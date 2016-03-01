@@ -1,0 +1,88 @@
+# Microsoft Developer Studio Generated Dependency File, included by BDADll.mak
+
+.\source\BDA.CPP : \
+	"..\public\AGELIST.H"\
+	"..\public\bda.h"\
+	"..\public\bdadefines.h"\
+	"..\public\bdasites.h"\
+	"..\public\defines.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stocc.h"\
+	"..\public\system1.h"\
+	".\source\poslist.h"\
+	".\source\RANDOMC.H"\
+	
+
+.\source\BDAS.cpp : \
+	"..\public\AGELIST.H"\
+	"..\public\bda.h"\
+	"..\public\bdadefines.h"\
+	"..\public\bdas.h"\
+	"..\public\bdasites.h"\
+	"..\public\defines.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stocc.h"\
+	"..\public\system1.h"\
+	".\source\RANDOMC.H"\
+	
+
+.\source\BDASExport.cpp : \
+	"..\public\AGELIST.H"\
+	"..\public\bda.h"\
+	"..\public\bdadefines.h"\
+	"..\public\bdaexport.h"\
+	"..\public\bdas.h"\
+	"..\public\bdasites.h"\
+	"..\public\defines.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stocc.h"\
+	"..\public\system1.h"\
+	".\source\RANDOMC.H"\
+	
+
+.\source\BDASites.cpp : \
+	"..\public\bdasites.h"\
+	
+
+.\source\MERSENNE.CPP : \
+	".\source\RANDOMC.H"\
+	
+
+.\source\PosList.cpp : \
+	".\source\poslist.h"\
+	
+
+.\source\STOC1.CPP : \
+	".\source\RANDOMC.H"\
+	".\source\STOCC.H"\
+	

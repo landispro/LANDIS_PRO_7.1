@@ -1,0 +1,511 @@
+# Microsoft Developer Studio Generated Dependency File, included by FuelDll.mak
+
+.\source\CohortRemovalMask.cpp : \
+	"..\public\AGELIST.H"\
+	".\source\CohortRemovalMask.h"\
+	
+
+.\source\FuelGlobalFuncs.cpp : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\FuelGlobalFuncs.h"\
+	"..\public\intarray.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\managementarea.h"\
+	"..\public\managementareas.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stand.h"\
+	"..\public\system1.h"\
+	".\source\CohortRemovalMask.h"\
+	".\source\FuelDefines.h"\
+	".\source\FuelGlobalVariables.h"\
+	".\source\FuelManage.h"\
+	".\source\FuelManEvent.h"\
+	".\source\FuelRule.h"\
+	".\source\FuelSites.h"\
+	".\source\FuelStand.h"\
+	".\source\FuelStands.h"\
+	".\source\FuelTrack.h"\
+	".\source\FuelTreatmentRank.h"\
+	".\source\HarvestReport.h"\
+	".\source\Reclass4.h"\
+	".\source\SiteHarvester.h"\
+	".\source\SiteRemovalMask.h"\
+	
+
+.\source\FuelManage.cpp : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\intarray.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\managementarea.h"\
+	"..\public\managementareas.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stand.h"\
+	"..\public\system1.h"\
+	".\source\CohortRemovalMask.h"\
+	".\source\FuelDefines.h"\
+	".\source\FuelGlobalVariables.h"\
+	".\source\FuelManage.h"\
+	".\source\FuelManEvent.h"\
+	".\source\FuelRule.h"\
+	".\source\FuelSites.h"\
+	".\source\FuelStand.h"\
+	".\source\FuelStands.h"\
+	".\source\FuelTrack.h"\
+	".\source\FuelTreatmentRank.h"\
+	".\source\HarvestReport.h"\
+	".\source\SiteHarvester.h"\
+	".\source\SiteRemovalMask.h"\
+	
+
+.\source\FuelManEvent.cpp : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\intarray.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\managementarea.h"\
+	"..\public\managementareas.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stand.h"\
+	"..\public\system1.h"\
+	".\source\CohortRemovalMask.h"\
+	".\source\FuelDefines.h"\
+	".\source\FuelGlobalVariables.h"\
+	".\source\FuelManage.h"\
+	".\source\FuelManEvent.h"\
+	".\source\FuelRule.h"\
+	".\source\FuelSites.h"\
+	".\source\FuelStand.h"\
+	".\source\FuelStands.h"\
+	".\source\FuelTrack.h"\
+	".\source\FuelTreatmentRank.h"\
+	".\source\HarvestReport.h"\
+	".\source\SiteHarvester.h"\
+	".\source\SiteRemovalMask.h"\
+	".\source\StandIterator.h"\
+	
+
+.\source\FuelRule.cpp : \
+	"..\public\defines.h"\
+	"..\public\system1.h"\
+	".\source\FuelRule.h"\
+	
+
+.\source\FuelSites.cpp : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\intarray.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\managementarea.h"\
+	"..\public\managementareas.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stand.h"\
+	"..\public\system1.h"\
+	".\source\CohortRemovalMask.h"\
+	".\source\FuelDefines.h"\
+	".\source\FuelGlobalVariables.h"\
+	".\source\FuelManage.h"\
+	".\source\FuelManEvent.h"\
+	".\source\FuelRule.h"\
+	".\source\FuelSites.h"\
+	".\source\FuelStand.h"\
+	".\source\FuelStands.h"\
+	".\source\FuelTrack.h"\
+	".\source\FuelTreatmentRank.h"\
+	".\source\HarvestReport.h"\
+	".\source\SiteHarvester.h"\
+	".\source\SiteRemovalMask.h"\
+	
+
+.\source\FuelStand.cpp : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\intarray.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\managementarea.h"\
+	"..\public\managementareas.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stand.h"\
+	"..\public\system1.h"\
+	".\source\CohortRemovalMask.h"\
+	".\source\FuelDefines.h"\
+	".\source\FuelGlobalVariables.h"\
+	".\source\FuelManage.h"\
+	".\source\FuelManEvent.h"\
+	".\source\FuelRule.h"\
+	".\source\FuelSites.h"\
+	".\source\FuelStand.h"\
+	".\source\FuelStands.h"\
+	".\source\FuelTrack.h"\
+	".\source\FuelTreatmentRank.h"\
+	".\source\HarvestReport.h"\
+	".\source\SiteHarvester.h"\
+	".\source\SiteRemovalMask.h"\
+	".\source\StandIterator.h"\
+	
+
+.\source\FuelStands.cpp : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\intarray.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\managementarea.h"\
+	"..\public\managementareas.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stand.h"\
+	".\source\CohortRemovalMask.h"\
+	".\source\FuelDefines.h"\
+	".\source\FuelGlobalVariables.h"\
+	".\source\FuelManage.h"\
+	".\source\FuelManEvent.h"\
+	".\source\FuelRule.h"\
+	".\source\FuelSites.h"\
+	".\source\FuelStand.h"\
+	".\source\FuelStands.h"\
+	".\source\FuelTrack.h"\
+	".\source\FuelTreatmentRank.h"\
+	".\source\HarvestReport.h"\
+	".\source\SiteHarvester.h"\
+	".\source\SiteRemovalMask.h"\
+	
+
+.\source\FuelTrack.cpp : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\intarray.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\managementarea.h"\
+	"..\public\managementareas.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stand.h"\
+	"..\public\system1.h"\
+	".\source\CohortRemovalMask.h"\
+	".\source\FuelDefines.h"\
+	".\source\FuelGlobalVariables.h"\
+	".\source\FuelManage.h"\
+	".\source\FuelManEvent.h"\
+	".\source\FuelRule.h"\
+	".\source\FuelSites.h"\
+	".\source\FuelStand.h"\
+	".\source\FuelStands.h"\
+	".\source\FuelTrack.h"\
+	".\source\FuelTreatmentRank.h"\
+	".\source\HarvestReport.h"\
+	".\source\SiteHarvester.h"\
+	".\source\SiteRemovalMask.h"\
+	
+
+.\source\FuelTreatmentRank.cpp : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\intarray.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\managementarea.h"\
+	"..\public\managementareas.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stand.h"\
+	"..\public\system1.h"\
+	".\source\CohortRemovalMask.h"\
+	".\source\FuelDefines.h"\
+	".\source\FuelGlobalVariables.h"\
+	".\source\FuelManage.h"\
+	".\source\FuelManEvent.h"\
+	".\source\FuelRule.h"\
+	".\source\FuelSites.h"\
+	".\source\FuelStand.h"\
+	".\source\FuelStands.h"\
+	".\source\FuelTrack.h"\
+	".\source\FuelTreatmentRank.h"\
+	".\source\HarvestReport.h"\
+	".\source\ManagementAreaIterator.h"\
+	".\source\SiteHarvester.h"\
+	".\source\SiteRemovalMask.h"\
+	".\source\StandIterator.h"\
+	
+
+.\source\HarvestReport.cpp : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\intarray.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\managementarea.h"\
+	"..\public\managementareas.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stand.h"\
+	".\source\CohortRemovalMask.h"\
+	".\source\FuelDefines.h"\
+	".\source\FuelGlobalVariables.h"\
+	".\source\FuelManage.h"\
+	".\source\FuelManEvent.h"\
+	".\source\FuelRule.h"\
+	".\source\FuelSites.h"\
+	".\source\FuelStand.h"\
+	".\source\FuelStands.h"\
+	".\source\FuelTrack.h"\
+	".\source\FuelTreatmentRank.h"\
+	".\source\HarvestReport.h"\
+	".\source\SiteHarvester.h"\
+	".\source\SiteRemovalMask.h"\
+	
+
+.\source\IntArray.cpp : \
+	"..\public\intarray.h"\
+	
+
+.\source\ManagementArea.cpp : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\globalfunctions.h"\
+	"..\public\globalvariables.h"\
+	"..\public\harvestevent.h"\
+	"..\public\harvesteventqueue.h"\
+	"..\public\harvestsites.h"\
+	"..\public\intarray.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\managementarea.h"\
+	"..\public\managementareas.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stand.h"\
+	"..\public\stands.h"\
+	"..\public\system1.h"\
+	
+
+.\source\ManagementAreaIterator.cpp : \
+	"..\public\managementarea.h"\
+	"..\public\point.h"\
+	".\source\ManagementAreaIterator.h"\
+	
+
+.\source\ManagementAreas.cpp : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\intarray.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\managementarea.h"\
+	"..\public\managementareas.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stand.h"\
+	".\source\CohortRemovalMask.h"\
+	".\source\FuelDefines.h"\
+	".\source\FuelGlobalVariables.h"\
+	".\source\FuelManage.h"\
+	".\source\FuelManEvent.h"\
+	".\source\FuelRule.h"\
+	".\source\FuelSites.h"\
+	".\source\FuelStand.h"\
+	".\source\FuelStands.h"\
+	".\source\FuelTrack.h"\
+	".\source\FuelTreatmentRank.h"\
+	".\source\HarvestReport.h"\
+	".\source\SiteHarvester.h"\
+	".\source\SiteRemovalMask.h"\
+	
+
+.\source\POINT.CPP : \
+	"..\public\point.h"\
+	
+
+.\source\Reclass4.cpp : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\intarray.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\managementarea.h"\
+	"..\public\managementareas.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stand.h"\
+	"..\public\system1.h"\
+	".\source\CohortRemovalMask.h"\
+	".\source\FuelDefines.h"\
+	".\source\FuelGlobalVariables.h"\
+	".\source\FuelManage.h"\
+	".\source\FuelManEvent.h"\
+	".\source\FuelRule.h"\
+	".\source\FuelSites.h"\
+	".\source\FuelStand.h"\
+	".\source\FuelStands.h"\
+	".\source\FuelTrack.h"\
+	".\source\FuelTreatmentRank.h"\
+	".\source\HarvestReport.h"\
+	".\source\Reclass4.h"\
+	".\source\SiteHarvester.h"\
+	".\source\SiteRemovalMask.h"\
+	
+
+.\source\SiteHarvester.cpp : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\intarray.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\managementarea.h"\
+	"..\public\managementareas.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stand.h"\
+	"..\public\system1.h"\
+	".\source\CohortRemovalMask.h"\
+	".\source\FuelDefines.h"\
+	".\source\FuelGlobalVariables.h"\
+	".\source\FuelManage.h"\
+	".\source\FuelManEvent.h"\
+	".\source\FuelRule.h"\
+	".\source\FuelSites.h"\
+	".\source\FuelStand.h"\
+	".\source\FuelStands.h"\
+	".\source\FuelTrack.h"\
+	".\source\FuelTreatmentRank.h"\
+	".\source\HarvestReport.h"\
+	".\source\SiteHarvester.h"\
+	".\source\SiteRemovalMask.h"\
+	
+
+.\source\SiteRemovalMask.cpp : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\globalvariables.h"\
+	"..\public\harvestevent.h"\
+	"..\public\harvesteventqueue.h"\
+	"..\public\harvestsites.h"\
+	"..\public\intarray.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\managementarea.h"\
+	"..\public\managementareas.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stand.h"\
+	"..\public\stands.h"\
+	".\source\CohortRemovalMask.h"\
+	".\source\SiteRemovalMask.h"\
+	
+
+.\source\StandIterator.cpp : \
+	"..\public\intarray.h"\
+	"..\public\point.h"\
+	".\source\FuelStand.h"\
+	".\source\StandIterator.h"\
+	

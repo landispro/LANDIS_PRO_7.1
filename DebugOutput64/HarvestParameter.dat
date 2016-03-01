@@ -1,0 +1,35 @@
+2              #Harvest Regime ID#
+2              #Harvest Regime Label#
+1              #Management Area#
+2              #Rotation Age#
+1              #Rank alrogithm#
+10              #Entry Year#
+10              #Repeat Interval#
+0.01              #Target Proportion#
+1              #Stand Proportion Denominator#
+20              #Mean Group Size#
+11              #Standard Deviation#
+
+#List species below in same order as species attribute file and assign priority rank for removal#
+#flag for harvest, flag for planting, number of trees planted#
+1 0 0   #Pinus echinata#
+1 0 0   #Black oak group#
+1 0 0   #White oak group#
+0    #Number of reentry events#
+
+1               #Harvest Regime ID#
+1               #Harvest Regime Label#
+1               #Management Area#
+2               #Rotation Age#
+1               #Rank alrogithm#
+10              #Entry Year#
+10              #Repeat Interval#
+1.0              #Minimum Stand Harvest Basal Area#
+1               #0 - Remove smallest trees first, 1 - Remove largest trees first#
+0.096              #Proportion of Management Area to Harvest#
+6.8              #Target Stand Basal Area#
+
+1 1 0 0   #Pinus echinata#
+2 1 0 0   #Black oak group#
+3 1 0 0   #White oak group#
+0    #Number of reentry events#

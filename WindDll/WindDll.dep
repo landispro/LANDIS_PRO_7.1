@@ -1,0 +1,49 @@
+# Microsoft Developer Studio Generated Dependency File, included by WindDll.mak
+
+.\source\PILE.CPP : \
+	"..\public\defines.h"\
+	"..\public\pile.h"\
+	"..\public\point.h"\
+	"..\public\system1.h"\
+	
+
+.\source\POINT.CPP : \
+	"..\public\point.h"\
+	
+
+.\source\WIND.CPP : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\pile.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\system1.h"\
+	"..\public\wind.h"\
+	
+
+.\source\WindExport.cpp : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\wind.h"\
+	".\source\windexport.h"\
+	

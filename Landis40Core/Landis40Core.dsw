@@ -1,0 +1,152 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "BDADll"=..\BDADll\BDADll.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Landis40Core
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "FireDll"=..\FireDll\FireDll.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Landis40Core
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "FuelDll"=..\FuelDll\FuelDll.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Landis40Core
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "HarvestDll"=..\Harvestdll\HarvestDll.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Landis40Core
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Landis40App"=..\Landis40App\Landis40App.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Landis40Core
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name HarvestDll
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name FuelDll
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name FireDll
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name WindDll
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name BDADll
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name SUCCESSION
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Landis40Core"=.\Landis40Core.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "SUCCESSION"=..\SUCCESSION\SUCCESSION.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Landis40Core
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "WindDll"=..\WindDll\WindDll.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Landis40Core
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+

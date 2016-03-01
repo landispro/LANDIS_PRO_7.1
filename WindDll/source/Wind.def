@@ -1,0 +1,9 @@
+LIBRARY WindDll
+
+ 
+
+   EXPORTS
+
+   GetWind
+
+   GetWindACTIVATE

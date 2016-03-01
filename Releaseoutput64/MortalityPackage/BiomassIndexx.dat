@@ -1,0 +1,5 @@
+#output for biomass for species, if output column is N/A, that species can not be mapped#
+#Species name, output#
+#SPP1#	biopin
+#SPP3#	bioboa
+#SPP4#	biowoa

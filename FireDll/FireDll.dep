@@ -1,0 +1,95 @@
+# Microsoft Developer Studio Generated Dependency File, included by FireDll.mak
+
+.\source\FIRE.CPP : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\fire.h"\
+	"..\public\FireRegimeUnit.h"\
+	"..\public\FireRegimeUnits.h"\
+	"..\public\FireSites.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\pile.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stocc.h"\
+	"..\public\system1.h"\
+	".\source\RANDOMC.H"\
+	
+
+.\source\FireExport.cpp : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\fire.h"\
+	"..\public\FireRegimeUnit.h"\
+	"..\public\FireRegimeUnits.h"\
+	"..\public\FireSites.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stocc.h"\
+	".\source\FireExport.h"\
+	".\source\RANDOMC.H"\
+	
+
+.\source\FireRegimeUnit.cpp : \
+	"..\public\FireRegimeUnit.h"\
+	"..\public\system1.h"\
+	
+
+.\source\FireRegimeUnits.cpp : \
+	"..\public\defines.h"\
+	"..\public\FireRegimeUnit.h"\
+	"..\public\FireRegimeUnits.h"\
+	"..\public\FireSites.h"\
+	"..\public\point.h"\
+	"..\public\stocc.h"\
+	"..\public\system1.h"\
+	".\source\RANDOMC.H"\
+	
+
+.\source\FireSites.cpp : \
+	"..\public\FireRegimeUnit.h"\
+	"..\public\FireSites.h"\
+	"..\public\system1.h"\
+	
+
+.\source\MERSENNE.CPP : \
+	".\source\RANDOMC.H"\
+	
+
+.\source\PILE.CPP : \
+	"..\public\defines.h"\
+	"..\public\pile.h"\
+	"..\public\point.h"\
+	"..\public\system1.h"\
+	
+
+.\source\POINT.CPP : \
+	"..\public\point.h"\
+	
+
+.\source\STOC1.CPP : \
+	".\source\RANDOMC.H"\
+	".\source\stocc.h"\
+	
+
+.\source\STOC2.CPP : \
+	".\source\RANDOMC.H"\
+	".\source\stocc.h"\
+	

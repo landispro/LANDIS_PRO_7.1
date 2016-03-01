@@ -1,0 +1,9 @@
+LIBRARY FireDll
+
+ 
+
+   EXPORTS
+
+   GetFire
+
+   GetFireACTIVATE

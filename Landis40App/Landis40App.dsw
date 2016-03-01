@@ -1,0 +1,80 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "FuelDll"="..\FuelDll\FuelDll.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Landis40Core
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "HarvestDll"="..\Harvestdll\HarvestDll.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name Landis40Core
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Landis40App"=".\Landis40App.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name FuelDll
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name HarvestDll
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name Landis40Core
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Landis40Core"="..\Landis40Core\Landis40Core.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+

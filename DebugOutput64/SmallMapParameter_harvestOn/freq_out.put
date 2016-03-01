@@ -1,0 +1,8 @@
+#This file establishes the number of years for output for reclass methods#
+#fire, wind, timber, and age class. A one (1) in any field will produce maps#
+#every iteration#
+#output maps for reclass#  1
+#output maps for fire# 1
+#output maps for wind# 1
+#output maps for timber# 1
+#output maps for age class# 1

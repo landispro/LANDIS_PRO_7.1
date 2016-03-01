@@ -1,0 +1,13 @@
+PRESCRIBEDBURNING   # EVENT LABEL #
+1   # management area identifier   #
+1   # rank algorithm (0: descending, 1: ascending, 3: random)  #
+1  # initial decade   #
+50  # final decade    #
+2  # reentry interval  #
+0.50  # proportion of management area for treatment #
+3   # minimum potential fire risk for management #
+#Fuel treatment mask #
+#fine fuel load before management #   #  0    1     2     3     4     5#  
+#fine fuel loads after management #       0    0     0     0     0     1
+#Coarse fuel load before management  #   #   0    1     2     3     4     5# 
+#Coarse fuel loads after management      #    0    0     1     1     2     2

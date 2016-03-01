@@ -1,0 +1,48 @@
+Start Landis 4.0 at Wed Aug 25 16:00:50 2004
+input: parameter500.dat
+Beginning Landis 4.0 Run.
+
+Fire are(is) on
+------------------------------------------------------------
+
+Reading input.
+
+Species maps output every------->10 years.
+Age maps output every----------->10 years.
+Age group maps output every----->10 years.
+
+Start fire initialization 
+Finish Fire initiliation 
+Output Landis Scenario.txt....
+
+Start writing outout at Wed Aug 25 16:00:51 2004
+reclass dom
+
+reclass sm
+
+reclass sp
+
+reclass bo
+
+reclass pr
+
+creating ySm age map
+creating ySp age map
+creating yBo age map
+creating yWo age map
+creating yPr age map
+Finish writing output at Wed Aug 25 16:00:58 2004
+it took 7 seconds
+
+Finish the initilization at Wed Aug 25 16:00:58 2004
+it took 8 seconds
+
+Processing Year 10
+Optimizing map ... at Wed Aug 25 16:01:19 2004
+Finish optimizing map at Wed Aug 25 16:01:23 2004
+ it took 4 seconds
+ERROR:
+
+CFireSites::operator() (int,int)-> (-858993460, -858993460) are illegal map                  coordinates
+
+EXITING PROGRAM.

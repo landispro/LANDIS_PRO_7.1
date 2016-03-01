@@ -1,0 +1,141 @@
+[SPECIES]
+#Live fuel quality coefficient (FQC) by species #
+#pinuechi# 1
+#quervelu# 1
+#quer alba# 1
+#Fine fuel accumulation curves by species #
+# #
+#Fine fuel classes for pinuechi#	1      2       3        4         5
+#Age of pinuechi#	                20     40     70     120      160
+#Fine fuel classes for quervelu#	1      2       3        4         5
+# Age of quervelu#	                 20      40      80       100      140
+#Fine fuel classes for queralba#	1      2       3        4         5
+# Age of queralba#	        20      40      60       100      120
+
+[LANDTYPE]
+#Probability of low/medium intensity fire to become a crown fire #
+#LT0# 0.0
+#LT1#	0.01   
+#LT2#	0.02
+#LT3#	0.03
+#LT4#	0.02
+#LT5#	0.05
+#LT6#	0.0
+#LT7#	0.0
+#LT8#	0.0
+
+#Landtype0 name#      empty
+#Fine fuel classes#                       # 1       2        3        4        5 #
+#Fine fuel loads modified by landtype1#    1       1        2        3       4
+#Coarse fuel accumulation curve for landtype1# 
+#Coarse fuel classes#                                                   # 1       2        3        4        5 #
+#Years of coarse fuel accumulation to reach the corresponding classes#   20      60      110    170    220
+#Coarse fuel decomposition curve for landtype1# 
+#Coarse fuel classes#                  # 4       3        2        1        0 #
+#Years of decomposition since last disturbance#  20      60      100    140    200
+
+#Landtype1 name#      sw.slope
+#Fine fuel classes#                       # 1       2        3        4        5 #
+#Fine fuel loads modified by landtype1#    1       1        2        3       4
+#Coarse fuel accumulation curve for landtype1# 
+#Coarse fuel classes#                                                   # 1       2        3        4        5 #
+#Years of coarse fuel accumulation to reach the corresponding classes#   20      60      110    170    220
+#Coarse fuel decomposition curve for landtype1# 
+#Coarse fuel classes#                  # 4       3        2        1        0 #
+#Years of decomposition since last disturbance#  20      60      100    140    200
+
+#Landtype1 name#      ne.slope
+#Fine fuel classes#                       # 1       2        3        4        5 #
+#Fine fuel loads modified by landtype1#    0       0        0        0       0
+#Coarse fuel accumulation curve for landtype1# 
+#Coarse fuel classes#                    				# 1       2        3        4        5 #
+#Years of coarse fuel accumulation to reach the corresponding classes#   100      200      300   500    800
+#Coarse fuel decomposition curve for landtype1# 
+#Coarse fuel classes#                           # 4       3        2        1        0 #
+#Years of decomposition since last disturbance#  10      20      30    40    50
+
+#Landtype1 name#      ridge
+#Fine fuel classes#                       # 1       2        3        4        5 #
+#Fine fuel loads modified by landtype1#    0       1        1        1       1
+#Coarse fuel accumulation curve for landtype1# 
+#Coarse fuel classes#                    				# 1       2        3        4        5 #
+#Years of coarse fuel accumulation to reach the corresponding classes#   80      140      250    350    450
+#Coarse fuel decomposition curve for landtype1# 
+#Coarse fuel classes#                           # 4       3        2        1        0 #
+#Years of decomposition since last disturbance#   20      60      100    140    200
+
+#Landtype1 name#      updrain
+#Fine fuel classes#                       # 1       2        3        4        5 #
+#Fine fuel loads modified by landtype1#    0       1        1        1       1
+#Coarse fuel accumulation curve for landtype1# 
+#Coarse fuel classes#                    				# 1       2        3        4        5 #
+#Years of coarse fuel accumulation to reach the corresponding classes#   80      140      250    350    450
+#Coarse fuel decomposition curve for landtype1# 
+#Coarse fuel classes#                           # 4       3        2        1        0 #
+#Years of decomposition since last disturbance#   20      60      100    140    200
+
+#Landtype1 name#      bottoms
+#Fine fuel classes#                       # 1       2        3        4        5 #
+#Fine fuel loads modified by landtype1#    0        1        2       3      4
+#Coarse fuel accumulation curve for landtype1# 
+#Coarse fuel classes#                    				# 1       2        3        4        5 #
+#Years of coarse fuel accumulation to reach the corresponding classes#    10      20      50    100    220
+#Coarse fuel decomposition curve for landtype1# 
+#Coarse fuel classes#                           # 4       3        2        1        0 #
+#Years of decomposition since last disturbance#   20      30      40    70    90
+
+
+#Landtype1 name#      water
+#Fine fuel classes#                       # 1       2        3        4        5 #
+#Fine fuel loads modified by landtype1#    1        2       3        4         5
+#Coarse fuel accumulation curve for landtype1# 
+#Coarse fuel classes#                    				# 1       2        3        4        5 #
+#Years of coarse fuel accumulation to reach the corresponding classes#    20      40      70    140    280
+#Coarse fuel decomposition curve for landtype1# 
+#Coarse fuel classes#                           # 4       3        2        1        0 #
+#Years of decomposition since last disturbance#    10      20      30    50    70
+
+
+#Landtype1 name#      nonforest
+#Fine fuel classes#                       # 1       2        3        4        5 #
+#Fine fuel loads modified by landtype1#    0        1        2       3      4
+#Coarse fuel accumulation curve for landtype1# 
+#Coarse fuel classes#                    				# 1       2        3        4        5 #
+#Years of coarse fuel accumulation to reach the corresponding classes#    10      30      50    110    240
+#Coarse fuel decomposition curve for landtype1# 
+#Coarse fuel classes#                           # 4       3        2        1        0 #
+#Years of decomposition since last disturbance#    10      20      30    50    80
+
+#Landtype1 name#      grassland
+#Fine fuel classes#                       # 1       2        3        4        5 #
+#Fine fuel loads modified by landtype1#    1        2       3        4         5
+#Coarse fuel accumulation curve for landtype1# 
+#Coarse fuel classes#                    				# 1       2        3        4        5 #
+#Years of coarse fuel accumulation to reach the corresponding classes#    20      30      60    130    260
+#Coarse fuel decomposition curve for landtype1# 
+#Coarse fuel classes#                           # 4       3        2        1        0 #
+#Years of decomposition since last disturbance#    10      20      30    50    60
+
+[FIRE]
+#Fire severity classes#	  # 1       2        3       4         5 #
+#Fine fuel reduction#   -1      -3       -4      -4        -5
+#Coarse fuel reduction#	  0       -1       -2      -3        -3
+
+
+[WIND]
+#Windthrow severity classes#	# 1       2        3       4        5 #
+#number of fine fuel classes increased#	   1       1        2       2        3
+#number of coarse fuel classes increased#	   1       2        3       4        4
+[BDA]
+#Total BDA types # 0
+
+[HARVEST]
+#Total harvest events # 1
+#Harvest event 1 #
+#Fine fuel load before harvest # # 0      1      2       3      4     5#
+#Fine fuel load after harvest #	   2      2      3       4      5     5
+#Coarse fuel load before harvest #	# 0      1      2       3      4     5#
+#Coarse fuel load after harvest #    2      3      3       4      5      5
+
+
+

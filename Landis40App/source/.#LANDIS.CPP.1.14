@@ -1,0 +1,786 @@
+/****************************************************************************
+* LANDIS model design:                                                      *
+*        David J. Mladenoff, Joel E. Boeder, Hong S. He, George E. Host     *
+* LANDIS 4.0  Dynamic Linked Libraries :                                    *
+*        Wei Li, Hong S. He													*
+* Contact :               
+*						                                                    *
+*        Hong S. He, Forestry Department, University of Missouri at			*
+*        Columbia,                       *
+*        heh@missouri.edu													*
+*                                                                           *
+* History:                                                                  *
+*        Name           Date                  General Modification          *
+* ----------------  ------------  ----------------------------------------- *
+*  Jeol E. Boeder       09/93            original coding                    *
+* Chris Heim           ??/94            upgrade from LANDIS 1.0 to 1.5      *
+* Hong S. He         10/94-2003       upgrade to LANDIS 3.6 (VC++6.0)       *
+* Wei Li			 05/2003-Current   LANDIS 4.0							*
+*-----------------  ------------  ----------------------------------------- *
+* Last changes were made by Wei Li 2004.									*
+*                                                                           *
+* Version: 4.0																*
+* Description:                                                              *
+*        LANDIS is a raster based landscape model simulating forest         *
+*        succession, wind and fire disturbances, forest management, and     *
+*        the interaction among them over long period of time.               *
+* Documentations:                                                           *
+*																			*
+*                                                                           *
+****************************************************************************/
+
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+#include <time.h>
+#include <afxwin.h> 
+
+#include "defines.h"
+#include "system1.h"
+#include "error.h"
+#include "params.h"
+#include "optim.h"
+#include "landu.h"
+#include "landus.h"
+#include "specatt.h"
+#include "specatts.h"
+#include "specie.h"
+#include "site.h"
+#include "sites.h"
+#include "fire.h"
+#include "wind.h"
+#include "io.h"
+#include "map8.h"
+#include "reclass3.h"
+
+
+#include "GlobalFunctions.h"
+
+
+
+#include "PDP.h"
+
+#include "Succession.h"
+
+//fuel
+#include "FuelGlobalFuncs.h"
+
+
+#include "BDAExport.h"
+#include "FireExport.h"
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+//                      FUNCTION DEFINITIONS                               //
+/////////////////////////////////////////////////////////////////////////////
+void singularLandisIteration(int, int, int, int, int, int, PDP*);
+
+/////////////////////////////////////////////////////////////////////////////
+//                      GLOBAL VARIABLE DECLARATION                        //
+//      THESE GLOBALS MAY BE REFERRENCED IN ALL LANDIS MODULES             //
+//          THEY ARE DEFINED IN THE LANDIS HEADER FILE                     //
+/////////////////////////////////////////////////////////////////////////////
+
+
+PARAMETERS    parameters;       //System paramters.            SYSTEM.CPP
+SPECIESATTRS  speciesAttrs(MAX_SPECIES); //Species attributes. SPECATT.CPP
+LANDUNITS     landUnits(MAX_LANDUNITS);    //Land units.         LANDU.CPP
+SITES         sites;            //Map of all landis sites.     SITES.CPP
+OPTIM         optim;            //Optimization structure.      OPTIM.CPP
+
+//BDA 
+BDAS*		  pBDAS;
+WIND*		  pWINDdll;
+HINSTANCE	  gLibBDA;
+HINSTANCE	  gLibWind;
+HINSTANCE	  gLibFuel;
+HINSTANCE	  gLibFire;
+
+CFIRE*		  pFire = NULL;
+
+SUCCESSION* pSuccession = NULL;
+
+//#ifdef __HARVEST__
+int freq[6];
+//#else
+//int freq[5];
+//#endif
+
+//#ifdef __HARVEST__
+int currentDecade;
+int numberOfSpecies;
+short currentHarvestEventId = 0;
+MAP16 visitationMap;
+//#endif Harvest
+
+char reMethods[MAX_RECLASS][80], ageMaps[MAX_SPECIES][80];
+
+int gDLLMode;
+
+
+void updateLandtypeMap8(FILE * ltMapFile)
+{
+	unsigned char c;
+	unsigned long dest[64];
+	int 	nCols,
+		nRows,
+		numRead,
+		coverType;
+	SITE* s;
+	LDfread((char*)dest,4,32,ltMapFile);
+#ifdef __UNIX__
+	ERDi4_c(&dest[4],nCols);
+	ERDi4_c(&dest[5],nRows);
+#else
+	nCols=dest[4];
+	nRows=dest[5];
+#endif
+	int xDim=sites.numColumns();
+	int yDim=sites.numRows();
+	if ((nCols!=xDim)||(nRows!=yDim))
+		errorSys("landtype map and species map do not match.",STOP);
+	
+	for (int i=yDim;i>0;i--)
+	{
+		for (int j=1;j<=xDim;j++)
+		{
+			numRead=LDfread((char*)(&c),1,1,ltMapFile);
+			coverType=(int)c;
+			if ((numRead>=0)&&(coverType>=0))
+			{
+				s=sites(i,j);
+				s->landUnit=landUnits(coverType);
+			}
+			else
+				errorSys("illegel landtype class found.",STOP);
+		}
+	}
+}
+
+void envUpdate(int i)
+{
+	char str[255],iterString[5];
+	char tempStr[255];
+	FILE * luFile, * ltMapFile;
+	itoa(i,iterString,10);
+
+	//update land type attribute
+	//file name is landtype.dat1, landtype.dat10 etc
+	strcpy(str,parameters.landUnitFile);	
+	strcat(str,iterString);
+	if ((luFile=LDfopen(str, 1))==NULL)
+	{
+		sprintf(tempStr,"Landtype attribute file %s not found.\n",str);		
+		errorSys(tempStr,STOP);
+	}
+	else
+	{
+		//update landtype attribute
+		landUnits.read(luFile);
+		LDfclose(luFile);
+	}
+
+	//update land type GIS
+	//file name is landtype.gis1, landtype.gis10 etc
+	strcpy(str,parameters.landUnitMapFile);	
+	strcat(str,iterString);
+	if ((ltMapFile=LDfopen(str, 1))==NULL)
+	{
+		
+		sprintf(tempStr,"Landtype GIS file %s not found.\n",str);
+		errorSys(tempStr,STOP);
+	}
+	else
+	{
+		//update landtype GIS
+		updateLandtypeMap8(ltMapFile);
+		LDfclose(ltMapFile);
+	}
+
+}
+////////////////////////////////////////////////////////////////////////////
+//                             MAIN ROUTINE                               //
+////////////////////////////////////////////////////////////////////////////
+
+int main (int argc, char *argv[])
+//Main program.  This contains start and shut down procedures as well as the
+//main iteration loop.
+
+{
+FILE *infile;
+char str[100];
+int numbOfIter, snr, snc, specAtNum;
+int run_extraSeed=0;
+int numSitesActive,envOn=0, reclYear=0;
+time_t ltime,ltimeTemp;
+long ltimeDiff;
+
+
+time(&ltime);
+printf("Start Landis 4.0 at %s",ctime(&ltime));
+
+if	((argc!=2)&&(argc!=3)&&(argc!=4))
+{
+	argHelp();
+    exit(255);
+}
+
+if ((strcmp(argv[1],"-h")==0)||(strcmp(argv[1],"-H")==0))
+{
+	argHelp();
+	exit(255);
+}
+else if ((strcmp(argv[1],"-p")==0)||(strcmp(argv[1],"-P")==0))
+{
+	help();
+	exit(255);
+}
+
+if ((strcmp(argv[1],"-e")==0)||(strcmp(argv[1],"-E")==0))
+{
+   if (argc != 4)
+        errorSys("Syntax error. For help enter: landis -h",STOP);
+   envOn=(atoi(argv[2]));
+   if (!envOn)
+   		errorSys("Invalid year value",STOP);
+   else if ((infile=LDfopen(argv[3],1))==NULL)
+   		errorSys("Input file not found. For help enter: landis -h",STOP);
+}
+
+else if ((strcmp(argv[1],"-r")==0)||(strcmp(argv[1],"-R")==0))
+{
+   if (argc != 4)
+      errorSys("Syntax error. For help enter: landis -h",STOP);
+   reclYear=atoi(argv[2]);
+   if(!(reclYear%10))
+		errorSys("Invalid year number",STOP);
+   else if ((infile=LDfopen(argv[3],1))==NULL)
+   		errorSys("Input file not found. For help enter: landis -h",STOP);
+}
+
+
+else if (((infile=LDfopen(argv[1], 1))==NULL))
+	errorSys("Input file not found. For help enter: landis -h",STOP);
+
+if (argc ==2)
+{
+	printf("input: %s\n", argv[1]);
+}
+else
+	printf("input: %s\n", argv[3]);
+
+printMessage("Beginning Landis 4.0.2 Run.\n");
+
+if (envOn>0) 
+	printf("Environment will be updated every %d iterarion\n",envOn);
+	
+
+int	 BDANo; 
+//Get DLL mode
+gDLLMode = parameters.read(infile, &BDANo);
+
+for (int x=0; x<5; x++) freq[x]=1;
+if ((gDLLMode & G_HARVEST) != 0)
+	for (x=0; x<6; x++) freq[x]=1;
+else
+	for (x=0; x<5; x++) freq[x]=1;
+
+if (gDLLMode & G_BDA)
+	printf("BDA ");
+if (gDLLMode & G_WIND)
+	printf("Wind ");
+if (gDLLMode & G_HARVEST)
+	printf("Harvest ");
+if (gDLLMode & G_FUEL)
+	printf("Fuel ");
+if (gDLLMode & G_FUELMANAGEMENT)
+	printf("Fuel management ");
+if (gDLLMode & G_FIRE)
+	printf("Fire ");
+if (gDLLMode != 0)
+	printf("are(is) on\n");
+
+printf("------------------------------------------------------------\n\n");
+fflush(stdout);
+
+
+
+//Harvest Init 1-----------------------------------------------//
+if ((gDLLMode & G_HARVEST) != 0)
+{
+//	printf("Harvest Dll loaded in...\n");
+	HarvestPass(&sites, &speciesAttrs);
+}
+
+//read in parameters & Init PDP---------------------------------//
+PDP* pPDP;
+
+getInput(infile, freq, reMethods, ageMaps, &pPDP, BDANo);
+//END read in parameters & Init PDP---------------------------------//
+
+//WIND-Init-----------------------------------------------------//
+if ((gDLLMode & G_WIND) != 0)
+{
+
+	typedef WIND* (*GetWINDTYPE)(char*, char*, int);
+
+	gLibWind = LoadLibrary("WindDll.dll");
+	FARPROC  pnProc  = GetProcAddress(gLibWind,"GetWind"); 
+	if (!pnProc)
+	{
+		DWORD m = GetLastError();
+		errorSys("Wind: Error in load in Wind DLL, check if there is a Wind dll.", STOP);
+	}
+
+	GetWINDTYPE GetWind = (GetWINDTYPE)pnProc;
+	pWINDdll = GetWind(parameters.strWindInitName, parameters.outputDir, gDLLMode);
+	pWINDdll->m_pPDP = pPDP;
+//	printf("Wind Dll loaded in...\n");
+}
+//WIND Inti END------------------------------------------------//
+
+
+if ((gDLLMode & G_WIND) != 0)
+	pWINDdll->m_pPDP = pPDP;
+//END read in parameters & Init PDP---------------------------------//
+
+
+//BDA Init ---------------------------------------------------------//
+if ((gDLLMode & G_BDA) != 0)
+{
+	typedef BDAS* (*GetBDASTYPE)(char* str, SITES* s, int i, char*, LANDUNITS* plu, SPECIESATTRS* ps, PDP*, int, int);
+
+	gLibBDA = LoadLibrary("BDADll.dll");
+
+	FARPROC  pnProc  = GetProcAddress(gLibBDA,"GetBDAS"); 
+
+	if (!pnProc)
+	{
+		DWORD m = GetLastError();
+		errorSys("BDA: Error in load in BDA DLL, check if there is a BDA dll.", STOP);
+	}
+
+	GetBDASTYPE GetBDAS = (GetBDASTYPE)pnProc;
+	pBDAS = GetBDAS(parameters.strBDAInitName, &sites, parameters.cellSize, parameters.outputDir, &landUnits, &speciesAttrs, pPDP, parameters.randSeed, gDLLMode);
+
+	
+	printf("BDA Dll loaded in...\n");
+}
+//BDA Init END---------------------------------------------------------//
+
+
+//Fuel init begin-------------------------------------------------  //
+if ((gDLLMode & G_FUEL) != 0)
+{
+	HINSTANCE gLibFuel;
+
+	typedef int (*GetFUELTYPE)(PDP*, char*, int, int, char*, SITES*, int);
+	gLibFuel = LoadLibrary("FuelDll.dll");
+	FARPROC pnProc = GetProcAddress(gLibFuel, "FuelInit");
+	if (!pnProc)
+	{
+		DWORD m = GetLastError();
+		errorSys("Fuel: Error in load in Fuel DLL, check if there is a Fuel dll.", STOP);
+	}
+
+	GetFUELTYPE FuelInit = (GetFUELTYPE)pnProc;
+
+	gDLLMode = FuelInit(pPDP, parameters.strFuelInitName, speciesAttrs.number(), landUnits.number(), parameters.outputDir, &sites, gDLLMode);
+//	printf("FUEL Dll loaded in...\n");
+}
+//Fuel init END ----------------------------------------------- ---//
+
+
+//Fire init begin-------------------------------------------------  //
+if ((gDLLMode & G_FIRE) != 0)
+{
+	printf("Start fire (with Finney method) initialization \n");
+	fflush(stdout);
+
+	typedef CFIRE* (*GetFIRETYPE)(char*, int, SITES*, LANDUNITS*, SPECIESATTRS*, PDP*, int, char*,int);
+	gLibFire = LoadLibrary("FireDll.dll");
+	FARPROC pnProcfire = GetProcAddress(gLibFire, "GetFire");
+	if (!pnProcfire)
+	{
+		DWORD m = GetLastError();
+		errorSys("Fire: Error in load in Fire DLL, check if there is a Fire dll.", STOP);
+	}
+
+	GetFIRETYPE GetFire = (GetFIRETYPE)pnProcfire;
+
+	pFire = GetFire(parameters.strFireInitName, gDLLMode, &sites, &landUnits, 
+		&speciesAttrs, pPDP, parameters.numberOfIterations,	
+		parameters.outputDir, parameters.randSeed);
+
+	printf("Finish Fire initiliation \n");
+	fflush(stdout);
+
+
+}
+//Fire init END-------------------------------------------------  //
+
+
+OutputScenario();
+
+if (reclYear)
+{
+	reclassify(reclYear, ageMaps);
+    putOutput(reclYear/10, reclYear/10, freq);
+	fclose(infile);
+	ioTerm();
+	return 0;
+}
+else putOutput(0, 0, freq);
+
+if ((gDLLMode & G_FUEL) != 0)
+	FuelputFuelOutput(reclYear/10, parameters.outputDir, parameters.cellSize);
+
+snr=sites.numRows();
+snc=sites.numColumns();
+numSitesActive=sites.numActive();
+specAtNum=speciesAttrs.number();
+optim.dim(specAtNum,snr,snc, &sites, &speciesAttrs);
+numbOfIter=parameters.numberOfIterations;
+
+
+if	(envOn>numbOfIter)
+	errorSys("Invalid year of interpretation for updating environment",STOP);
+
+if (parameters.randSeed == 0)  //random
+{
+   srand((unsigned)time(&ltime));
+   parameters.randSeed=ltime;
+   fseed(parameters.randSeed);
+}
+else fseed(parameters.randSeed);
+
+
+time(&ltimeTemp);
+printf("\nFinish the initilization at %s",ctime(&ltimeTemp));
+ltimeDiff = (long) ltimeTemp-ltime;
+printf("it took %ld seconds\n", ltimeDiff);
+fflush(stdout);
+
+//Simulation loops////////////////////////////////////////////////
+for (int i=1;i<=numbOfIter;i++)
+{
+	
+	if((envOn>0)&&(i%envOn==0)&&i>1)
+	{
+		//performing environment change
+		//should also affect fireRegimeUnit GIS and Attr 
+		//for fire and fuel module
+
+		//update landtype GIS and landtype Attr if there are any
+		//let fire module update fire regime unit GIS and Attr if there are any
+		envUpdate(i);
+		printf("landtype attribute and gis has been updated at iteration %d\n",i);
+   		//pSuccession->envChange(i,specAtNum, parameters.landUnitFile);
+		if ((gDLLMode & G_FIRE) != 0)
+		{
+			//update fire regime unit attr and fire regime GIS
+			pFire->updateFRU(i);
+			printf("fire regime unit attribute and gis has been updated at iteration %d\n",i);
+
+		}
+	}
+
+	if ((gDLLMode & G_HARVEST) != 0)
+	{
+	//   currentDecade = i;  modified by Vera Nov. 18, 2003
+	   HarvestPassCurrentDecade(i);
+	   if (parameters.harvest) {
+		   for (int r=1; r<=snr; r++) {
+			   for (int c=1; c<=snc; c++)
+				   setUpdateFlags(r,c);
+		   }
+	   }
+	}
+
+    if (pSuccession) 
+		delete pSuccession;
+	pSuccession = new SUCCESSION(&sites, &landUnits, &optim, parameters.cellSize );
+	sprintf(str,"\nProcessing Year %d",i*10);//J.Yang hard coding from i*10
+	printMessage(str);	
+	//End Harvest Init 2-----------------------------------------------//
+
+		
+	singularLandisIteration(i,run_extraSeed,(numSitesActive/1000),	snr,snc,specAtNum, pPDP);
+
+	putOutput(0, i, freq);
+
+	if ((gDLLMode & G_FUEL) != 0)
+		FuelputFuelOutput(i, parameters.outputDir, parameters.cellSize);
+
+}
+
+//Simulation loops end/////////////////////////////////////////////////
+
+
+//Close program.
+if ((gDLLMode & G_HARVEST) != 0)
+{
+	CleanHarvest();
+}
+
+delete pSuccession;
+LDfclose(infile);
+ioTerm();
+return 0;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+//                      SINGULAR LANDIS ITERATION ROUTINE                  //
+/////////////////////////////////////////////////////////////////////////////
+
+void singularLandisIteration(int itr, int run_extraSeed, int numSitesActive, int snr, int snc, int specAtNum, PDP* ppdp)
+//This processes a singular Landis iteration.  It loops through each site
+//followed by each species.  For every iteration of the loop grow and kill
+//are called.  Then seed availability is checked.  If seed is available
+//and shade conditions are correct birth is called.
+
+{
+char str[100];
+int i, j;
+LANDUNIT *l;
+int shade;
+SPECIE *s;
+SPECIESATTR *sa;
+int speciesNum;
+
+	time_t ltime,ltimeTemp;
+	long ltimeDiff;
+
+	time(&ltime);
+	printf("Optimizing map ... at %s",ctime(&ltime));
+	fflush(stdout);
+
+//printMessage("Optimizing map.");
+    optim.initialize();
+	time(&ltimeTemp);
+	ltimeDiff = (long) ltimeTemp - ltime;
+	printf("Finish optimizing map at %s it took %ld seconds\n",ctime(&ltimeTemp), ltimeDiff);
+	fflush(stdout);
+
+//Wind process
+if ((gDLLMode & G_WIND) != 0)
+{
+	printMessage("\nProcessing windthrow.\n");
+//    pWINDdll->activate(itr, freq, &sites, &speciesAttrs, parameters.cellSize, parameters.randSeed, parameters.wind, parameters.numberOfIterations, gDLLMode);
+	typedef void (*GetWindACTIVETYPE)(WIND*, int, int freq[], SITES*, SPECIESATTRS*, int, int, int, int);
+
+	FARPROC  pnProc1  = GetProcAddress(gLibWind,"GetWindACTIVATE"); 
+	if (!pnProc1)
+	{
+		DWORD m = GetLastError();
+		errorSys("BDA: Error in access BDAActive.", STOP);
+	}
+
+	GetWindACTIVETYPE GetWindACTIVATE = (GetWindACTIVETYPE)pnProc1;
+	GetWindACTIVATE(pWINDdll, itr, freq, &sites, &speciesAttrs, parameters.cellSize, parameters.randSeed, parameters.numberOfIterations, gDLLMode);
+
+    fseed(parameters.randSeed+itr*2);
+}
+
+
+if ((gDLLMode & G_FIRE) != 0)
+{
+	time(&ltime);
+	printf("Start simulating fire disturbance ... at %s",ctime(&ltime));
+	
+	typedef CFIRE* (*GetFireACTIVATETYPE)(CFIRE* pf, int itr, int freq[]);
+	gLibFire = LoadLibrary("FireDll.dll");
+	FARPROC pnProc = GetProcAddress(gLibFire, "GetFireACTIVATE");
+	if (!pnProc)
+	{
+		DWORD m = GetLastError();
+		errorSys("Fire: Error in load in Fire DLL, check if there is a Fire dll.", STOP);
+	}
+
+	GetFireACTIVATETYPE GetFireACTIVATE = (GetFireACTIVATETYPE)pnProc;
+
+	GetFireACTIVATE(pFire, itr,freq);
+	
+	time(&ltimeTemp);
+	ltimeDiff = (long) ltimeTemp - ltime;
+	printf("Finish simulating fire disturbance at %sit took %ld seconds\n",ctime(&ltimeTemp), ltimeDiff);
+	fflush(stdout);
+
+}
+
+//BDA process
+if ((gDLLMode & G_BDA) != 0)
+{
+	time_t lBDAtime,lBDAtimeTemp;
+	long lBDAtimeDiff;
+	time(&lBDAtime);
+	printf("Start BDA at %s",ctime(&lBDAtime));
+
+
+	typedef void (*GetBDAACTIVETYPE)(BDAS* pBDAS, int itr);
+
+	FARPROC  pnProc1  = GetProcAddress(gLibBDA,"GetBDAACTIVE"); 
+	if (!pnProc1)
+	{
+		DWORD m = GetLastError();
+		errorSys("BDA: Error in access BDAActive.", STOP);
+	}
+
+	GetBDAACTIVETYPE GetBDAACTIVE = (GetBDAACTIVETYPE)pnProc1;
+
+	GetBDAACTIVE(pBDAS, itr);
+//	pBDAS->Active();
+	fseed(parameters.randSeed+itr*4);
+
+	time(&lBDAtimeTemp);
+	printf("End BDA at %s",ctime(&lBDAtimeTemp));
+	lBDAtimeDiff = (long) (lBDAtimeTemp - lBDAtime);
+	sprintf(str,"The whole BDA procedure took %ld seconds\n",lBDAtimeDiff);
+	printMessage(str);
+}
+
+
+
+//Fuel process--------------------------------------//
+if ((gDLLMode & G_FUEL) != 0)
+{
+	printf("Processing Fuel\n");
+	FuelProcessEvent();
+	fseed(parameters.randSeed+itr*5);
+
+}
+
+
+//Harvest process
+if ((gDLLMode & G_HARVEST) != 0)
+{
+	printMessage("Processing harvest events.\n");
+	//   harvestEvents.processEvents();  modified by Vera
+	HarvestprocessEvents();
+	fseed(parameters.randSeed+itr*6);
+
+}
+
+//Fuel management process--------------------------------------//
+
+if ((gDLLMode & G_FUELMANAGEMENT) != 0)
+{
+		printf("Fuel: Processing fuel management.\n");
+		// process fuel management events
+		FuelManageProcessEvents(itr);
+		fseed(parameters.randSeed+itr*7);
+
+}
+
+//#endif
+
+//printMessage("Optimizing map.");			    //	hsh: the old order
+//optim.initialize();							//	hsh: the old order
+
+/* J.Yang commented below based on Hong's suggestion
+
+//RScheller 5/12/03: moved kill and grow routines to separate loops to prevent double-seeding
+//of sites, which happens when a site is seeded before the grow/kill functions
+//occur at the site.
+for (i=1;i<=snr;i++)
+{
+	for (j=1;j<=snc;j++)
+	{
+ 		l=sites(i,j)->landUnit;
+
+ 		if (l!=NULL && l->active())
+ 		{
+			s=sites(i,j)->first();        //Specie being processed.
+			sa=sites(i,j)->specAtt();     //Associated attributes.
+
+			//Inner loop; Loops through all species on a site.
+			while (s!=NULL)
+			{
+			pSuccession->kill(s,sa);
+			pSuccession->grow(s,sa);
+
+			//Loop to next species and species attribute.
+			s=sites(i,j)->next();
+			sa=sites(i,j)->specAtt();
+			}
+
+		}
+	}
+}
+*/
+
+//Outer loop; Loops through sites.
+	time(&ltime);
+	printf("Start succession ... at %s",ctime(&ltime));
+	fflush(stdout);
+
+for (i=1;i<=snr;i++)
+{
+ if (i%10==0 || i==1)
+ {
+	sprintf(str,"Processing row: %d",i);
+	printMessage(str);
+ }
+ for (j=1;j<=snc;j++)
+ {
+	ppdp->sTSLMortality[i][j] += (short)10;
+
+	if ((gDLLMode & G_WIND) != 0)
+		ppdp->sTSLWind[i][j] += (short)10;
+
+	if ((gDLLMode & G_HARVEST) != 0)
+	{
+		if (0 != ppdp->sTSLHarvest[i][j])
+			ppdp->sTSLHarvest[i][j] += (short)10;
+	}
+
+ 	//Define Land unit.
+ 	l=sites(i,j)->landUnit;
+ 	if (l!=NULL && l->active())
+ 	{
+		shade=pSuccession->findShade(sites(i,j));  //Shade class for site.
+		s=sites(i,j)->first();        //Specie being processed.
+		sa=sites(i,j)->specAtt();     //Associated attributes.
+		speciesNum=1;                 //Species referrrence #.
+
+		//Inner loop; Loops through all species on a site.
+		
+		while (s!=NULL)
+		{
+			int maxAge = 0;
+			maxAge = s->oldest();		
+			pSuccession->kill(s,sa);
+			if (s->oldest() < maxAge)
+				ppdp->sTSLMortality[i][j] = 0;
+
+			pSuccession->grow(s,sa);
+		  
+			if (optim.speciesActive(speciesNum) && (sa->shadeTolerance!=5 ||
+				sites(i,j)->oldest() >= sites(i,j)->landUnit->minShade))
+			{ 			 
+				pSuccession->seed(sa, l, s, shade, speciesNum, i, j, parameters.dispRegime); 
+			}
+			if ( (s->vegPropagules) && *optim(speciesNum, i, j) )
+			{
+				pSuccession->vegProp(s, sa, shade);
+			}
+			//Loop to next species and species attribute.
+			s=sites(i,j)->next();
+			sa=sites(i,j)->specAtt();
+			speciesNum++;
+		}
+    }
+ }
+}
+	if (run_extraSeed==1)
+		pSuccession->extraSeed(numSitesActive, snr, snc, specAtNum);
+	time(&ltimeTemp);
+	ltimeDiff = (long) ltimeTemp - ltime;
+	printf("Finish succession at %sit took %ld seconds\n",ctime(&ltimeTemp), ltimeDiff);
+
+fseed(parameters.randSeed+itr*6);
+}
+

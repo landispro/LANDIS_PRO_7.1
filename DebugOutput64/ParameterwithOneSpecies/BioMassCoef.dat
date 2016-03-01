@@ -1,0 +1,23 @@
+#species classification used to calculate Biomass#
+19 #Number of species class#
+5 #minimum DBH for calculating biomass#
+#V0  V1  Type of Species# 
+-2.2094 2.3867 #01-Aspen#
+-2.2094 2.3867 #02-alder#
+-2.2094 2.3867 #03-cottonwood#
+-2.2094 2.3867 #04-willow#
+-1.9123 2.3651 #05-Soft maple#
+-1.9123 2.3651 #06-birch#
+-2.4800 2.4835 #07-Mixed hardwood#
+-2.0127 2.4342 #08-Hard maple#
+-2.0127 2.4342 #09-hickory#
+-2.0127 2.4342 #10-beech#
+-2.0127 2.4342 #11-oak#
+-2.0336 2.2592 #12-Cedar#
+-2.0336 2.2592 #13-larch#
+-2.2304 2.4435 #14-Douglas-fir#
+-2.5384 2.4814 #15-True fir#
+-2.5384 2.4814 #16-hemlock#
+-2.5356 2.4349 #17-Pine#
+-2.0773 2.3323 #18-Spruce#
+-1.0000 1.0000 #19-Grass#

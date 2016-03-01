@@ -1,0 +1,9 @@
+LIBRARY bdadll
+
+ 
+
+   EXPORTS
+
+	GetBDAS
+
+	GetBDAACTIVE

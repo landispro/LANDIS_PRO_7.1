@@ -1,0 +1,90 @@
+# Microsoft Developer Studio Generated Dependency File, included by Landis40Core.mak
+
+.\source\AGELIST.CPP : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\system1.h"\
+	
+
+.\source\LANDU.CPP : \
+	"..\public\defines.h"\
+	"..\public\landu.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\system1.h"\
+	
+
+.\source\LANDUS.CPP : \
+	"..\public\defines.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\system1.h"\
+	
+
+.\source\Map8.cpp : \
+	"..\public\map8.h"\
+	"..\public\point.h"\
+	"..\public\system1.h"\
+	
+
+.\source\SITE.CPP : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\site.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\system1.h"\
+	
+
+.\source\SITES.CPP : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\system1.h"\
+	
+
+.\source\SPECATT.CPP : \
+	"..\public\specatt.h"\
+	"..\public\system1.h"\
+	
+
+.\source\SPECATTS.CPP : \
+	"..\public\defines.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\system1.h"\
+	
+
+.\source\SPECIE.CPP : \
+	"..\public\AGELIST.H"\
+	"..\public\specie.h"\
+	"..\public\system1.h"\
+	
+
+.\source\SPECIES.CPP : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\system1.h"\
+	
+
+.\source\SYSTEM1.CPP : \
+	"..\public\defines.h"\
+	"..\public\system1.h"\
+	

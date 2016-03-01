@@ -1,0 +1,203 @@
+# Microsoft Developer Studio Generated Dependency File, included by Landis40App.mak
+
+.\source\IO.CPP : \
+	"..\public\AGELIST.H"\
+	"..\public\bda.h"\
+	"..\public\bdadefines.h"\
+	"..\public\bdaexport.h"\
+	"..\public\bdas.h"\
+	"..\public\bdasites.h"\
+	"..\public\defines.h"\
+	"..\public\fire.h"\
+	"..\public\FireRegimeUnit.h"\
+	"..\public\FireRegimeUnits.h"\
+	"..\public\FireSites.h"\
+	"..\public\globalfunctions.h"\
+	"..\public\globalvariables.h"\
+	"..\public\harvestevent.h"\
+	"..\public\harvesteventqueue.h"\
+	"..\public\harvestsites.h"\
+	"..\public\intarray.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\managementarea.h"\
+	"..\public\managementareas.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stand.h"\
+	"..\public\stands.h"\
+	"..\public\stocc.h"\
+	"..\public\system1.h"\
+	"..\public\wind.h"\
+	".\source\landis.h"\
+	".\source\PARAMS.H"\
+	".\source\randomc.h"\
+	".\source\reclass.h"\
+	".\source\reclass2.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\source\LANDIS.CPP : \
+	"..\public\AGELIST.H"\
+	"..\public\bda.h"\
+	"..\public\bdadefines.h"\
+	"..\public\bdaexport.h"\
+	"..\public\bdas.h"\
+	"..\public\bdasites.h"\
+	"..\public\defines.h"\
+	"..\public\fire.h"\
+	"..\public\FireRegimeUnit.h"\
+	"..\public\FireRegimeUnits.h"\
+	"..\public\FireSites.h"\
+	"..\public\FuelGlobalFuncs.h"\
+	"..\public\globalfunctions.h"\
+	"..\public\harvestevent.h"\
+	"..\public\harvesteventqueue.h"\
+	"..\public\intarray.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\map8.h"\
+	"..\public\optim.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stand.h"\
+	"..\public\stands.h"\
+	"..\public\stocc.h"\
+	"..\public\succession.h"\
+	"..\public\system1.h"\
+	"..\public\wind.h"\
+	".\source\PARAMS.H"\
+	".\source\randomc.h"\
+	".\source\reclass3.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
+
+.\source\PARAMS.CPP : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\fire.h"\
+	"..\public\FireRegimeUnit.h"\
+	"..\public\FireRegimeUnits.h"\
+	"..\public\FireSites.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stocc.h"\
+	"..\public\system1.h"\
+	"..\public\wind.h"\
+	".\source\PARAMS.H"\
+	".\source\randomc.h"\
+	
+
+.\source\PDP.CPP : \
+	"..\public\AGELIST.H"\
+	"..\public\defines.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\pdp.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	
+
+.\source\RECLASS.CPP : \
+	"..\public\AGELIST.H"\
+	"..\public\bda.h"\
+	"..\public\bdadefines.h"\
+	"..\public\bdas.h"\
+	"..\public\bdasites.h"\
+	"..\public\defines.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stocc.h"\
+	"..\public\system1.h"\
+	".\source\landis.h"\
+	".\source\PARAMS.H"\
+	".\source\randomc.h"\
+	".\source\reclass.h"\
+	
+
+.\source\RECLASS2.CPP : \
+	"..\public\AGELIST.H"\
+	"..\public\bda.h"\
+	"..\public\bdadefines.h"\
+	"..\public\bdas.h"\
+	"..\public\bdasites.h"\
+	"..\public\defines.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stocc.h"\
+	"..\public\system1.h"\
+	".\source\landis.h"\
+	".\source\PARAMS.H"\
+	".\source\randomc.h"\
+	".\source\reclass2.h"\
+	
+
+.\source\RECLASS3.CPP : \
+	"..\public\AGELIST.H"\
+	"..\public\bda.h"\
+	"..\public\bdadefines.h"\
+	"..\public\bdas.h"\
+	"..\public\bdasites.h"\
+	"..\public\defines.h"\
+	"..\public\landu.h"\
+	"..\public\landus.h"\
+	"..\public\map8.h"\
+	"..\public\pdp.h"\
+	"..\public\point.h"\
+	"..\public\site.h"\
+	"..\public\sites.h"\
+	"..\public\specatt.h"\
+	"..\public\specatts.h"\
+	"..\public\specie.h"\
+	"..\public\species.h"\
+	"..\public\stocc.h"\
+	"..\public\system1.h"\
+	".\source\landis.h"\
+	".\source\PARAMS.H"\
+	".\source\randomc.h"\
+	".\source\reclass3.h"\
+	

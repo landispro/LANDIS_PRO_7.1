@@ -1,0 +1,27 @@
+#I. select species and attributes to output for all age cohorts#
+
+# TPA BA BIO IV SEEDS RD #
+pinuechi Y Y Y Y Y Y 
+quervelu Y Y N Y N N 
+queralba Y Y N Y N N 
+
+#TPA BA Bio Car RD#
+Total Y Y Y Y Y 
+
+N #II. select species to attibutes to output for specific age cohorts#
+
+# TPA  BA   Bio   IV#
+pinuechi Y Y N Y 
+quervelu Y Y N Y 
+queralba Y Y N Y 
+
+#TPA BA Bio Car RD#
+Total Y Y N N N
+
+#select specific age cohorts to output#
+pinuechi 6 1-10 20-21 31-31 40-41 50-51 60-61
+quervelu 1 20-150
+queralba 1 20-300
+
+#III. output age -TPA/BA distribution for each species#
+N/A

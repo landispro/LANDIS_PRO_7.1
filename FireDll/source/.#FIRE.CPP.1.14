@@ -1,0 +1,1458 @@
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+#include <direct.h>
+#include "defines.h"
+#include "system1.h"
+#include "error.h"
+#include "point.h"
+#include "pile.h"
+#include "landu.h"
+#include "specatt.h"
+#include "specie.h"
+#include "map8.h"
+#include "time.h"
+#include "fire.h"
+
+
+static const float  lifespan[5]={(float)0.0,(float).2,(float).5,(float).7,(float).85};
+static int red[maxLeg]={0,0,100,150,200,0,0,0,150,0,150,255,80,150,255};
+static int green[maxLeg]={0,0,0,0,0,100,150,255,0,150,150,255,80,150,255};
+static int blue[maxLeg]={0,150,0,0,0,0,0,0,150,150,0,0,80,150,255};
+
+
+//////////////////////////////////////////////////////////////////////////////
+//			    ASSOCIATED FIRE FUNCTIONS                                      //
+//////////////////////////////////////////////////////////////////////////////
+static PILE pile;
+
+//////////////////////////////////////////////////////////////////////
+// Construction/Destruction
+//////////////////////////////////////////////////////////////////////
+
+CFIRE::CFIRE()
+{
+
+}
+
+CFIRE::CFIRE(char*	strfn, int mode, SITES* outsites, LANDUNITS* outlus, 
+			 SPECIESATTRS*  outsa, PDP* ppdp, int nFNOI,
+			 char * strOutput,int randSeed)
+{
+
+	FILE * fp;
+	fp = LDfopen(strfn,1);
+	if (fp==NULL) 
+		errorSys("FIRE: FIRE parameter file not found.",STOP);
+	ReadParam(fp);
+	LDfclose(fp);	
+	//add the main output directory in front of the subdirectory
+	char s[1024];
+	sprintf(s,"%s\\Fire",strOutput);
+	_mkdir(s);
+	sprintf(s,"%s\\Fire\\%s",strOutput,m_fireParam.logFn);
+	sprintf(m_fireParam.logFn,"%s",s);
+	sprintf(s,"%s\\Fire\\%s",strOutput,m_fireParam.yearlyFn);
+	sprintf(m_fireParam.yearlyFn,"%s",s);
+	sprintf(s,"%s\\Fire\\%s",strOutput,m_fireParam.finalFn);
+	sprintf(m_fireParam.finalFn,"%s",s);
+	sprintf(m_strTSLF,"%s\\Fire\\TSLF",strOutput);
+
+	//data initilization
+	m_lptrIgnitionOccurance = NULL;
+	m_iptrValidLandUnits = NULL;
+
+	//m_pStochastic = new StochasticLib(time(0));
+	if (randSeed)
+	{
+		m_pStochastic = new StochasticLib(randSeed);
+	}
+	else
+	{
+		m_pStochastic = new StochasticLib(time(0));
+	}
+
+	
+	m_pPDP = ppdp;
+	m_pSPECIESATTRS = outsa;
+	m_pLAND = outsites;
+	m_fireParam.m_nFNOI = nFNOI;
+	m_DLLMode = mode;
+	m_fireParam.rows = outsites->numRows();
+	m_fireParam.cols = outsites->numColumns();
+	//FireSites
+	m_pFireSites = new CFireSites(m_fireParam.rows,m_fireParam.cols);	
+	//DEM
+	/*
+	FILE * fptemp;
+	fptemp = LDfopen_0("testFire.txt","a");
+	LDfprintf0(fptemp,"m_fireParam.iDEMFlag is %d\n",m_fireParam.iDEMFlag);
+	LDfclose(fptemp);
+	*/
+
+	if (m_fireParam.iDEMFlag) ReadDEM(m_fireParam.DEMDataFn);
+	//FireRegimeUnits
+	m_pFireRegimeUnits = new CFireRegimeUnits(MAX_LANDUNITS,m_pStochastic);
+	fp = LDfopen(m_fireParam.fireRegimeAttrFn,1);
+	if (fp==NULL) 
+		errorSys("FIRE: fire regime attribute file not found.",STOP);
+	m_pFireRegimeUnits->read(fp);
+	LDfclose(fp);
+	m_pFireRegimeUnits->attach(m_pFireSites);	
+	if (m_fireParam.iFireRegimeFlag != 0)
+	{
+		fp = LDfopen(m_fireParam.fireRegimeDataFn, 1);
+		if (fp==NULL) 
+			errorSys("FIRE: fire regime GIS file not found.",STOP);
+		m_pFireRegimeUnits->readFireRegimeGIS(fp); 
+		LDfclose(fp);
+	}
+	else 
+	{
+		AttachLandUnitGIS(outsites);
+	}
+	m_pFireRegimeUnits->dispatch();
+	m_pFireRegimeUnits->updateIGDensity(m_fireParam.cellSize);
+
+	
+	//initilize fire info in public data pool
+	int i, j;
+	for (i = 1; i <=outsites->numRows(); i++)
+	{
+		for (j = 1; j <=outsites->numColumns(); j++)
+		{
+			m_pPDP->sTSLFire[i][j] = m_pFireSites->operator ()(i,j)->pFireRegimeUnit->initialLastFire;			
+		}
+	}
+
+	//write TSLF
+	WriteTSLF(outsites->numRows(),outsites->numColumns(),0);
+
+
+
+}
+
+CFIRE::~CFIRE()
+{
+	//do I need to delete m_pFireRegimeUnits here
+	//Notice that in my deconstruction of CFireRegimeUnits, I have a delete statement also.
+	delete m_pStochastic;
+	delete m_pFireSites;
+	delete m_pFireRegimeUnits;
+}
+
+
+void CFIRE::Activate(int itr, int freq[])
+{
+	FILE*  logfile;        //fire log file.
+	double probForSite;    //This is the probability of firethr. init. on a site.       
+
+
+	char 	 str[256];        //Character string.
+	int 	 i,j, k,snr, snc,  //rows and coloums
+			 fireINTERV,     //mean fire return interval
+			 max_sites_examined=0;       
+	long   arealeft,
+		   amtdamaged=0;
+ 
+
+	for (i = 0; i< 42; i++)
+		m_iWindEventsLog[i] = 0;
+	m_itr = itr;
+	//Fill map.
+	snr=m_pFireSites->numRows();
+	snc=m_pFireSites->numColumns();
+	m_Map.dim(snr,snc);
+	for (i=1;i<=snr;i++)
+		for (j=1;j<=snc;j++)
+		{
+			if (m_pFireSites->operator ()(i,j)->pFireRegimeUnit->active())			
+				m_Map(i,j)=1;			
+			else
+				m_Map(i,j)=0;
+		}
+	if (itr==1)
+		m_cummMap=m_Map;
+
+	//Setup fire parameters.
+	//fseed(parameters.randSeed+itr*6);
+	
+	if (itr == 1)
+	{
+		//if ((logfile=LDfopen(m_fireParam.logFn,3))==NULL) 
+		logfile = LDfopen_0(m_fireParam.logFn,"w");
+		if (logfile==NULL)
+			errorSys("Error opening fire log file",STOP);		
+	}
+	else
+	{
+		logfile = LDfopen_0(m_fireParam.logFn,"a");
+		if (logfile==NULL)
+			errorSys("Error opening fire log file",STOP);
+	}
+	m_LogFP = logfile;
+		
+		
+
+	long lIgChecking=0;
+	m_iNumLU = m_pFireRegimeUnits->number();
+	if (m_lptrIgnitionOccurance) 
+		delete [] m_lptrIgnitionOccurance;
+	m_lptrIgnitionOccurance = (long *) malloc(sizeof(long)*m_iNumLU);
+	if (m_iptrValidLandUnits)
+		delete [] m_iptrValidLandUnits;
+	m_iptrValidLandUnits = (int *) malloc(sizeof(int)*m_iNumLU);
+
+	/* for each landtype, generate a poisson X which stands for how many 
+	Ignitions in this iteration for each landtype
+	*/
+#ifdef __FIREDEBUG__
+	printf("Ignitions: \n");
+#endif
+	j = m_iNumLU;	
+	for (k=0,i=0;i<j;i++)
+	{	
+		float IgDensity = 0.0;
+		IgDensity = m_pFireRegimeUnits->operator () (i)->m_fIgPoisson;
+		if (IgDensity >0)
+			m_lptrIgnitionOccurance[i] = m_pStochastic->Poisson(IgDensity);
+		else
+			m_lptrIgnitionOccurance[i] = 0;		 
+#ifdef __FIREDEBUG__
+		printf("%d ",m_lptrIgnitionOccurance[i]);
+#endif
+		if (m_lptrIgnitionOccurance[i]>0) 
+			m_iptrValidLandUnits[k++] = i;
+		else m_iNumLU --;
+	}
+#ifdef __FIREDEBUG__
+	printf("%\n");
+#endif	
+	/*
+	if any of lIgnitionOccurance is >0
+	consume one Ignition in any valid landtype randomly
+	*/
+	LDPOINT p1;
+
+	while (m_iNumLU>0) 
+	{
+
+		lIgChecking++;	
+		//randomly select k from 0 to iNumLU-1 
+		//J.Yang use stochastic.uniform instead?
+		k=irand(0,m_iNumLU-1);
+		k = (int) m_pStochastic->IRandom(0, m_iNumLU-1);
+
+		/*
+		randomly select a point from landunits.sitesWRTLandtypeListArray[iptrValidLandUnits[k]]
+	
+		sitesWRTLandtypeListArray is an array[numLU] in which every element is a pointer
+		to a list, the list contains all points with respect to that landtype
+		and size(how many sites)
+		*/
+		p1 = m_pFireRegimeUnits->retrieve(m_iptrValidLandUnits[k]);			
+
+		//change relative lptrIgnitionOccurance[i] 
+		//& if lptrIgnitionOccurance[i] == 0 then 
+		//decrease iNumLU one and redim iptrValidLandUnits[]
+		m_lptrIgnitionOccurance[m_iptrValidLandUnits[k]]--;
+		if (m_lptrIgnitionOccurance[m_iptrValidLandUnits[k]]==0)
+		{
+			for (i=k;i<m_iNumLU-1;i++)
+				m_iptrValidLandUnits[i]= m_iptrValidLandUnits[i+1];
+			m_iNumLU--;
+		}
+
+
+		//check and perform disturbance
+		int p1y, p1x;
+		p1y = p1.y;
+		p1x = p1.x;
+		if (m_pFireSites->operator ()(p1y,p1x)->pFireRegimeUnit->active())
+		{
+   			
+			//Calculating fire initiation probability
+			if ( !m_fireParam.iFuelFlag || !(m_DLLMode& G_FUEL)) //using old fire initiation routine
+				//Should I use two flags: 1 for choosing different initiation routine
+				//and another one for choosing different fire spread routine?
+			{
+				fireINTERV=m_pFireSites->operator ()(p1y, p1x)->pFireRegimeUnit->fireInterval;
+				if (fireINTERV == 0) 
+					probForSite = 1;
+				else
+					probForSite= exp((double) m_pPDP->sTSLFire[p1y][p1x]*((double) -1/fireINTERV));	
+				// probForSite is the reliability probability: has life time as least t
+				// say X is life time of system, t = lastFire;
+				// probForSite = p[X>=t]
+
+				// using bernoulli try Bernoulli(p) p = probForSite
+				// 1 success means no fire till this time
+				// 0 failure means fire occure till now
+			}
+			else
+			{
+				//using FF loading class
+				//FUEL module has to be turned on to use fine fuel
+				i = (int) m_pPDP->cFineFuel[p1y][p1x];
+				if (i>=1 && i <=5)
+					probForSite = 1 - m_fireParam.fInitiationProb[i-1];
+				else
+					probForSite = 1;
+				// 1 success means no fire till this time
+				// 0 failure means fire occure till now
+			}
+
+			m_fWind = 0.0;
+			m_fSlope = 0.0;
+			m_dFSFactor = 0.0;
+			if(probForSite > 1) 
+			{
+				printf("1 - fire initiation probability (probForSite: %f) is larger than 1",probForSite);
+				printf(" at site %d %d \n", p1y,p1x);
+				fflush(stdout); 
+				probForSite = 1;
+			}
+			if(probForSite < 0) 
+			{
+				printf("1 - fire initiation probability (probForSite: %f) is less than 0",probForSite);
+				printf(" at site %d %d \n", p1y,p1x);
+				fflush(stdout); 
+				probForSite = 0;
+			}
+
+			if (m_pStochastic->Bernoulli(probForSite)==0)
+	 		{
+	  			// start a fire							
+				if(m_fireParam.iFuelFlag)
+				{
+					amtdamaged = (long) fireSpread(p1y,p1x);
+
+				}
+				else
+				{
+					arealeft = fireSize(m_pFireSites->operator ()(p1y, p1x)->pFireRegimeUnit->m_fMFS,
+							m_pFireSites->operator ()(p1y, p1x)->pFireRegimeUnit->m_fFireSTD); 	  		
+					amtdamaged=(long) disturb(p1y,p1x,(int)arealeft,m_Map,logfile,probForSite,itr);	  		
+				}
+	 		}
+			else
+			{
+				//dummy
+			}
+		}
+  
+	}
+
+
+	//Add data to cummMap
+	//and change TSLF
+	for (i=1;i<=snr;i++)
+		for (j=1;j<=snc;j++)
+		{
+			if (m_Map(i,j)>=2)
+			{
+				m_cummMap(i,j)=max(m_Map(i,j),m_cummMap(i,j)); 
+					//J.Yang should be max(m_cummMap(i,j), m_Map(i,j))
+				m_pPDP->sTSLFire[i][j] = 0;
+			}
+			else
+				m_pPDP->sTSLFire[i][j] += 10;
+		}
+
+	if (((itr%freq[1])==0)&&(freq[1]<10)||(itr*10==freq[1])&&(freq[1]>=0)) 
+	{                                                                     
+		//Write map output file.
+		sprintf(str,"fire damage assessment for year %d.",itr*10);        
+		m_Map.setHeader(m_pLAND->getHeader());
+		m_Map.rename(str);
+		for(i=0;i<maxLeg;i++)
+		{
+			m_Map.assignLeg(i,"");
+		}
+		m_Map.assignLeg(0,"NonActive");
+		m_Map.assignLeg(1,"No Fires");
+		m_Map.assignLeg(2,"Class 1");
+		m_Map.assignLeg(3,"Class 2");
+		m_Map.assignLeg(4,"Class 3");
+		m_Map.assignLeg(5,"Class 4");
+		m_Map.assignLeg(6,"Class 5");
+		sprintf(str,"%s%d",m_fireParam.yearlyFn,itr*10);
+		m_Map.setCellSize(m_fireParam.cellSize);
+		m_Map.write(str,red,green,blue);
+
+		//write time-since-last-fire map
+		WriteTSLF(snr,snc,itr);
+
+	}
+
+	LDfclose(logfile);
+	if (itr==m_fireParam.m_nFNOI)
+	{
+		//Write cumulative map output file.
+		sprintf(str,"Cumulative fire damage assessment."); 
+		m_cummMap.setHeader(m_pLAND->getHeader());
+		m_cummMap.rename(str);
+		for(i=0;i<maxLeg;i++)
+			m_cummMap.assignLeg(i,"");
+		m_cummMap.assignLeg(0,"NonActive");
+		m_cummMap.assignLeg(1,"No Fires");
+		m_cummMap.assignLeg(2,"Class 1");
+		m_cummMap.assignLeg(3,"Class 2");
+		m_cummMap.assignLeg(4,"Class 3");
+		m_cummMap.assignLeg(5,"Class 4");
+		m_cummMap.assignLeg(6,"Class 5");
+		sprintf(str,"%s",m_fireParam.finalFn);
+		m_cummMap.setCellSize(m_fireParam.cellSize);
+		m_cummMap.write(str,red,green,blue);
+	}
+
+	PrintWindLog();
+}
+
+
+
+void CFIRE::ReadParam(FILE *infile)
+{
+	
+	if (fscanc(infile, "%d", &m_fireParam.iFuelFlag) != 1) 
+		errorSys("Error in reading new-fire-algorithms-flag.", STOP);
+	if (fscanc(infile, "%d", &m_fireParam.iWindFlag) != 1) 
+		errorSys("Error in reading wind flag.", STOP);
+	if (fscanc(infile, "%d", &m_fireParam.iDEMFlag) != 1) 
+		errorSys("Error in reading DEM flag.", STOP);
+	if (fscanc(infile, "%d", &m_fireParam.iFireRegimeFlag) != 1) 
+		errorSys("Error in reading fire regime flag.", STOP);
+	if (fscanc(infile, "%d", &m_fireParam.iTSLFFlag) != 1) 
+		errorSys("Error in reading TSLF flag.", STOP);
+	for (int i=0;i<5;i++)  
+		if (fscanc(infile,"%f",&m_fireParam.fInitiationProb[i])!=1)
+			errorSys("Error reading in Initiation Probability.",STOP);
+	
+	
+	if (fscanc(infile, "%f", &m_fireParam.fSpreadProb) != 1) 
+		errorSys("Error in reading SpreadProbability.", STOP);
+	if (fscanc(infile, "%f", &m_fireParam.fCoeff1) != 1) 
+		errorSys("Error in reading Wind coefficient.", STOP);
+	if (fscanc(infile, "%f", &m_fireParam.fCoeff2) != 1) 
+		errorSys("Error in reading Topography coefficient.", STOP);
+	if (fscanc(infile, "%f", &m_fireParam.fCoeff3) != 1) 
+		errorSys("Error in reading Predefined fire size distribution coefficient.", STOP);
+
+	/* Reading prevaling fire regime
+	*/
+	if (fscanc(infile, "%d", &m_fireParam.iNonWindPercent) != 1) 
+		errorSys("Error in reading Percentage of Non wind events.", STOP);
+	for (i=0;i<40;i++)  
+		if (fscanc(infile,"%d",&m_fireParam.iCummWindClass[i]) !=1)
+			errorSys("Error reading in Cummulative probabilities of wind classes.",STOP);
+	
+/*
+	char tempStr[255];	
+	if (fscanc(infile, "%s", tempStr) != 1) 
+		errorSys("Error in reading Wind direction.", STOP);
+	if (strcmp(tempStr,"SW") == -1)
+		m_fireParam.iWindDirectionIndex= 0;
+	else if (strcmp(tempStr,"W") == -1)
+		m_fireParam.iWindDirectionIndex= 1;
+	else if(strcmp(tempStr,"NW") == -1)
+		m_fireParam.iWindDirectionIndex= 2;
+	else if (strcmp(tempStr,"W") == -1)
+		m_fireParam.iWindDirectionIndex= 3;
+	else if (strcmp(tempStr,"NE") == -1)
+		m_fireParam.iWindDirectionIndex= 4;
+	else if (strcmp(tempStr,"E") == -1)
+		m_fireParam.iWindDirectionIndex= 5;
+	else if (strcmp(tempStr,"SE") == -1)
+		m_fireParam.iWindDirectionIndex= 6;
+	else if (strcmp(tempStr,"S") == -1)
+		m_fireParam.iWindDirectionIndex= 7;
+	else 
+		m_fireParam.iWindDirectionIndex= -1;
+	
+	if (m_fireParam.iWindDirectionIndex == -1)
+		errorSys("Not a valid wind direction, must be N, NE,E,SE,S,SW,W,NW.",STOP);
+	
+	if (fscanc(infile, "%d", &m_fireParam.iWindIntensity) != 1) 
+		errorSys("Error in reading Wind intensity class.", STOP);
+*/
+
+	if (fscanc(infile, "%s", m_fireParam.fireRegimeAttrFn) != 1) 
+		errorSys("Error in reading file name for fire Regime Attributes", STOP);
+	if (fscanc(infile, "%s", m_fireParam.fireRegimeDataFn) != 1) 
+		errorSys("Error in reading file name for fire Regime data", STOP);
+	if (fscanc(infile, "%s", m_fireParam.DEMDataFn) != 1) 
+		errorSys("Error in reading file name for DEM data", STOP);
+
+	if (fscanc(infile, "%s", m_fireParam.yearlyFn) != 1) 
+		errorSys("Error in reading file name for iterationaly fire information output", STOP);
+	if (fscanc(infile, "%s", m_fireParam.finalFn) != 1) 
+		errorSys("Error in reading file name for final fire information output", STOP);
+	if (fscanc(infile, "%s", m_fireParam.logFn) != 1) 
+		errorSys("Error in reading file name for log fire information output", STOP);
+	
+
+	if (fscanc(infile, "%d", &m_fireParam.cellSize) != 1) 
+		errorSys("Error in reading cell size.", STOP);
+
+}
+
+
+void CFIRE::AttachLandUnitGIS(SITES* outsites)
+{
+	for (int i=outsites->numRows();i>0;i--)
+	{
+		for (int j=1;j<=outsites->numColumns();j++)
+		{
+   			
+			if (m_pFireRegimeUnits->operator ()(outsites->operator ()(i,j)->landUnit->name) != NULL)
+			{
+				m_pFireSites->operator ()(i,j)->pFireRegimeUnit = m_pFireRegimeUnits->operator ()(outsites->operator ()(i,j)->landUnit->name);
+			}			
+			else
+        		errorSys("fire regime unit is not consistent with the land unit.",STOP);
+		}
+
+	}	
+}
+
+long CFIRE::fireSize(float MFS,float STD)
+{
+	//generate random fire size based on lognormal distribution
+	double size,VAR;	
+	long  numSites,       //Number of sites.		  
+		  siteSize;       //Square meters on a singular site.
+
+	//if x is fire size following lognormal distribution with mean MFS and variance as VAR
+	//then log(x) follows normal distribution with
+	//mean = 2logMFS - 1/2log(VAR+MFS square)
+	//variance = log(VAR+MFS square) - 2logMFS
+	double mean,var,std;
+	
+	numSites=m_pFireSites->numRows()*m_pFireSites->numColumns();
+	siteSize=m_fireParam.cellSize*m_fireParam.cellSize;	
+	VAR = STD * STD;
+
+	mean = 2.0 * log(MFS) - 0.5 * log(VAR + MFS*MFS);
+	var = log(1.0*(VAR + MFS*MFS)) - 2.0 * log(MFS);
+	std = sqrt(var);	
+
+	while (1)  //standard disturbance
+	{
+		size = m_pStochastic->Normal(mean,std);
+		size = exp(size);	//unit: hectare. 1 ha = 10,000 squre meters
+		size = (long) 10000*size/siteSize;
+		if((size <= numSites)&&(size >=1))	break;				
+	}	
+	return (long) size;
+}
+
+int CFIRE::disturb(int row, int col, int totArea, class MAP8 &m, FILE *logfile,
+double x, int itr)
+//This will activate a fire disturbance at row r and col c.  The size of
+//the fire will be totArea where totArea is in number of pixels.
+//The output map is contained in m and the output file is logfile.
+//area is the total area consumed by fire
+{
+	LDPOINT p1, p2;
+	MAP8 dist;						//This will be marked true if an area is disturbed.
+	int      numSites=0,			//Number of sites damaged.
+			 numCohorts=0,			//Number of cohorts damaged.
+			 fireClass,				//Fire class (1-5).
+			singleTry=0,
+			stopFlag = 0,
+			fireINTERV,			//fire interval
+			numLU;					//number of landunits
+	long 	 land[MAX_LANDUNITS];	//fire on different landunits	
+	double siteProb; //verified new probability on each site
+	char *NAME; //the landunit name
+
+	long FS[MAX_LANDUNITS]; // fire size for each landunits
+	int landOnFire[MAX_LANDUNITS]; // if fire on this landunits, it's 1, otherwise, 0
+	int j,k;
+
+	double dTSLF;//TimeSinceLastFire
+	int nCKilled;
+
+
+#ifdef __FIREDEBUG__
+	char str[100];
+	FILE *txtFile;
+	sprintf(str,"%s",m_fireParam.logFn);
+	sprintf(str,"%s.txt",str);
+	txtFile = LDfopen(str,4);
+	LDfprintf(txtFile,"%d, %s, %d, ",itr*10, 
+		m_pFireSites->operator ()(row,col)->pFireRegimeUnit->name,
+		m_pPDP->sTSLFire[row][col]);	
+#endif
+
+
+	numLU = m_pFireRegimeUnits->number();
+	for (int t = 0; t<numLU; t++)
+	{
+		land[t]=0;
+		landOnFire[t] = 0;
+		FS[t] = 0;
+	}
+
+
+	pile.reset();          
+	dist.dim(m_pFireSites->numRows(), m_pFireSites->numColumns());
+	dist.fill(false);
+
+	dist(row,col)=true;
+	p1.x=col;
+	p1.y=row;
+	numCohorts = damage(p1, fireClass);
+	m(row,col)=(unsigned char)(1+fireClass); 
+		//J.Yang put the fireClass into the map
+
+	NAME=m_pFireSites->operator ()(p1.y,p1.x)->pFireRegimeUnit->name;
+
+	for(j=0;j<numLU;j++) 
+	{
+		if(strcmp(m_pFireRegimeUnits->operator ()(j)->name,NAME)==0)
+		{
+			land[j]++;
+			landOnFire[j] = 1;
+			FS[j] = fireSize(m_pFireSites->operator ()(p1.y,p1.x)->pFireRegimeUnit->m_fMFS,
+					m_pFireSites->operator ()(p1.y,p1.x)->pFireRegimeUnit->m_fFireSTD);
+			totArea = FS[j];
+			numSites = 1;
+			//now totArea means that the firesize for the 1st landtype(start point)
+			break;
+		}
+	}	
+
+	if (p1.x-1>0 && !dist(p1.y,p1.x-1))
+	{
+		p2.x=p1.x-1;
+		p2.y=p1.y;
+		dist(p2.y,p2.x)=true;
+		if (m_pFireSites->operator ()(p2.y,p2.x)->pFireRegimeUnit->active())
+			pile.push(p2);
+	}
+
+	if (p1.x+1<=m_pLAND->numColumns() && !dist(p1.y,p1.x+1))
+	{
+		p2.x=p1.x+1;
+		p2.y=p1.y;
+		dist(p2.y,p2.x)=true;
+		if (m_pFireSites->operator ()(p2.y,p2.x)->pFireRegimeUnit->active())
+			pile.push(p2);
+	}
+
+	if (p1.y-1>0 && !dist(p1.y-1,p1.x))
+	{
+		p2.x=p1.x;
+		p2.y=p1.y-1;
+		dist(p2.y,p2.x)=true;
+		if (m_pFireSites->operator ()(p2.y,p2.x)->pFireRegimeUnit->active())
+			pile.push(p2);
+	}
+
+	if (p1.y+1<=m_pLAND->numRows() && !dist(p1.y+1,p1.x))
+	{
+		p2.x=p1.x;
+		p2.y=p1.y+1;
+		dist(p2.y,p2.x)=true;
+		if (m_pFireSites->operator ()(p2.y,p2.x)->pFireRegimeUnit->active())
+			pile.push(p2);
+	}
+
+	
+	while (!pile.isEmpty() && ! stopFlag)
+	{
+		p1=pile.pull();
+		singleTry ++;
+		nCKilled = 0;	
+		NAME=m_pFireSites->operator ()(p1.y,p1.x)->pFireRegimeUnit->name;
+		for (j = 0;j<numLU;j++)
+		{
+			if(strcmp(m_pFireRegimeUnits->operator ()(j)->name,NAME)==0)			
+				break;
+		}
+		fireINTERV=m_pFireSites->operator ()(p1.y,p1.x)->pFireRegimeUnit->fireInterval;	
+		dTSLF = m_pPDP->sTSLFire[p1.y][p1.x];
+		if (fireINTERV == 0)
+			siteProb = 1;
+		else
+			siteProb= exp(dTSLF *((double) -1/fireINTERV));
+		//modified siteProbability based on how much sites already burned
+		if (landOnFire[j] == 1) //it's fire spreading
+			//siteProb = exp(log(FS[j]- land[j] + 1)*log(siteProb));
+			if (FS[j] > land[j]) siteProb = 0; else siteProb = 1;		
+		else
+		{
+			//if ignitionChecking is out, siteProb = 1. it means that fire cannot be ignited
+			if (m_lptrIgnitionOccurance[j] == 0) 
+				siteProb = 1;
+			else
+			{	//consume one ignition
+				//decrease m_lptrIgnitionOccurance[j] by 1 and related work			
+				m_lptrIgnitionOccurance[j]-- ;			
+				if (m_lptrIgnitionOccurance[j]==0) {
+					for(k=0;k<m_iNumLU;k++)
+						if (m_iptrValidLandUnits[k] == j) break;
+					for (int i=k;i<m_iNumLU-1;i++)
+						m_iptrValidLandUnits[i]= m_iptrValidLandUnits[i+1];
+					m_iNumLU--;
+				}
+			}
+		}
+
+		if(siteProb > 1) 
+		{
+			printf("1 - fire spread probability (siteProb: %f) is larger than 1",siteProb);
+			fflush(stdout); 
+			siteProb = 1;
+		}
+		if(siteProb < 0) 
+		{
+			printf("1 - fire spread probability (siteProb: %f) is less than 0",siteProb);
+			fflush(stdout); 
+			siteProb = 0;
+		}
+
+		if (m_pStochastic->Bernoulli(siteProb)==0) 
+		{// either fire spreading or fire initiation		
+			nCKilled= damage(p1, fireClass);
+			m(p1.y,p1.x)=(unsigned char)(1+fireClass); 
+				//J.Yang put fireClass into the map
+
+			land[j] ++;
+			numSites ++;
+			if (landOnFire[j] == 0) 
+			{// an initiation				
+				landOnFire[j] = 1;
+				FS[j] = fireSize(m_pFireSites->operator ()(p1.y,p1.x)->pFireRegimeUnit->m_fMFS,
+					m_pFireSites->operator ()(p1.y,p1.x)->pFireRegimeUnit->m_fFireSTD);								
+			}
+		}
+		else pile.push(p1);
+		numCohorts += nCKilled;
+		if (nCKilled)
+		{
+			singleTry = 0;  		
+			if (m_pFireSites->operator ()(p1.y,p1.x)->pFireRegimeUnit->active()) // it is surely active			
+				m(p1.y,p1.x)= (unsigned char)(1+fireClass);
+
+			if (p1.x-1>0 && !dist(p1.y,p1.x-1))
+			{
+				p2.x=p1.x-1;
+				p2.y=p1.y;
+				dist(p2.y,p2.x)=true;
+				if (m_pFireSites->operator ()(p2.y,p2.x)->pFireRegimeUnit->active())
+					pile.push(p2);
+			}
+			if (p1.x+1<=m_pLAND->numColumns() && !dist(p1.y,p1.x+1))
+			{
+				p2.x=p1.x+1;
+				p2.y=p1.y;
+				dist(p2.y,p2.x)=true;
+				if (m_pFireSites->operator ()(p2.y,p2.x)->pFireRegimeUnit->active())
+					pile.push(p2);
+			}
+			if (p1.y-1>0 && !dist(p1.y-1,p1.x))
+			{
+				p2.x=p1.x;
+				p2.y=p1.y-1;
+				dist(p2.y,p2.x)=true;
+				if (m_pFireSites->operator ()(p2.y,p2.x)->pFireRegimeUnit->active())
+					pile.push(p2);
+			}
+			if (p1.y+1<=m_pLAND->numRows() && !dist(p1.y+1,p1.x))
+			{
+				p2.x=p1.x;
+				p2.y=p1.y+1;
+				dist(p2.y,p2.x)=true;
+				if (m_pFireSites->operator ()(p2.y,p2.x)->pFireRegimeUnit->active())
+					pile.push(p2);
+			}    		
+		}//end if nCKilled    
+		stopFlag = 1;	
+		for (k=0; k<numLU; k++)	
+		{
+			if(FS[k] > land[k]) {stopFlag = 0; break;}
+		}
+		if (singleTry > MAX_TRY) {stopFlag = 2; break;}
+	}//end while
+
+	//add to fire log file	
+	LDfprintf0(logfile,"%d, ",itr*10); 
+    LDfflush(logfile);          
+	LDfprintf0(logfile,"'(%d,%d)', %d, ",col,row,totArea);
+	LDfflush(logfile);
+	LDfprintf0(logfile, "%d, %d",numSites, numCohorts);
+	for(int i = 0; i<numLU;i++)
+		LDfprintf0(logfile, "%s %d", ",",land[i]);
+	LDfprintf0(logfile, "%s", "\n");	
+	LDfflush(logfile);
+
+#ifdef __FIREDEBUG__
+	LDfprintf0(txtFile,"%d\n",stopFlag);		
+	LDfclose(txtFile);
+#endif
+	return numSites;
+}
+
+int CFIRE::damage(LDPOINT p, int &fireClass)
+//This will cause damage from the fire at POINT p.  It will return the
+//actual number of cohorts killed.  Class is the return value of the fire
+//class.
+//Note p.y is row, p.x is col
+
+{
+	int i, j;
+	int specAtNum= m_pSPECIESATTRS->number();		
+	if (!m_pFireSites->operator ()(p.y,p.x)->pFireRegimeUnit->active())
+		return 0;
+	CFireRegimeUnit * pFRU = m_pFireSites->operator ()(p.y,p.x)->pFireRegimeUnit;
+
+	//Determine fire class.
+	if ( !m_fireParam.iFuelFlag || !(m_DLLMode& G_FUEL))
+	{
+		fireClass=0;
+		for (i=4;i>=0;i--)
+		{
+			if (pFRU->fireCurve[i] <= m_pPDP->sTSLFire[p.y][p.x])
+				fireClass=max(fireClass,pFRU->fireClass[i]);
+		}	
+	}
+	else
+	{
+		fireClass = (int) m_pPDP->cFireIntensityClass[p.y][p.x];
+	}
+	// J.Yang need to consider when windDLL is turned on
+	//how to simulate wind effect on fire damage	
+	if (m_DLLMode & G_WIND)
+	{
+		if (m_pPDP->sTSLFire[p.y][p.x] > m_pPDP->sTSLWind[p.y][p.x])
+		{
+			for (i=4;i>=0;i--)
+			{
+				if (pFRU->windCurve[i] <= m_pPDP->sTSLWind[p.y][p.x])
+					fireClass=max(fireClass, pFRU->windClass[i]);
+			}
+		}
+	} 	
+	if (fireClass<=0)
+		return 0;
+
+	//Perform fire damage.   
+	int numCohorts=0; 
+	int shade = 0;
+	for (i=1;i<=specAtNum;i++)
+	{
+		
+		SPECIE *s = (* (*m_pLAND) (p.y,p.x)) (i);
+		SPECIESATTR *sa = (*m_pLAND) (p.y,p.x)->specAtt();
+		if ((fireClass==5) || (fireClass - sa->fireTolerance>=1))
+		{
+			numCohorts+=s->number();
+			s->kill(10,sa->longevity);
+			
+		}
+		else if (fireClass-sa->fireTolerance==0) 
+		{
+			for(j=10;j<(sa->longevity)*lifespan[3];j+=10) 
+				if(s->query(j))
+				{
+					s->kill(j);
+					numCohorts++;
+				}
+		}
+		else if ((fireClass-sa->fireTolerance)==-1)
+		{
+			for(j=10;j<(sa->longevity)*lifespan[1];j+=10) 
+				if(s->query(j))
+				{
+					s->kill(j);
+					numCohorts++;
+				}
+		}
+		else if ((fireClass-sa->fireTolerance)==-2)
+		{
+			for(j=10;j<(sa->longevity)*lifespan[0];j+=10) 
+				if(s->query(j))
+				{
+					s->kill(j);
+					numCohorts++;
+				}
+		}
+		s->updateDispropagules(sa->maturity);
+	}
+	if (numCohorts)		
+		m_pPDP->sTSLFire[p.y][p.x] = 0;	
+	return numCohorts;   
+}
+
+void CFIRE::ReadDEM(char *fileName)
+{
+	FILE * fp;
+	fp = LDfopen_0(fileName,"r");
+	int temp;
+	if (fp==NULL) 
+		errorSys("FIRE: DEM file not found.",STOP);
+	for (int i = m_fireParam.rows; i>= 1; i--)
+		for (int j = 1; j <= m_fireParam.cols; j++)
+		{
+			if (fscanc(fp,"%d",&temp) != 1) 
+			{
+				errorSys("FIRE: Error reading in topo value.",STOP);
+			}
+			m_pFireSites->operator ()(i,j)->DEM = temp;			
+		}
+	
+
+}
+
+//Fire spread from ignition point
+//Return the size of burnt area (number of sites burned)
+//assume the logFire is a data memember of CFIRE
+//Notice the value of row: 1 ...... rows
+//				   of col: 1 ...... cols
+long CFIRE::fireSpread(int row, int col)
+{
+
+	LDPOINT point;
+	int numSites=1,		//Number of sites damaged.
+		totArea, //Predefined fire size 
+		numCohorts=0,		//Number of cohorts damaged.
+		numFRU= m_pFireRegimeUnits->number(), //Number of fire regime unit
+		fireClass;		//Fire class (1-5).
+	long 	land[MAX_LANDUNITS];	//fire on different landunits	
+	long FS[MAX_LANDUNITS]; // predefined fire size for each landunits	
+	int landOnFire[MAX_LANDUNITS]; // if fire on this landunits, it's 1, otherwise, 0
+	int i,j,k;
+
+	for (i = 0; i<MAX_LANDUNITS;i++) {
+		land[i] = 0;
+		FS[i]=0;
+		landOnFire[i]=0;
+	}
+	fireFront * front1;
+	fireFront * front2;
+	long lLength1,lLength2;	
+	char * NAME; //Name of fire regime Unit 
+	front1 = new fireFront [m_fireParam.rows * m_fireParam.cols * 8];
+	front2 = new fireFront [m_fireParam.rows * m_fireParam.cols * 8];
+
+	//the initiation point
+	point.x = col;
+	point.y = row;
+	NAME=m_pFireSites->operator ()(row,col)->pFireRegimeUnit->name;
+	for(j=0;j<numFRU;j++) 
+	{
+		if(strcmp(m_pFireRegimeUnits->operator ()(j)->name,NAME)==0)
+		{
+			land[j]++;
+			landOnFire[j] = 1;
+			FS[j] = fireSize(m_pFireSites->operator ()(point.y,point.x)->pFireRegimeUnit->m_fMFS,
+					m_pFireSites->operator ()(point.y,point.x)->pFireRegimeUnit->m_fFireSTD);			
+			totArea = FS[j];			
+			break;
+		}
+	}	
+	DrawWindEvent();
+
+
+	
+	/*
+	construct front1 from origin point	
+
+	while(lLength1>0){
+		for each burnning site in the front1
+			if (it self hasn't meet the burnning time limit)
+				{ put it into front2, increase the burnning time by 1,increase lLength2}
+			else //burnt out
+				{ check its valid neighbors
+				  if(Bernoulli==1) {a new burnning site, increase lLength2,
+					put it into front2,draw red,map[][] = 2}
+                  else map[][] = 3;
+				}
+		//end for
+		lLength1 = lLenght2;
+		if(lLength2 >0) {
+		  delete front1;
+		  front1 = new fireFront[lLength2];
+		  copy elt from front2 to front 1;
+		  lLength1 = lLenght2;
+		  lLength2 =0;
+		 }
+	}//end while
+	*/
+
+	lLength1 = 1;
+	front1[0].burnningTime = 1;
+	front1[0].burnningLimit = 1;
+	front1[0].row = row;
+	front1[0].col = col;
+	
+	int tempRow,tempCol;
+	lLength2 = 0;
+	
+	while(lLength1>0) {
+		
+		for (long l =0;l<lLength1;l++) {
+			if (front1[l].burnningTime < front1[l].burnningLimit ) {				
+				front2[lLength2].burnningLimit = front1[l].burnningLimit;
+				front2[lLength2].burnningTime = front1[l].burnningTime+1;
+				front2[lLength2].row = front1[l].row;
+				front2[lLength2].col = front1[l].col;
+				lLength2 ++;
+			}
+			else {
+				//burnt out
+				tempRow = front1[l].row; tempCol = front1[l].col;
+				point.y = tempRow;
+				point.x = tempCol;
+				numCohorts += damage(point,fireClass);
+				m_Map(tempRow,tempCol)=(unsigned char)(1+fireClass);
+					//J.Yang A bug fixed here
+				
+				for (i =0; i<8; i++) {
+					switch (i) {
+						case 0: //SW
+							tempRow = front1[l].row-1;tempCol = front1[l].col-1;							
+							break;
+						case 1: //W
+							tempRow = front1[l].row;tempCol = front1[l].col-1;
+							break;
+						case 2: //NW
+							tempRow = front1[l].row +1;tempCol = front1[l].col-1;
+							break;
+						case 3: //N
+							tempRow = front1[l].row+1;tempCol = front1[l].col;
+							break;
+						case 4: //NE
+							tempRow = front1[l].row+1;tempCol = front1[l].col+1;
+							break;
+						case 5:  //E
+							tempRow = front1[l].row;tempCol = front1[l].col+1;
+							break;
+						case 6:  //SE
+							tempRow = front1[l].row-1;tempCol = front1[l].col+1;
+							break;
+						case 7:  //S
+							tempRow = front1[l].row-1;tempCol = front1[l].col;
+							break;
+						default:
+							break;
+					}					
+				    //check its neighbors
+					double fireSpreadProb;
+					//isValid means the site is in the bound
+					//and it is in an active site
+					//and it is unburnt site
+					//if the site is in a new fire regime unit even it is active
+					//check the limit of fire occurrences for this FRU
+					if (isValid(tempRow,tempCol,landOnFire)) 
+					{						
+						NAME=m_pFireSites->operator ()(tempRow,tempCol)->pFireRegimeUnit->name;
+						for (j = 0;j<numFRU;j++)
+						{
+							if(strcmp(m_pFireRegimeUnits->operator ()(j)->name,NAME)==0)			
+								break;
+						}				
+						CalculateWind(i);
+						CalculateSlope(front1[l].row, front1[l].col,tempRow,tempCol);
+						CalculateFSFactor(numSites,totArea);		
+						//J.Yang change above for Brian M
+
+						fireSpreadProb = modifiedSpreadProb(tempRow,tempCol);
+						if (fireSpreadProb > 1) 
+						{
+							printf("fire spread probability (fireSpreadProb: %f) is larger than 1",fireSpreadProb);
+							printf(" at site %d %d \n", tempRow,tempCol);
+							fflush(stdout); 
+							fireSpreadProb = 1;
+						}
+						if (fireSpreadProb <0) 
+						{
+							printf("fire spread probability (fireSpreadProb: %f) is less than 0",fireSpreadProb);
+							printf(" at site %d %d \n", tempRow,tempCol);
+							fflush(stdout); 
+							fireSpreadProb = 0;
+						}
+						if(m_pStochastic->Bernoulli(fireSpreadProb) ==1) {
+							//burnning site
+							front2[lLength2].row = tempRow;
+							front2[lLength2].col = tempCol;
+							front2[lLength2].burnningTime = 1;
+							front2[lLength2].burnningLimit = 1;
+							lLength2 ++;
+							//change map value for this site
+							m_Map(tempRow,tempCol) = 2; //0 not active; 1 no fire ; 2 fire class = 1 (lowest)
+							//increase fire size (numSites) w.r.t. fire regime unit
+							land[j] ++;					
+							numSites ++;
+
+							/* J.Yang delete them at Brian M's request
+							if (landOnFire[j] == 0) 
+							{// an initiation				
+								landOnFire[j] = 1;
+								FS[j] = fireSize(m_pFireSites->operator ()(tempRow,tempCol)->pFireRegimeUnit->m_fMFS,
+									m_pFireSites->operator ()(tempRow,tempCol)->pFireRegimeUnit->m_fFireSTD);								
+								m_lptrIgnitionOccurance[j]-- ;			
+								if (m_lptrIgnitionOccurance[j]==0)
+								{
+									for(k=0;k<m_iNumLU;k++)
+										if (m_iptrValidLandUnits[k] == j) break;
+									for (int i=k;i<m_iNumLU-1;i++)
+										m_iptrValidLandUnits[i]= m_iptrValidLandUnits[i+1];
+									m_iNumLU--;
+								}		
+
+							}//end of an initiation
+							*/
+
+						}
+						else {
+							//dummy now
+						}
+					} // end one neighbor
+				}// end for looping in 8 neighbors		
+
+			} //end else
+
+		} //end for (looping in the front1)
+		
+
+		lLength1 = lLength2;
+		if(lLength2 >0) {						
+			//copy elt from front2 to front 1;
+			for(l=0;l<lLength2;l++) {
+				front1[l].burnningLimit = front2[l].burnningLimit;
+				front1[l].burnningTime = front2[l].burnningTime;
+				front1[l].row = front2[l].row;
+				front1[l].col = front2[l].col;
+			}
+			lLength2 =0;
+		 }
+
+	} //end while
+	delete front1;
+	delete front2;
+
+	//add to fire log file	
+	LDfprintf0(m_LogFP,"%d, ",m_itr*10);
+    LDfflush(m_LogFP);          
+	LDfprintf0(m_LogFP,"'(%d,%d)', %d, ",col,row,totArea);
+	LDfflush(m_LogFP);
+	LDfprintf0(m_LogFP, "%d, %d",numSites, numCohorts);
+	for(i = 0; i<numFRU;i++)
+		LDfprintf0(m_LogFP, "%s %d", ",",land[i]);
+	LDfprintf0(m_LogFP, "%s", "\n");	
+	LDfflush(m_LogFP);
+
+
+	return numSites;
+}
+
+//Notice the range of row: 1 ...... rows
+//				   of col: 1 ...... cols
+int CFIRE::isValid(int row, int col, int * landOnFire)
+{
+	//check map boundary
+	//check map value (0 not active, 1 no fires yet, 2 burnning or fire class is 1)
+	//check the site is in an active FRU (Fire Regime Unit)
+	//check the site is in a new FRU which still allows new initiations
+	
+	if (row <1 || row > m_fireParam.rows || col < 1 || col > m_fireParam.cols) 
+		return 0;
+	if (m_Map(row,col) > 1)
+		return 0;
+	//check the site is an active FRU
+	if (!m_pFireSites->operator ()(row,col)->pFireRegimeUnit->active())
+		return 0;
+	
+	// J.Yang do not check whether the test site belongs to a new FRU 
+	// at the Brian M's request
+
+	/*
+	char * NAME;
+	int j;
+	NAME=m_pFireSites->operator ()(row,col)->pFireRegimeUnit->name;
+	for (j = 0;j<m_pFireRegimeUnits->number();j++)
+	{
+		if(strcmp(m_pFireRegimeUnits->operator ()(j)->name,NAME)==0)			
+			break;
+	}	
+	if (landOnFire[j] == 0) //there is no fire spreading at this FRU		
+		if (m_lptrIgnitionOccurance[j] == 0) 
+				return 0;
+	*/
+		
+	return 1;
+
+}
+
+double CFIRE::modifiedSpreadProb(int row, int col)
+{
+	double ret = 0.0;
+	double k = 0.0; 
+	k = log(1-m_fireParam.fSpreadProb)/(-3);
+	if (m_DLLMode & G_FUEL)
+	{
+		ret = 1-exp( -1 * 
+			pow( (1 + m_fireParam.fCoeff1), m_fWind) *
+			pow( (1 + m_fireParam.fCoeff2), m_fSlope) * 
+			pow( (1 + m_fireParam.fCoeff3), m_dFSFactor) * 
+			k * (int) m_pPDP->cFireIntensityClass[row][col]
+			);
+	}
+	else
+	{
+		ret = 1-exp( -1 * 
+			pow( (1 + m_fireParam.fCoeff1), m_fWind) *
+			pow( (1 + m_fireParam.fCoeff2), m_fSlope) * 
+			pow( (1 + m_fireParam.fCoeff3), m_dFSFactor) * 
+			k *1
+			);		
+	}
+	return ret;
+
+}
+
+
+/************** The Coordination System in LANDIS ***************/
+/* (500,1) (500,2) (500,3) ..........(500,500)
+/* (499,1) (499,2) (499,3) ..........(499,500)
+/* ...........................................
+/* ...........................................
+/* (1,1)   (1,2)   (1,3) .............(1,500)
+For a 500 x 500 map
+*/
+
+void CFIRE::CalculateWind(int index)
+{
+	//index is the direction along fire is spreading into
+	//prevailing wind index and prevailing wind intensity is
+	//	reserved in m_fireParam
+	//simulated wind index and intensity will be done later
+
+	m_fWind = 0.0f;
+	if (m_fireParam.iWindFlag == 0)
+		return;
+
+	/* draw a wind event
+	*/
+	//comment it, move it to the begining of fire spread
+	//otherwise, wind direction and speed is actually 
+	//simulated at each cell burning time rather than 
+	//at each fire ignition time.
+	//DrawWindEvent();
+	if (m_iWindIntensity == 0)
+		return;
+	int diff;
+	diff = abs(m_iWindDirectionIndex - index);
+	switch (diff) {
+	case 0:
+		m_fWind = 0.2f;
+		break;
+	case 1:
+		m_fWind = 0.1f;
+		break;
+	case 7:
+		m_fWind = 0.1f;
+		break;
+	case 2:
+		m_fWind = 0.0f;
+		break;
+	case 6:
+		m_fWind = 0.0f;
+		break;
+	case 3:
+		m_fWind = -0.1f;
+		break;
+	case 5:
+		m_fWind = -0.1f;
+		break;
+	case 4:
+		m_fWind = -0.2f;
+		break;
+	default:
+		m_fWind = 0.0f;
+		break;
+	}
+	m_fWind = m_fWind * m_iWindIntensity;
+
+}
+
+
+void CFIRE::CalculateSlope(int row1, int col1, int row2, int col2)
+{
+	m_fSlope = 0.0;
+	double diff;
+	if(m_fireParam.iDEMFlag)
+	{		
+		diff = m_pFireSites->operator ()(row2,col2)->DEM
+				- m_pFireSites->operator ()(row1,col1)->DEM;
+		m_fSlope = (float) atan(diff/m_fireParam.cellSize);
+	}
+
+}
+
+void CFIRE::CalculateFSFactor(long lCurrentFS, long lFS)
+{
+	if (lFS > 0)
+		m_dFSFactor = 1 - (double) 2 * lCurrentFS/lFS;
+	else
+		m_dFSFactor = 0;
+}
+
+
+void CFIRE::updateFRU(int itr)
+{
+	FILE * fp;
+	char str[255],iterString[5];	
+	itoa(itr,iterString,10);
+
+	strcpy(str,m_fireParam.fireRegimeAttrFn);	
+	strcat(str,iterString);
+
+	fp = LDfopen(str,1);
+	if (fp==NULL) 
+	{
+		printf("Fire regime attribute file %s not found.\n",str);
+		errorSys("FIRE: fire regime attribute can not be updated.",STOP);
+	}
+	m_pFireRegimeUnits->read(fp);
+	LDfclose(fp);
+
+	if (m_fireParam.iFireRegimeFlag != 0)
+	{
+		strcpy(str,m_fireParam.fireRegimeDataFn);	
+		strcat(str,iterString);
+		fp = LDfopen(str, 1);
+		if (fp==NULL) 
+		{
+			printf("Fire regime GIS file %s not found.\n",str);
+			errorSys("FIRE: fire regime GIS can not be updated.",STOP);
+		}
+		m_pFireRegimeUnits->readFireRegimeGIS(fp); 
+		LDfclose(fp);
+	}
+	else 
+	{
+		AttachLandUnitGIS(m_pLAND);
+	}
+	//j.Yang check this
+	m_pFireRegimeUnits->dispatch();	
+	m_pFireRegimeUnits->updateIGDensity(m_fireParam.cellSize);
+}
+
+void CFIRE::DrawWindEvent()
+{
+	/* 
+	generate a number that follows uniform distribution 
+	bw. 0 -- 100, then compare it with the frqeuncy distributions
+	if it is less than Percentage of NonWindEvents, then we write no wind
+	otherwise, it is a wind event
+	Do similar thing to decide wind class
+	*/
+	m_iWindEventsLog[41] ++;
+	float z;
+	z = (float) m_pStochastic->Random() * 100;
+	if (z <= m_fireParam.iNonWindPercent)
+	{
+		m_iWindIntensity = 0;
+		m_iWindDirectionIndex = 0; //any thing, doesn't matter
+		m_iWindEventsLog[0] ++;
+		return;
+	}
+	z = (float) m_pStochastic->Random() * 100;
+	for (int i = 0; i< 40; i++)
+	{
+		if (z <= m_fireParam.iCummWindClass[i])
+		{
+			//it is i'th class 
+			m_iWindDirectionIndex = (int) floor(i/5);
+			m_iWindIntensity = (i % 5) + 1;
+			m_iWindEventsLog[i+1] ++;
+			return;
+		}
+	}
+	
+}
+
+void CFIRE::PrintWindLog()
+{	
+	
+	if (m_fireParam.iWindFlag == 0)
+		return;
+	
+	int percentage[41];
+	int i;	
+	if (m_iWindEventsLog[41] == 0)
+		percentage[0] = 0;
+	else
+		percentage[0] = 100 * m_iWindEventsLog[0]/m_iWindEventsLog[41];
+	int temp;
+	temp = m_iWindEventsLog[41] - m_iWindEventsLog[0];	
+	for (i = 1; i< 41; i++)
+	{
+		if (temp <= 0)
+			percentage[i] = 0;
+		else
+			percentage[i] = 100 * m_iWindEventsLog[i] / temp;
+	}	
+	printf("There are %d fire events simulated in this iteraion\t",m_iWindEventsLog[41]);
+	printf("Among them, there are %d (%d percent) non-wind events\n",m_iWindEventsLog[0],percentage[0]);
+	printf("Number of wind class simulated and its respective percentage of wind events are:\n");
+	for (i = 1; i< 41; i++)
+	{
+		if ( (i % 5) == 0)
+		{
+			printf("%5d (%2d)\n",m_iWindEventsLog[i],percentage[i]);
+		}
+		else
+		{
+			printf("%5d (%2d)\t",m_iWindEventsLog[i],percentage[i]);
+		}
+	}	
+	fflush(stdout);	
+}
+
+void CFIRE::WriteTSLF(int snr, int snc, int itr)
+{
+	
+	int i,j;
+	char str[255];
+	if (m_fireParam.iTSLFFlag)
+		{
+			/*
+			FILE * tslfFile;
+			sprintf(str,"%s/tslf%d.txt",parameters.outputDir,itr*10);
+			if ((tslfFile=fopen(str,"a"))==NULL)
+				errorSys("Error opening time-since-last-fire file",STOP);
+			*/
+			class MAP8 m;
+			m.dim(snr,snc);
+			for (i=1;i<=snr;i++)
+				for (j=1;j<=snc;j++)
+				{
+					if (m_pFireSites->operator ()(i,j)->pFireRegimeUnit->active())			
+						m(i,j)= m_pPDP->sTSLFire[i][j]/10;			
+					else
+						m(i,j)= 255;				
+					//fprintf(tslfFile,"%d ", m(i,j));
+					//if (j==snc) fprintf(tslfFile, "\n");
+				}
+				//fclose(tslfFile);
+				sprintf(str,"Time-since-last-fire for year %d.",itr*10); 
+				m.setHeader(m_pLAND->getHeader());
+				m.rename(str);
+				for(i=0;i<maxLeg;i++)
+				{
+					sprintf(str,"%d year",i*10);
+					m.assignLeg(i,str);
+				}		
+				m.assignLeg(255,"Not Active");
+				sprintf(str,"%s%d",m_strTSLF,itr*10);
+				m.setCellSize(m_fireParam.cellSize);
+				m.write(str,red,green,blue);
+		}
+
+}
