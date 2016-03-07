@@ -975,7 +975,7 @@ int main(int argc, char *argv[])
 
 	if (envOn > 0)
 
-		printf("Environment will be updated every %d iterarion\n", envOn);
+		printf("Environment will be updated every %d iteration\n", envOn);
 
 
 
