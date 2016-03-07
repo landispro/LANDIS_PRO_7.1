@@ -969,7 +969,7 @@ int main(int argc, char *argv[])
 
 
 
-	printMessage("Beginning Landis 7.0 Pro Run.\n");
+	printMessage("Beginning Landis 7.1 Pro Run.\n");
 
 
 
