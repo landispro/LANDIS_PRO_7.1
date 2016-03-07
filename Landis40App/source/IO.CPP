@@ -1669,7 +1669,7 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 				}
 
 			}
-		//3.TPA
+		//3.TPA  TreeNumber
 			pintScanline = (unsigned int *)CPLMalloc(sizeof(unsigned int)* (sites.numColumns()*sites.numRows()));//*
 
 		if(sites.GetOutputGeneralFlagArray(k-1,TPA))

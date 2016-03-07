@@ -232,9 +232,19 @@ if(map_landtype)
 
 //<Add By Qia on June 29 2009>
 
-if(SeedRain)
+//if(SeedRain)
+//
+//	delete [] SeedRain;
 
-	delete [] SeedRain;
+if (SeedRain){
+
+	for (int l = 0; l < (MaxDistofAllSpec / CellSize * MaxDistofAllSpec / CellSize); l++){
+
+		delete[] SeedRain[l];
+	}
+
+	delete[] SeedRain;
+}
 
 if(GrowthRates)
 
@@ -1260,8 +1270,14 @@ map_landtype=new LANDUNIT*[i*j];//Add by Qia Oct 07 2008
 
 //<Add By Qia on June 29 2009>
 
-SeedRain = new float[species*(MaxDistofAllSpec / CellSize * MaxDistofAllSpec / CellSize + 2)];
+//SeedRain = new float[species*(MaxDistofAllSpec / CellSize * MaxDistofAllSpec / CellSize + 2)];
 
+SeedRain = new float*[species];
+
+for (int i = 0; i < species; i++){
+
+	SeedRain[i] = new float[MaxDistofAllSpec / CellSize * MaxDistofAllSpec / CellSize ];
+}
 GrowthRates=new float[species*(320/TimeStep+1)];
 
 MortalityRates=new float[species*(320/TimeStep+1)];
@@ -1729,6 +1745,9 @@ LANDUNIT * SITES::locateLanduPt(int i, int j)
 //find the landtype
 
 {
+
+
+	
 
 	int x;
 
@@ -3179,7 +3198,7 @@ void SITES::SeedGermination(SITE* siteptr, LANDUNIT *l, int RDFlag)
 		SppRD[i] = 0;
 	}
 	
-	if(RDFlag==0 || RDFlag==1)
+	if(RDFlag==0 || RDFlag==1) // 
 
 		{
 
@@ -3214,7 +3233,7 @@ void SITES::SeedGermination(SITE* siteptr, LANDUNIT *l, int RDFlag)
 
 							int ran = rand() % 10 + 1; // ran in the range 1 to 10
 
-							if (ran < 2){
+							if (ran <= 1){
 
 								Seedling[i - 1] = 1;
 
@@ -3251,6 +3270,19 @@ void SITES::SeedGermination(SITE* siteptr, LANDUNIT *l, int RDFlag)
 						seedlingTemp = IndexRD[i-1] *(l->MaxRD -siteptr->RD)/RDTotal*CellSize*CellSize/(pow((SITES::GetGrowthRates(i,1 ,l->ltID)/25.4),1.605)*siteptr->specAtt(i)->MaxAreaOfSTDTree);
 
 						Seedling[i-1] = (seedlingTemp)*l->probRepro(i) + temp;
+
+						if ((seedlingTemp)*l->probRepro(i) + temp > 0 && (seedlingTemp)*l->probRepro(i) + temp< 1){
+
+							int ran = rand() % 10 + 1; // ran in the range 1 to 10
+
+							if (ran <= 1){
+
+								Seedling[i - 1] = 1;
+
+							}
+
+
+						}
 						if(wenjuan_debug){
 							printf("spec: %d, landtype: %s, temp: %ld, avlbseed: %ld, probRepro: %f, seedling: %ld\n",
 								i, l->name,temp,siteptr->SpecieIndex(i)->AvailableSeed,l->probRepro(i),Seedling[i-1]);
@@ -3324,6 +3356,19 @@ void SITES::SeedGermination(SITE* siteptr, LANDUNIT *l, int RDFlag)
 						siteptr->SpecieIndex(i)->TreesFromVeg=0;
 
 						Seedling[i-1] = (siteptr->SpecieIndex(i)->AvailableSeed)*l->probRepro(i) + temp;
+
+						if ((siteptr->SpecieIndex(i)->AvailableSeed)*l->probRepro(i) + temp > 0 && (siteptr->SpecieIndex(i)->AvailableSeed)*l->probRepro(i) + temp < 1){
+
+							int ran = rand() % 10 + 1; // ran in the range 1 to 10
+
+							if (ran <= 1){
+
+								Seedling[i - 1] = 1;
+
+							}
+
+
+						}
 						if(wenjuan_debug){
 							printf("spec: %d, landtype: %s, temp: %ld, avlbseed: %ld, probRepro: %f, seedling: %ld\n",
 								i, l->name,temp,siteptr->SpecieIndex(i)->AvailableSeed,l->probRepro(i),Seedling[i-1]);
@@ -3347,6 +3392,20 @@ void SITES::SeedGermination(SITE* siteptr, LANDUNIT *l, int RDFlag)
 						seedlingTemp = IndexRD[i-1] * (l->MaxRD -siteptr->RD)/RDTotal*CellSize*CellSize/(pow((SITES::GetGrowthRates(i,1, l->ltID)/25.4),1.605)*siteptr->specAtt(i)->MaxAreaOfSTDTree);
 
 						Seedling[i-1] = (seedlingTemp)*l->probRepro(i) + temp;
+
+						if ((seedlingTemp)*l->probRepro(i) + temp > 0 && (seedlingTemp)*l->probRepro(i) + temp < 1){
+
+							int ran = rand() % 10 + 1; // ran in the range 1 to 10
+
+							if (ran <= 1){
+
+								Seedling[i - 1] = 1;
+
+							}
+
+
+						}
+
 						if(wenjuan_debug){
 							printf("spec: %d, landtype: %s, temp: %ld, avlbseed: %ld, probRepro: %f, seedling: %ld\n",
 								i, l->name,temp,siteptr->SpecieIndex(i)->AvailableSeed,l->probRepro(i),Seedling[i-1]);
@@ -3418,6 +3477,19 @@ void SITES::SeedGermination(SITE* siteptr, LANDUNIT *l, int RDFlag)
 						siteptr->SpecieIndex(i)->TreesFromVeg=0;
 
 						Seedling[i-1] = (siteptr->SpecieIndex(i)->AvailableSeed)*l->probRepro(i) + temp;
+
+						if ((siteptr->SpecieIndex(i)->AvailableSeed)*l->probRepro(i) + temp> 0 && (siteptr->SpecieIndex(i)->AvailableSeed)*l->probRepro(i) + temp< 1){
+
+							int ran = rand() % 10 + 1; // ran in the range 1 to 10
+
+							if (ran <= 1){
+
+								Seedling[i - 1] = 1;
+
+							}
+
+
+						}
 						if(wenjuan_debug){
 							printf("spec: %d, landtype: %s, temp: %ld, avlbseed: %ld, probRepro: %f, seedling: %ld\n",
 								i, l->name,temp,siteptr->SpecieIndex(i)->AvailableSeed,l->probRepro(i),Seedling[i-1]);
@@ -3441,6 +3513,19 @@ void SITES::SeedGermination(SITE* siteptr, LANDUNIT *l, int RDFlag)
 						seedlingTemp = IndexRD[i-1] *(l->MaxRD -siteptr->RD)/RDTotal*CellSize*CellSize/(pow((SITES::GetGrowthRates(i,1, l->ltID)/25.4),1.605)*siteptr->specAtt(i)->MaxAreaOfSTDTree);
 
 						Seedling[i-1] = (seedlingTemp)*l->probRepro(i) + temp;
+
+						if ((seedlingTemp)*l->probRepro(i) + temp> 0 && (seedlingTemp)*l->probRepro(i) + temp< 1){
+
+							int ran = rand() % 10 + 1; // ran in the range 1 to 10
+
+							if (ran <= 1){
+
+								Seedling[i - 1] = 1;
+
+							}
+
+
+						}
 						if(wenjuan_debug){
 							printf("spec: %d, landtype: %s, temp: %ld, avlbseed: %ld, probRepro: %f, seedling: %ld\n",
 								i, l->name,temp,siteptr->SpecieIndex(i)->AvailableSeed,l->probRepro(i),Seedling[i-1]);
@@ -3912,11 +3997,58 @@ for(k=1;k<=siteptr->number();k++)
 
 							unsigned long tempAvailableSeed = (GetSeedRain(k, TempDist)*SITES::operator()(i, j)->SpecieIndex(k)->GetMatureTreeValue()*SITES::operator()(i, j)->specAtt(k)->TotalSeed*TimeStep);
 
-							siteptr->SpecieIndex(k)->AvailableSeed += tempAvailableSeed;
+
+							//std::cout << " avaliable Seed " << GetSeedRain(k, TempDist) << " ";
+
+						//	std::cout << " Mature Tree " << SITES::operator()(i, j)->SpecieIndex(k)->GetMatureTreeValue() << " ";
+
+							//std::cout << " Total Seed " << SITES::operator()(i, j)->specAtt(k)->TotalSeed << " ";
+							////std::cout << "avaliable Seed" << 0.0001 * 1000 << " ";
+							if ((GetSeedRain(k, TempDist)*SITES::operator()(i, j)->SpecieIndex(k)->GetMatureTreeValue()*SITES::operator()(i, j)->specAtt(k)->TotalSeed*TimeStep)> 0 && (GetSeedRain(k, TempDist)*SITES::operator()(i, j)->SpecieIndex(k)->GetMatureTreeValue()*SITES::operator()(i, j)->specAtt(k)->TotalSeed*TimeStep) < 1){
+
+								int ran = rand() % 100 + 1; // ran in the range 1 to 100
+
+								int threshold = local_maxD_d_cellsize / sqrt(TempDist)* 5 ;
+
+								if (threshold >= 100)
+
+									threshold = 80;
+
+
+								if (ran <= threshold){
+
+									tempAvailableSeed = tempAvailableSeed + 1;
+
+									siteptr->SpecieIndex(k)->AvailableSeed += tempAvailableSeed;
+								}
+								else{
+
+									siteptr->SpecieIndex(k)->AvailableSeed += tempAvailableSeed;
+								}
+							}
+							else{
+
+								
+								siteptr->SpecieIndex(k)->AvailableSeed += tempAvailableSeed;
+
+							}
+
+							
+							
 
 							///std::cout << "Probability: " << GetSeedRain(k, TempDist) << std::endl;
-						}
 
+							if (i == 251 && j == 251 ){
+
+								/*std::cout << std::endl;
+
+								std::cout << "position (" << Row << "," << Col << ") " <<sqrt(TempDist)*CellSize << " treenumber:" << tempAvailableSeed << " ";
+*/
+								/*std::cout << " Mature Tree " << SITES::operator()(i, j)->SpecieIndex(k)->GetMatureTreeValue() << " ";
+
+								std::cout << "available tree" << (GetSeedRain(k, TempDist)*SITES::operator()(i, j)->SpecieIndex(k)->GetMatureTreeValue()*SITES::operator()(i, j)->specAtt(k)->TotalSeed*TimeStep) << " ";*/
+							}
+						}
 
 					}
 				}
@@ -3935,6 +4067,14 @@ for(k=1;k<=siteptr->number();k++)
 
 
 				}
+
+				/*if (siteptr->SpecieIndex(k)->AvailableSeed >0 && siteptr->SpecieIndex(k)->AvailableSeed <1){
+
+					siteptr->SpecieIndex(k)->AvailableSeed = 1;
+				}*/
+
+			//	std::cout << " Total available seed" << siteptr->SpecieIndex(k)->AvailableSeed << std::endl;
+
 			}
 			else {
 
@@ -5136,32 +5276,50 @@ float SITES::GetSeedRain(int spec,int Distance)
 
 		if ((spec - 1)*(MaxDistofAllSpec / CellSize + 2) + Distance >= specNum*(MaxDistofAllSpec / CellSize*MaxDistofAllSpec / CellSize + 2)){
 
-			std::cout << "probability is zero" << std::endl;
+			errorSys("Out bound in GetSeedRain\n", STOP);
 
 			return 0;
 
 		}
 
-		else
+		else{
+			/*if (spec == 1 && Distance == 74){
 
-			return SeedRain[(spec - 1)*(MaxDistofAllSpec / CellSize + 2) + Distance];
-	}
+				std::cout << "get probability = 74:" << SeedRain[1][74] << std::endl;
+
+				return SeedRain[1][74];
+			}*/
+			/*return SeedRain[(spec - 1)*(MaxDistofAllSpec / CellSize + 2) + Distance];*/
+			return SeedRain[(spec - 1)][ Distance];
+
+
+			}
+		}
 	else {
 
 		if ((spec - 1)*(2 + 2) + Distance >= specNum*(4 + 2)){
 
-			std::cout << "probability is our of bound" << std::endl;
+			errorSys("Out bound in GetSeedRain\n", STOP);
 
 			return 0;
 
 		}
 
-		else
+		else{
 
-			return SeedRain[(spec - 1)*(MaxDistofAllSpec / CellSize + 2) + Distance];
+			/*if (spec == 1 && Distance == 74){
+
+				std::cout << "get probability = 74:" << SeedRain[74] << std::endl;
+			}*/
+
+			/*return SeedRain[(spec - 1)*(MaxDistofAllSpec / CellSize + 2) + Distance];*/
+
+			return SeedRain[(spec - 1)][Distance];
+		}
+
 	}
 
-
+	
 
 }
 
@@ -5253,6 +5411,11 @@ else{
 void SITES::SetSeedRain(int spec,int Distance,float value)
 
 {
+	/*if ((spec == 2 && Distance == 74)){
+
+
+		std::cout << "set probability = 74: " << spec << "," << SeedRain[74] << std::endl;
+	}*/
 
 	if (MaxDistofAllSpec / CellSize > 1){
 
@@ -5262,18 +5425,27 @@ void SITES::SetSeedRain(int spec,int Distance,float value)
 
 		else
 
-			SeedRain[(spec - 1)*(MaxDistofAllSpec / CellSize + 2) + Distance] = value;
+			SeedRain[(spec - 1)][Distance] = value;
 	}
 	else{
 		if ((spec - 1)*(2 + 2) + Distance >= specNum*(4 + 2))
 
 			errorSys("Out bound in SetSeedRain\n", STOP);
 
-		else
+		else{
 
-			SeedRain[(spec - 1)*(MaxDistofAllSpec / CellSize + 2) + Distance] = value;
+
+			SeedRain[(spec - 1)][Distance] = value;
+
+		}
+
 	}
 	
+	/*if ( (spec == 2 && Distance == 74)){
+
+		
+		std::cout << "set probability = 74: " << spec << "," << SeedRain[74] << std::endl;
+	}*/
 
 
 
@@ -5517,7 +5689,27 @@ SeedRainFlag=seedflag;
 
 						 Probability[m + sitetmp->specAtt(i)->maxD / CellSize][n + sitetmp->specAtt(i)->maxD / CellSize] = temp;
 
+						/* if (temp >= 0 && temp <= 1)
+
+							 temp = 1;*/
+
+						 /*if ( (i == 2 && index == 74)){
+
+							 std::cout << "test 0 before: " << i << "," << GetSeedRain(1, 74) << std::endl;
+
+						 }*/
+
 						 SetSeedRain(i, index, temp);
+
+						/* if ( (i == 2 && index == 74)){
+
+							 std::cout << "test 0 after: " << i << "," << GetSeedRain(1, 74) << std::endl;
+
+						 }*/
+
+							
+
+						// std::cout << "distance" << sqrt(index)*CellSize << "=" << temp << " ";
 
 						 /*if (number[index] == 1){
 
@@ -5530,6 +5722,7 @@ SeedRainFlag=seedflag;
 					 }
 
 				 }
+				// std::cout << std::endl;
 			 }
 
 		 }
@@ -5555,6 +5748,10 @@ SeedRainFlag=seedflag;
 
 						 SetSeedRain(i, index, temp);
 
+						/* if ((i == 1 && index == 74 )|| (i == 2 && index == 74))
+
+							 std::cout << "test 1:" <<GetSeedRain(1, 74) << std::endl;*/
+
 						 /*if (number[index] == 1){
 
 						 probSum += Probability[m + sitetmp->specAtt(i)->maxD / CellSize][n + sitetmp->specAtt(i)->maxD / CellSize];
@@ -5569,12 +5766,12 @@ SeedRainFlag=seedflag;
 			 }
 
 		 }
-	/*	 for (int l = 0; l < ((sitetmp->specAtt(i)->maxD / CellSize) *(sitetmp->specAtt(i)->maxD / CellSize) * 2) + 1; l++){
+		/* for (int l = 0; l < ((sitetmp->specAtt(i)->maxD / CellSize) *(sitetmp->specAtt(i)->maxD / CellSize) * 2) + 1; l++){
 
 			 std::cout << " distance: " << sqrt(l)* CellSize<<" number :"<< number[l] << std::endl;
 		 }
-		 std::cout << std::endl;*/
-		/* std::cout << "probability before normalization" << std::endl;
+		 std::cout << std::endl;
+		 std::cout << "probability before normalization" << std::endl;
 
 		 for (int m = 0; m < (sitetmp->specAtt(i)->maxD / CellSize * 2) + 1; m++){
 
@@ -5618,7 +5815,8 @@ SeedRainFlag=seedflag;
 			 std::cout << std::endl;
 		 }
 */
-		
+	/*	 std::cout <<  "test2: "<< GetSeedRain(1, 74) << std::endl;*/
+
 		 if (sitetmp->specAtt(i)->maxD / CellSize > 1){
 
 			 for (int l = 0; l < (sitetmp->specAtt(i)->maxD / CellSize) + 1; l++){
@@ -5722,6 +5920,8 @@ else
 			}	
 
 	}
+
+	std::cout << "test3"<<GetSeedRain(1, 74) << std::endl;
 
 	LDfclose(fp);
 

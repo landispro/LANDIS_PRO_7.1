@@ -1,0 +1,79 @@
+sw.slope    #landtype name#
+70 400 #minimum year of shade before shade tolerant five species's establishment#  
+0.10
+0.30
+0.55
+0.65
+#pinuechi# 0.11
+#quervelu# 0.98
+#queralba# 1.0
+
+ne.slope    #landtype name#
+60 400  #minimum year of shade before shade tolerant five species's establishment# 
+0.15
+0.40
+0.65
+0.75 
+#pinuechi# 0.10
+#quervelu# 0.90
+#queralba# 1.0
+
+ridge    #landtype name#
+70 400  #minimum year of shade before shade tolerant five species's establishment# 
+0.12
+0.32
+0.52
+0.60   
+#pinuechi# 0.18
+#quervelu# 0.92
+#queralba# 1.0
+
+updrain    #landtype name#
+40 400 #minimum year of shade before shade tolerant five species's establishmen#
+0.15
+0.40
+0.65
+0.75
+#pinuechi# 0.07
+#quervelu# 0.47
+#queralba# 1.0
+
+bottoms    #landtype name#
+40 400 #minimum year of shade before shade tolerant five species's establishment#   
+0.15
+0.40
+0.65
+0.75
+#pinuechi# 0.0
+#quervelu# 0.88
+#queralba# 0.88
+
+water
+600 1  #minimum year of shade before shade tolerant five species's establishment#  
+0.15
+0.40
+0.65
+0.75 
+#pinuechi# 0.0
+#quervelu# 0.0
+#queralba# 0.0
+
+nonforest
+600 1 #minimum year of shade before shade tolerant five species's establishment#   
+0.15
+0.40
+0.65
+0.75
+#pinuechi# 0.0
+#quervelu# 0.0
+#queralba# 0.0
+
+grassland
+10 400 #minimum year of shade before shade tolerant five species's establishment#   
+0.15
+0.40
+0.65
+0.75
+#pinuechi# 0.0
+#quervelu# 0.0
+#queralba# 0.0

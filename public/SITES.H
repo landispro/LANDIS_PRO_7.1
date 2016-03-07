@@ -560,7 +560,7 @@ private:
 
 //<Add By Qia on June 29 2009>
 
-float *SeedRain;
+float **SeedRain;
 
 float *GrowthRates;
 float *MortalityRates;

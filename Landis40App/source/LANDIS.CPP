@@ -1412,7 +1412,7 @@ int main(int argc, char *argv[])
 
 	}
 
-	
+
 
 	if ((gDLLMode & G_FUEL) != 0)
 
@@ -2020,7 +2020,7 @@ void Succession_Landis70(int snr, int snc, PDP* ppdp)
 				{
 
 
-
+					
 					sites(i, j)->SpecieIndex(k)->GrowTree(k);
 
 				}
@@ -2037,6 +2037,7 @@ void Succession_Landis70(int snr, int snc, PDP* ppdp)
 
 	//seed dispersal
 
+	
 	initiateRDofSite_Landis70(snr, snc);
 
 	printf("Seed Dispersal:\n");
@@ -2214,6 +2215,8 @@ void singularLandisIteration(int itr, int run_extraSeed, int numSitesActive, int
 	long ltimeDiff;
 
 	fprintf(fpforTimeBU, "\nYear: %d:\n", itr);// Add By Qia
+
+	int debut = sites.GetSeedRain(1, 74);
 
 	fflush(stdout);
 
