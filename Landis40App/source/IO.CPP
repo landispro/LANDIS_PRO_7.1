@@ -1381,7 +1381,7 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 
 {
 
-	
+	pafScanline = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
 
 	//Below is for every species
 
@@ -1399,7 +1399,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 
 				{
 
-					pafScanline = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
 					/*sprintf(str,"%s/%s_%d.asc",parameters.outputDir,BioMassFileNames[k-1].c_str(),itr*sites.TimeStep);
 
 					if ((fpbiomass = LDfopen(str, 3)) == NULL)
@@ -1464,10 +1463,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 
 							if (poDstDS != NULL)
 								GDALClose((GDALDatasetH)poDstDS);//*
-
-							CPLFree(pafScanline);
-							CSLDestroy(papszOptions); //*
-
 
 							//CPLFree(pafScanline);
 					//	}
@@ -1539,7 +1534,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 		//2.BA
 
 	
-	
 
 		if(sites.GetOutputGeneralFlagArray(k-1,BA))
 
@@ -1548,9 +1542,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 			if(strcmp(BasalFileNames[k-1].c_str(),"N/A")!=0)
 
 				{
-					papszOptions = NULL;
-
-					pafScanline = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
 
 					/*sprintf(str,"%s/%s_%d.asc",parameters.outputDir,BasalFileNames[k-1].c_str(),itr*sites.TimeStep);
 
@@ -1614,8 +1605,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 
 					if (poDstDS != NULL)
 						GDALClose((GDALDatasetH)poDstDS);//*
-					CPLFree(pafScanline);
-					CSLDestroy(papszOptions); //*
 
 					//CPLFree(pafScanline);
 			//	}
@@ -1681,7 +1670,7 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 
 			}
 		//3.TPA  TreeNumber
-			
+			pintScanline = (unsigned int *)CPLMalloc(sizeof(unsigned int)* (sites.numColumns()*sites.numRows()));//*
 
 		if(sites.GetOutputGeneralFlagArray(k-1,TPA))
 
@@ -1690,9 +1679,7 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 			if(strcmp(TreesFileNames[k-1].c_str(),"N/A")!=0)
 
 				{
-					pintScanline = (unsigned int *)CPLMalloc(sizeof(unsigned int)* (sites.numColumns()*sites.numRows()));//*
 
-					papszOptions = NULL;
 				/*	sprintf(str,"%s/%s_%d.asc",parameters.outputDir,TreesFileNames[k-1].c_str(),itr*sites.TimeStep);
 
 					if ((fptree= LDfopen(str, 3)) == NULL)
@@ -1751,10 +1738,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 
 					if (poDstDS != NULL)
 						GDALClose((GDALDatasetH)poDstDS);//*
-
-					CPLFree(pintScanline);
-					CSLDestroy(papszOptions); //*
-
 
 					//CPLFree(pintScanline);
 			//	}
@@ -1827,9 +1810,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 			if(strcmp(IVFileNames[k-1].c_str(),"N/A")!=0)
 
 				{
-					papszOptions = NULL;
-
-					pafScanline = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
 
 					/*sprintf(str,"%s/%s_%d.asc",parameters.outputDir,IVFileNames[k-1].c_str(),itr*sites.TimeStep);
 
@@ -1930,9 +1910,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 
 					if (poDstDS != NULL)
 						GDALClose((GDALDatasetH)poDstDS);//*
-
-					CPLFree(pafScanline);
-					CSLDestroy(papszOptions); //*
 
 				//	CPLFree(pafScanline);
 			//	}
@@ -2046,9 +2023,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 			if(strcmp(SeedsFileNames[k-1].c_str(),"N/A")!=0)
 
 				{
-					papszOptions = NULL;
-
-					pintScanline = (unsigned int *)CPLMalloc(sizeof(unsigned int)* (sites.numColumns()*sites.numRows()));//*
 
 				/*	sprintf(str,"%s/%s_%d.asc",parameters.outputDir,SeedsFileNames[k-1].c_str(),itr*sites.TimeStep);
 
@@ -2098,9 +2072,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 
 					if (poDstDS != NULL)
 						GDALClose((GDALDatasetH)poDstDS);//*
-
-					CPLFree(pintScanline);
-					CSLDestroy(papszOptions); //*
 
 				//	CPLFree(pintScanline);
 			//	}
@@ -2161,10 +2132,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 			if(strcmp(RDFileNames[k-1].c_str(),"N/A")!=0)
 
 				{
-					papszOptions = NULL;
-
-					pafScanline = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-
 
 					/*sprintf(str,"%s/%s_%d.asc",parameters.outputDir,RDFileNames[k-1].c_str(),itr*sites.TimeStep);
 
@@ -2240,9 +2207,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 
 					if (poDstDS != NULL)
 						GDALClose((GDALDatasetH)poDstDS);//*
-
-					CPLFree(pafScanline);
-					CSLDestroy(papszOptions); //*
 
 					//CPLFree(pafScanline);
 
@@ -2333,9 +2297,7 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 			if(strcmp(DBHFileNames[k-1].c_str(),"N/A")!=0)
 
 				{
-					papszOptions = NULL;
 
-					pafScanline = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
 					/*sprintf(str,"%s/%s_%d.asc",parameters.outputDir,DBHFileNames[k-1].c_str(),itr*sites.TimeStep);
 
 					if ((fpDBH= LDfopen(str, 3)) == NULL)
@@ -2400,8 +2362,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 					if (poDstDS != NULL)
 						GDALClose((GDALDatasetH)poDstDS);//*
 
-					CPLFree(pafScanline);
-					CSLDestroy(papszOptions); //*
 				//	CPLFree(pafScanline);
 
 				}
@@ -2543,11 +2503,9 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 		pafScanline1 = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
 		pafScanline2 = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
 		pafScanline3 = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-		pintScanline = (unsigned int *)CPLMalloc(sizeof(unsigned int)* (sites.numColumns()*sites.numRows()));//*
-		//pafScanline4 = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
+	//	pintScanline = (unsigned int *)CPLMalloc(sizeof(unsigned int)* (sites.numColumns()*sites.numRows()));//*
+		pafScanline4 = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
 		pafScanline5 = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-
-		papszOptions = NULL;
 
 	//	if (itr*freq[0] <= parameters.numberOfIterations){
 
@@ -2826,7 +2784,7 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 				if (poDstDS1 != NULL)
 					GDALClose((GDALDatasetH)poDstDS1);//*
 
-				CPLFree(pafScanline1);
+			//	CPLFree(pafScanline1);
 			}
 			//2.Car
 			if (sites.GetOutputGeneralFlagArray(sites.specNum, Car)){
@@ -2838,7 +2796,7 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 				if (poDstDS2 != NULL)
 					GDALClose((GDALDatasetH)poDstDS2);//*
 
-				CPLFree(pafScanline2);
+				//CPLFree(pafScanline2);
 			}
 			//3.BA
 			if (sites.GetOutputGeneralFlagArray(sites.specNum, BA))
@@ -2851,7 +2809,7 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 				if (poDstDS3 != NULL)
 					GDALClose((GDALDatasetH)poDstDS3);//*
 
-				CPLFree(pafScanline3);
+				//CPLFree(pafScanline3);
 
 			}
 			//4.TPA
@@ -2865,7 +2823,7 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 				if (poDstDS4 != NULL)
 					GDALClose((GDALDatasetH)poDstDS4);//*
 
-				CPLFree(pintScanline);
+			//	CPLFree(pintScanline);
 			}
 			//5.RDensity
 			if (sites.GetOutputGeneralFlagArray(sites.specNum, RDensity))
@@ -2878,7 +2836,7 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 				if (poDstDS5 != NULL)
 					GDALClose((GDALDatasetH)poDstDS5);//*
 
-				CPLFree(pafScanline5);
+			//	CPLFree(pafScanline5);
 			}
 
 			/*if(sites.GetOutputGeneralFlagArray(sites.specNum,Seeds)){
@@ -3281,9 +3239,7 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 					if (strcmp(BioMassFileNames[k - 1].c_str(), "N/A") != 0)
 
 					{
-						papszOptions = NULL;
 
-						pafScanline = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
 						/*sprintf(str,"%s/%s_Age%d_Age%d_%d.asc",parameters.outputDir,BioMassFileNames[k-1].c_str(),Agerangeage1,Agerangeage2,itr*sites.TimeStep);
 
 						if ((fpbiomass = LDfopen(str, 3)) == NULL)
@@ -3345,8 +3301,7 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 
 							if (poDstDS != NULL)
 								GDALClose((GDALDatasetH)poDstDS);//*
-							CPLFree(pafScanline);
-							CSLDestroy(papszOptions); //
+
 							//CPLFree(pafScanline);
 						//}
 
@@ -3429,9 +3384,7 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 					if (strcmp(BasalFileNames[k - 1].c_str(), "N/A") != 0)
 
 					{
-						papszOptions = NULL;
 
-						pafScanline = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
 						/*sprintf(str,"%s/%s_Age%d_Age%d_%d.asc",parameters.outputDir,BasalFileNames[k-1].c_str(),Agerangeage1,Agerangeage2,itr*sites.TimeStep);
 
 						if ((fpbasal= LDfopen(str, 3)) == NULL)
@@ -3496,9 +3449,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 
 							if (poDstDS != NULL)
 								GDALClose((GDALDatasetH)poDstDS);//*
-
-							CPLFree(pafScanline);
-							CSLDestroy(papszOptions); //*
 
 						//	CPLFree(pafScanline);
 					//	}
@@ -3584,9 +3534,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 					if (strcmp(TreesFileNames[k - 1].c_str(), "N/A") != 0)
 
 					{
-						papszOptions = NULL;
-
-						pintScanline = (unsigned int *)CPLMalloc(sizeof(unsigned int)* (sites.numColumns()*sites.numRows()));//*
 
 						/*sprintf(str,"%s/%s_Age%d_Age%d_%d.asc",parameters.outputDir,TreesFileNames[k-1].c_str(),Agerangeage1,Agerangeage2,itr*sites.TimeStep);
 
@@ -3644,9 +3591,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 
 							if (poDstDS != NULL)
 								GDALClose((GDALDatasetH)poDstDS);//*
-
-							CPLFree(pintScanline);
-							CSLDestroy(papszOptions); //*
 
 							//CPLFree(pintScanline);
 
@@ -3729,9 +3673,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 					if (strcmp(IVFileNames[k - 1].c_str(), "N/A") != 0)
 
 					{
-						papszOptions = NULL;
-
-						pafScanline = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
 
 						/*sprintf(str,"%s/%s_Age%d_Age%d_%d.asc",parameters.outputDir,IVFileNames[k-1].c_str(),Agerangeage1,Agerangeage2,itr*sites.TimeStep);
 
@@ -3847,8 +3788,7 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 
 							if (poDstDS != NULL)
 								GDALClose((GDALDatasetH)poDstDS);//*
-							CPLFree(pafScanline);
-							CSLDestroy(papszOptions); //*
+
 							//CPLFree(pafScanline);
 					//	}
 
@@ -3971,16 +3911,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 
 
 		}
-
-		papszOptions = NULL;
-
-		pafScanline1 = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-		//pafScanline2 = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-		pafScanline3 = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-		pintScanline = (unsigned int *)CPLMalloc(sizeof(unsigned int)* (sites.numColumns()*sites.numRows()));//*
-		pafScanline4 = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-		pafScanline5 = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-
 
 		//below is for age range  total 
 
@@ -4247,7 +4177,7 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 				if (poDstDS1 != NULL)
 					GDALClose((GDALDatasetH)poDstDS1);//*
 
-				CPLFree(pafScanline1);
+			//	CPLFree(pafScanline1);
 			}
 			//4.Car
 			if (sites.GetOutputAgerangeFlagArray(sites.specNum, Car)){
@@ -4258,7 +4188,7 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 				if (poDstDS4 != NULL)
 					GDALClose((GDALDatasetH)poDstDS4);//*
 
-				CPLFree(pafScanline4);
+				//CPLFree(pafScanline4);
 			}
 			//3.BA
 			if (sites.GetOutputAgerangeFlagArray(sites.specNum, BA)){
@@ -4270,7 +4200,7 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 				if (poDstDS3 != NULL)
 					GDALClose((GDALDatasetH)poDstDS3);//*
 
-				CPLFree(pafScanline3);
+				//CPLFree(pafScanline3);
 			}
 			//2.TPA
 			if (sites.GetOutputAgerangeFlagArray(sites.specNum, TPA)){
@@ -4282,7 +4212,7 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 				if (poDstDS2 != NULL)
 					GDALClose((GDALDatasetH)poDstDS2);//*
 
-				CPLFree(pintScanline);
+				//CPLFree(pintScanline);
 			}
 			//5.RDensity
 			if (sites.GetOutputAgerangeFlagArray(sites.specNum, RDensity)){
@@ -4294,7 +4224,7 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 				if (poDstDS5 != NULL)
 					GDALClose((GDALDatasetH)poDstDS5);//*
 
-				CPLFree(pafScanline5);
+				//CPLFree(pafScanline5);
 			}
 
 	//	}
@@ -4618,13 +4548,13 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 
 time(&ltimeTemp);
 
-//CPLFree(pafScanline1);
-//CPLFree(pafScanline2);
-//CPLFree(pafScanline3);
-//CPLFree(pafScanline4);
-//CPLFree(pafScanline5);
-//CPLFree(pintScanline);
-//CPLFree(pafScanline);
+CPLFree(pafScanline1);
+CPLFree(pafScanline2);
+CPLFree(pafScanline3);
+CPLFree(pafScanline4);
+CPLFree(pafScanline5);
+CPLFree(pintScanline);
+CPLFree(pafScanline);
 
 printf("Finish 7.0 Style writing output at %s\n",ctime(&ltimeTemp));
 
@@ -5293,7 +5223,7 @@ void inputImgSpec(FILE* classFile, GDALDataset* simgFileint, int yDim, int xDim)
 	if ((classFile = LDfopen(parameters.reclassInFile, 1)) == NULL) //This one has age list
 
 		errorSys("Map attribute input file not found.", STOP);
-	
+
 	s = new SITE[numCovers];
 
 	for (int i = 0; i < numCovers; i++){
@@ -6273,7 +6203,6 @@ void inputLandtypeImg(GDALDataset* ltimgFile, int xDim, int yDim, PDP* ppdp)
 				}
 			}
 		}
-
 	}
 
 }

@@ -7,7 +7,6 @@ Date:			Oct. 16, 2002
 Last Mod:		
 */
 #include <stdlib.h>
-#include <iostream>
 #include <string.h>
 #include "BDASites.h"
 
@@ -407,23 +406,18 @@ void BDASites::BefStChg(int i, int j)
 				}
 			else
 				{
-					//std::cout << "site's location: " << i << "," << j << std::endl;
 					printf("num of vectors %d\n",SortedIndex.size());
 					printf("ERROR ERROR ERROR ERROR!!~~~%d\n",pos);
 					//
-					//std::cout << "dumpsite(sitetouse)" << std::endl;
-					//dumpsite(sitetouse);
-					////std::cout << "dumpsite(temp)" << std::endl;
-					//dumpsite(temp);
-					////std::cout << "dumpsite(SortedIndex.at(0))" << std::endl;
-					//dumpsite(SortedIndex.at(0));
-					////std::cout << "dumpsite(SortedIndex.at(1))" << std::endl;
-					//dumpsite(SortedIndex.at(1));
-					//dumpsite(SortedIndex.at(pos-2));
-					//dumpsite(SortedIndex.at(pos-1));
-					//dumpsite(SortedIndex.at(pos));
-					//dumpsite(SortedIndex.at(pos+1));
-					//dumpsite(SortedIndex.at(pos + 2));
+					dumpsite(sitetouse);
+					dumpsite(temp);
+					dumpsite(SortedIndex.at(0));
+					dumpsite(SortedIndex.at(1));
+					dumpsite(SortedIndex.at(pos-2));
+					dumpsite(SortedIndex.at(pos-1));
+					dumpsite(SortedIndex.at(pos));
+					dumpsite(SortedIndex.at(pos+1));
+					dumpsite(SortedIndex.at(pos+2));
 				}
 		}
 	else if(temp->numofsites<=0)
