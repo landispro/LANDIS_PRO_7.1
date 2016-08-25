@@ -414,6 +414,10 @@ char ch;
 
 // while (((ch=getc(infile))!=EOF)&&(isspace(ch))) {}     old code
 
+
+
+
+
 while ( ( (ch=(char)getc(infile))!=EOF) && ( (isspace(ch)) || (isCharComment(ch)) ) ) {}
 
 

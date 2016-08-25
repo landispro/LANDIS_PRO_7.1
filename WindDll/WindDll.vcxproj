@@ -166,7 +166,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;LandisProCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>.\..\DebugOutput64/WindDll.dll</OutputFile>
+      <OutputFile>..\$(Platform)\$(Configuration)\WindDll.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\output;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\source\Wind.def</ModuleDefinitionFile>
@@ -253,7 +253,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>LandisProCore.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>.\..\Releaseoutput64/WindDll.dll</OutputFile>
+      <OutputFile>..\$(Platform)\$(Configuration)\WindDll.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>../output;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\source\Wind.def</ModuleDefinitionFile>

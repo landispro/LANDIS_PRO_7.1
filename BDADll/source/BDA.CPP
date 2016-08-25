@@ -244,7 +244,7 @@ Function: BDA::read
 Description: read int BDA parameters
 ************************************************************/
 //##ModelId=3F01D0EB0289
-void BDA::read(FILE* pfile)
+void BDA::read(FILE* pfile) // read insect1.dat parameter
 {
 	int		i, iTemp;
 	float	fTemp;
@@ -362,14 +362,14 @@ void BDA::read(FILE* pfile)
 	fscanc(pfile, "%s", strTemp);
 	if (!strcmp(strTemp, "random"))
 		m_enumTempPattern = random;
-	else if (!strcmp(strTemp, "cyclic"))
+	else if (!strcmp(strTemp, "Cyclic"))
 		m_enumTempPattern = cyclic;
 	else
 		errorSys("Error in reading BDA m_enumTempPattern, unrecognized type.", STOP);
 
 	//read in TempType
 	fscanc(pfile, "%s", strTemp);
-	if (!strcmp(strTemp, "pulse"))
+	if (!strcmp(strTemp, "Pulse"))
 		m_enumTempType = TTpulse;
 	else if (!strcmp(strTemp, "variablepulse"))
 		m_enumTempType = TTvariablepulse;
@@ -400,6 +400,7 @@ void BDA::read(FILE* pfile)
 	
 	//read in species parameters
 	fscanc(pfile, "%d", &iTemp); //i number of species
+	cout << "species number" << pBDAspeciesAttrs->number() << endl;
 	if (iTemp != pBDAspeciesAttrs->number())
 		errorSys("BDA: number of species dosn't match", STOP);
 
@@ -416,10 +417,10 @@ void BDA::read(FILE* pfile)
 		fscanc(pfile, "%s", strTemp);
 		if (strcmp(strTemp, pSA->name))
 			errorSys("specie name dosn't match", STOP);
-		fscanc(pfile, "%d", &MinorHostAge[i]);		
-		fscanc(pfile, "%d", &SecondaryHostAge[i]);		
-		fscanc(pfile, "%d", &PrimaryHostAge[i]);		
-		fscanc(pfile, "%d", &ResistantHostAge[i]);		
+		fscanc(pfile, "%d", &MinorHostAge[i]);//0		
+		fscanc(pfile, "%d", &SecondaryHostAge[i]);	//	20
+		fscanc(pfile, "%d", &PrimaryHostAge[i]);	// 30	
+		fscanc(pfile, "%d", &ResistantHostAge[i]);		//0
 		fscanc(pfile, "%d", &Toleranthostage[i]);		
 		fscanc(pfile, "%d", &VulnerableHostAge[i]);	
 		pSA = pBDAspeciesAttrs->next();

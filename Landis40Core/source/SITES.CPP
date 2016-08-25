@@ -60,7 +60,7 @@ SITES::SITES(int species, int i, int j)
 
 //Constructor.  This will dimension the size of the map to i rows and j
 
-//columns.  The number of species is set to species.
+
 
 
 
@@ -238,7 +238,7 @@ if(map_landtype)
 
 if (SeedRain){
 
-	for (int l = 0; l < (MaxDistofAllSpec / CellSize * MaxDistofAllSpec / CellSize); l++){
+	for (int l = 0; l < specNum; l++){
 
 		delete[] SeedRain[l];
 	}
@@ -4038,7 +4038,7 @@ for(k=1;k<=siteptr->number();k++)
 
 							///std::cout << "Probability: " << GetSeedRain(k, TempDist) << std::endl;
 
-							if (i == 251 && j == 251 ){
+							//if (i == 251 && j == 251 ){
 
 								/*std::cout << std::endl;
 
@@ -4047,7 +4047,7 @@ for(k=1;k<=siteptr->number();k++)
 								/*std::cout << " Mature Tree " << SITES::operator()(i, j)->SpecieIndex(k)->GetMatureTreeValue() << " ";
 
 								std::cout << "available tree" << (GetSeedRain(k, TempDist)*SITES::operator()(i, j)->SpecieIndex(k)->GetMatureTreeValue()*SITES::operator()(i, j)->specAtt(k)->TotalSeed*TimeStep) << " ";*/
-							}
+							//}
 						}
 
 					}
@@ -6021,6 +6021,7 @@ else
 		{
 			for(j=1;j<=sitetmp->specAtt(i)->longevity/TimeStep;j++)
 			{
+				
 				if (fscanc(fp,"%f",&temp)!=1)
    					errorSys("Error reading in growth rates from file.",STOP);
 				SetGrowthRates(GrowthFlag, i,j,temp, numLU);

@@ -21,6 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8D089B87-2999-462B-86EB-A994CCE87886}</ProjectGuid>
     <RootNamespace>Landis40App</RootNamespace>
+    <ProjectName>Landis40App</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -76,11 +77,11 @@
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>C:\Copy_From_Station\LANDISsource_7.1.3.8_0225_ChangedDisperal\DebugOutput64</OutDir>
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Users\ylt5b\Downloads\release_gdal_1111_x64_libs\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\ylt5b\Downloads\release_gdal_1111_x64_libs\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\GDAL\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\GDAL\lib;$(IncludePath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>.\..\output\</OutDir>
@@ -88,12 +89,12 @@
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>C:\Copy_From_Station\LANDISsource_7.1.3.8_0225_ChangedDisperal\DebugOutput64</OutDir>
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <TargetName>Landis70ProApp</TargetName>
-    <IncludePath>C:\Users\ylt5b\Downloads\release_gdal_1111_x64_libs\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\ylt5b\Downloads\release_gdal_1111_x64_libs\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\GDAL\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\GDAL\lib;$(IncludePath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -143,7 +144,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\public;C:\Users\ylt5b\Downloads\release_gdal_1111_x64_libs\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\public;..\GDAL\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -164,9 +165,9 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>cairo.lib;fontconfig.lib;freetype2411.lib;freexl.lib;freexl_i.lib;fribidi.lib;cfitsio.lib;clientlib.lib;expat.lib;gd.lib;gdal_i.lib;geos.lib;giflib.lib;harfbuzz.lib;hdf5.lib;hdf5_cpp.lib;hdf5_hl.lib;hdf5_hl_cpp.lib;hdfdll.lib;libecwj2.lib;spatialite_i.lib;ssleay32.lib;szip.lib;xdrdll.lib;xerces-c_2.lib;zdll.lib;zlib.lib;iconv.lib;minizip.lib;netcdf.lib;openjp2.lib;pixman-1.lib;poppler.lib;proj.lib;proj_i.lib;spatialite.lib;libcurl_imp.lib;libtiff_i.lib;libxml2.lib;mapserver.lib;mfhdfdll.lib;libeay32.lib;libmysql.lib;libpng.lib;libpq.lib;libpqdll.lib;libsvg.lib;libsvg-cairo.lib;libfcgi.lib;libkmldom.lib;libkmlengine.lib;libkmlregionator.lib;libkmlxsd.lib;libjbig.lib;libjpeg.lib;libkea.lib;libkmlbase.lib;libkmlconvenience.lib</AdditionalDependencies>
-      <OutputFile>..\Releaseoutput64/Landis70ProApp.exe</OutputFile>
+      <OutputFile>..\$(Platform)\$(Configuration)\Landis70ProApp.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>C:\Users\ylt5b\Downloads\release_gdal_1111_x64_libs\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\GDAL\lib;$(VSInstallDir)\VC\lib\amd64;$(ExtensionSDKDirectoryRoot)\Windows\v7.1A\Lib\x64;$(VSInstallDir)\VC\atlmfc\lib\amd64</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>.\..\output/LandisProApp.pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -221,7 +222,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\public;C:\Users\ylt5b\Downloads\release_gdal_1111_x64_libs\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\public;..\GDAL\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -241,9 +242,9 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <OutputFile>..\DebugOutput64/Landis70ProApp.exe</OutputFile>
+      <OutputFile>..\$(Platform)\$(Configuration)\Landis70ProApp.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>C:\Users\ylt5b\Downloads\release_gdal_1111_x64_libs\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\GDAL\lib;$(VSInstallDir)\VC\lib\amd64;$(ExtensionSDKDirectoryRoot)\Windows\v7.1A\Lib\x64;$(VSInstallDir)\VC\atlmfc\lib\amd64</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>.\..\output/LandisProApp.pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>

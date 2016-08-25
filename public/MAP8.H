@@ -202,9 +202,9 @@ public:
 	int readImg(const char *fn, const int giRow, const int giCol);
 
 	// %%# Changed 5
-	unsigned short get_data(int r, int c);
+	unsigned int get_data(int r, int c);
 	// %%# Changed 6
-	void set_data(int r, int c, unsigned short val);
+	void set_data(int r, int c, unsigned int val);
 
     void dim(int, int);          //This will dimension or redimension the map size.
 
@@ -245,7 +245,7 @@ private:
 
     int numCols, numRows;       //Map dimensions.
 
-    unsigned short *data;        //Pointer to data array.
+    unsigned int *data;        //Pointer to data array.
 
     unsigned char flag16or32; //Add By Qia on Nov 4 2008
 

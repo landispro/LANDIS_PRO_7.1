@@ -165,7 +165,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>LandisProCore.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>.\..\Releaseoutput64/FuelDll.dll</OutputFile>
+      <OutputFile>..\$(Platform)\$(Configuration)\FuelDll.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>../output;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\source\Fuel.def</ModuleDefinitionFile>
@@ -250,7 +250,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;LandisProCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>.\..\DebugOutput64/FuelDll.dll</OutputFile>
+      <OutputFile>..\$(Platform)\$(Configuration)\FuelDll.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\output;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\source\Fuel.def</ModuleDefinitionFile>

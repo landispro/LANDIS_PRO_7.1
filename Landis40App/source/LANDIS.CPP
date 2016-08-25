@@ -865,7 +865,7 @@ int main(int argc, char *argv[])
 
 	time(&ltime);
 
-	printf("Start Landis Pro at %s", ctime(&ltime));
+	printf("Starting LANDIS PRO 7.1 at %s", ctime(&ltime));
 
 
 
@@ -1905,9 +1905,7 @@ int main(int argc, char *argv[])
 
 	fclose(fpLogFileSEC);
 
-	printf("end here\n");
-
-	getchar();
+	printf("End of simulation.\n");
 
 	return 0;
 
@@ -2216,7 +2214,7 @@ void singularLandisIteration(int itr, int run_extraSeed, int numSitesActive, int
 
 	fprintf(fpforTimeBU, "\nYear: %d:\n", itr);// Add By Qia
 
-	int debut = sites.GetSeedRain(1, 74);
+	//int debut = sites.GetSeedRain(1, 74);
 
 	fflush(stdout);
 

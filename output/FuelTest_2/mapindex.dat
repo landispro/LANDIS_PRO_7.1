@@ -1,4 +1,0 @@
-#mapindex#
-BiomassIndex.dat	#N/A=don't output biomass by species, if a file, the species name and output file name for it#
-BasalAreaIndex.dat	#N/A=don't output basal area by species, if a file, the species name and output file name for it#
-TreesIndex.dat	#N/A=don't output trees by species, if a file, the species name and output file name for it#

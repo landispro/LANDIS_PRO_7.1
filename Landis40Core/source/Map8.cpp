@@ -446,12 +446,12 @@ int MAP8::write(const char *fn, int *red, int *green, int *blue,   double wAdfGe
 
 	return write(fn, (unsigned char*)&ured[0], (unsigned char*)&ugreen[0], (unsigned char*)&ublue[0],  wAdfGeoTransform);
 
-	cout << "wAdfGeoTransform" << endl;
+	/*cout << "wAdfGeoTransform" << endl;
 
 	for (int i = 0; i < 6; i++){
 		cout << wAdfGeoTransform[i];
 	}
-	cout << endl;
+	cout << endl;*/
 
 }
 
@@ -512,13 +512,14 @@ int MAP8::write(const char *fn, unsigned char *red, unsigned char *green, unsign
 
 	oSRS.exportToWkt(&pszSRS_WKT);//*
 
+	CPLFree(pszSRS_WKT);
 	//sprintf(str, "%s.gis", fn);
 
 	sprintf(str1, "%s.img", fn); //*
 
-	poDstDS = poDriver->Create(str1, numcol, numrow, 1, GDT_UInt32, papszOptions);//*
-
 	pintScanline = (unsigned int *)CPLMalloc(sizeof(unsigned int)* (numcol*numrow));//*
+
+	poDstDS = poDriver->Create(str1, numcol, numrow, 1, GDT_UInt32, papszOptions);//*
 
 	if (poDstDS == NULL){
 
@@ -615,8 +616,13 @@ int MAP8::write(const char *fn, unsigned char *red, unsigned char *green, unsign
 
 	outPoBand->RasterIO(GF_Write, 0, 0, numcol, numrow, pintScanline, numcol, numrow, GDT_UInt32, 0, 0);//*
 
-	GDALClose((GDALDatasetH)poDstDS);//*
+	
 
+	if (poDstDS != NULL)
+		GDALClose((GDALDatasetH)poDstDS);//*
+
+	CPLFree(pintScanline);
+	CSLDestroy(papszOptions); //*
 
 	//fclose(fp);
 
@@ -1602,15 +1608,15 @@ int MAP16::readImg(const char *fn, const int giRow, const int giCol)
 			// (*this)(i,j)=(unsigned short)mapValue;
 			
 			// %%# Changed 13
-			(*this).set_data(i, j, (unsigned short)mapValue);
+			(*this).set_data(i, j, mapValue);
 
 			if (numread > 0)
 
 			{
 
-				if ((unsigned short)mapValue > largeCell)
+				if (mapValue > largeCell)
 
-					largeCell = (unsigned short)mapValue;
+					largeCell = mapValue;
 
 			}
 
@@ -1644,7 +1650,7 @@ void MAP16::dim(int r, int c)
 
 	flag16or32 = 16;
 
-	data = new unsigned short[numCols*numRows];
+	data = new unsigned int[numCols*numRows];
 
 }
 
@@ -1747,7 +1753,7 @@ int MAP16::rows()
 
 
 // %%# Changed 14
-unsigned short MAP16::get_data(int r, int c)
+unsigned int MAP16::get_data(int r, int c)
 {
 
 	static int get_datacount = 0;
@@ -1805,7 +1811,7 @@ unsigned short MAP16::get_data(int r, int c)
 
 
 // %%# Changed 15
-void MAP16::set_data(int r, int c, unsigned short val)
+void MAP16::set_data(int r, int c, unsigned int val)
 {
 	assert(flag16or32 == 16);
 

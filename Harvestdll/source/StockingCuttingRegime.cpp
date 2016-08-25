@@ -70,14 +70,14 @@ int StockingCuttingRegime::conditions() {
         if (currentDecade == itsEntryDecade) {
 
             passed = 1;
-			printf("stocking first event year: %d\n", currentDecade);
+			
 			itsState = TOHARVEST;
 			send_parameters_to_current(1,-1);
 
         } else if (currentDecade>itsEntryDecade&&(currentDecade-itsEntryDecade) % itsRepeatInterval == 0) {
 
             passed = 1;
-			printf("stocking repeat event year %d\n", currentDecade);
+			
             itsState = TOHARVEST;
 			send_parameters_to_current(1,-1);
 		}
@@ -91,7 +91,7 @@ int StockingCuttingRegime::conditions() {
 			for(int i=0;i<total_reentry_event_instances;i++){
 				int inteval_reentry = StockingCuttingRegime_reentry_event_instances[i].itsReentryInteval;
 				if((currentDecade-itsEntryDecade-inteval_reentry)%(itsRepeatInterval) == 0 ||(currentDecade-itsEntryDecade)-inteval_reentry == 0){
-					printf("stocking a reentry year: %d\n",currentDecade);
+					
 					passed = 1;
 					itsState = TOREENTRY;
 					send_parameters_to_current(0,i);
@@ -132,14 +132,14 @@ void StockingCuttingRegime::harvest() {
     switch (itsState) {
 
     case TOHARVEST :
-		printf("stocking event\n");
+		
         
         HarvestRegime::harvest();
 		itsState = PENDING;
 
         break;
 	case TOREENTRY:
-		printf("stocking reentry\n");
+		
 		reharvest();
 		
 		itsStands.clear();
@@ -975,7 +975,7 @@ double StockingCuttingRegime::computeStandStocking(Stand* stand) {
 		}
 		
     }
-	printf("tree num: %lf, diame: %lf, diamsquare: %lf\n",num_trees, Diameters, Diameters_square);
+	//printf("tree num: %lf, diame: %lf, diamsquare: %lf\n",num_trees, Diameters, Diameters_square);
 	return (x*num_trees+y*Diameters+z*Diameters_square)/(pCoresites->CellSize*pCoresites->CellSize/4046.86)/stand->numberOfActiveSites();
 
 }
@@ -989,7 +989,7 @@ void StockingCuttingRegime::reharvest() {
 		stand = (*pstands)(itsStands.at(ii));
 		SitesCut+=stand->numberOfActiveSites();
 	double stocking_debug = computeStandStocking(stand);
-	printf("standID: %d, stocking: %f\n",stand->getId(),stocking_debug);
+	//printf("standID: %d, stocking: %f\n",stand->getId(),stocking_debug);
 	//printf("sitesinstand:%d SitesCut:%d Target:%d\n",stand->numberOfActiveSites(),SitesCut,itsTargetCut);
 
     LDPOINT pt;
@@ -1079,7 +1079,7 @@ void StockingCuttingRegime::reharvest() {
 }
 int StockingCuttingRegime::harvestStand(Stand* stand) {
 
-	printf("before harvest standID: %d, stocking: %lf\n",stand->getId(),computeStandStocking(stand));
+	//printf("before harvest standID: %d, stocking: %lf\n",stand->getId(),computeStandStocking(stand));
 	SitesCut+=stand->numberOfActiveSites();
 
 	//printf("sitesinstand:%d SitesCut:%d Target:%d\n",stand->numberOfActiveSites(),SitesCut,itsTargetCut);
@@ -1163,7 +1163,7 @@ int StockingCuttingRegime::harvestStand(Stand* stand) {
 		}
 
     //return StandsCut;
-	printf("after harvest standID: %d, stocking: %lf\n",stand->getId(),computeStandStocking(stand));
+	//printf("after harvest standID: %d, stocking: %lf\n",stand->getId(),computeStandStocking(stand));
 	return 1;
 
 }
