@@ -42,8 +42,6 @@ PDP::PDP(int mode, int col, int row, int BDANo)
 
 	iBDANum = BDANo;
 
-
-
 	sTSLFire = NULL;
 
 	cFireSeverity = NULL;

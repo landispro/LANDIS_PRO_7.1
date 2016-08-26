@@ -681,7 +681,7 @@ void output_harvest_Dec_Type(int itr, char str_htyp[200], char str_dec[200]){
 }
 
 
-void output_harvest_Dec_Type(int itr, char str_htyp[200], char str_htyp1[200], char str_dec[200], char str_dec1[200]){
+void output_harvest_Dec_Type(int itr, char str_htyp[200], char str_htyp1[200], char str_dec[200], char str_dec1[200], double wAdfGeoTransform[]){
 
 	// Harvest type map
 
@@ -711,7 +711,7 @@ void output_harvest_Dec_Type(int itr, char str_htyp[200], char str_htyp1[200], c
 
 	float cellsize = *(((float*)pCoresites->getHeader()) + 30);
 
-	double wAdfGeoTransform[6] = { 0.00, cellsize, 0.00, 28350.00, 0.00, -cellsize };//*
+	//double wAdfGeoTransform[6] = { 0.00, cellsize, 0.00, 28350.00, 0.00, -cellsize };//*
 
 	char **papszOptions = NULL;//*
 
@@ -1188,7 +1188,7 @@ void PutOutput_harvestBACut(char *fn){
 
 }
 
-void PutOutput_harvestBACut(char *fn, char *fn1){
+void PutOutput_harvestBACut(char *fn, char *fn1, double wAdfGeoTransform[]){
 
 	FILE *fpOutput;
 
@@ -1215,7 +1215,7 @@ void PutOutput_harvestBACut(char *fn, char *fn1){
 
 	float cellsize = *(((float*)pCoresites->getHeader()) + 30);
 
-	double wAdfGeoTransform[6] = { 0.00, cellsize, 0.00, 28350.00, 0.00, -cellsize };//*
+	//double wAdfGeoTransform[6] = { 0.00, cellsize, 0.00, 28350.00, 0.00, -cellsize };//*
 
 	char **papszOptions = NULL;//*
 
@@ -1305,7 +1305,7 @@ void PutOutput_harvestBACut_spec(char *fn,int spec){
 
 }
 
-void PutOutput_harvestBACut_spec(char *fn, char *fn1, int spec){
+void PutOutput_harvestBACut_spec(char *fn, char *fn1, int spec, double wAdfGeoTransform[]){
 
 	FILE *fpOutput;
 
@@ -1329,7 +1329,7 @@ void PutOutput_harvestBACut_spec(char *fn, char *fn1, int spec){
 
 	float cellsize = *(((float*)pCoresites->getHeader()) + 30);
 
-	double wAdfGeoTransform[6] = { 0.00, cellsize, 0.00, 28350.00, 0.00, -cellsize };//*
+	//double wAdfGeoTransform[6] = { 0.00, cellsize, 0.00, 28350.00, 0.00, -cellsize };//*
 
 	char **papszOptions = NULL;//*
 

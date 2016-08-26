@@ -358,7 +358,7 @@ CFIRE::~CFIRE()
 
 
 
-void CFIRE::Activate(int itr, int freq[])
+void CFIRE::Activate(int itr, int freq[], double wAdfGeoTransform[])
 
 {
 
@@ -918,7 +918,7 @@ void CFIRE::Activate(int itr, int freq[])
 
 		m_Map.setCellSize(m_fireParam.cellSize);
 
-		double wAdfGeoTransform[6] = { 0.00, m_fireParam.cellSize, 0.00, 600.00, 0.00, -m_fireParam.cellSize };//*
+		//double wAdfGeoTransform[6] = { 0.00, m_fireParam.cellSize, 0.00, 600.00, 0.00, -m_fireParam.cellSize };//*
 
 		float nodata = 0;
 
@@ -974,7 +974,7 @@ void CFIRE::Activate(int itr, int freq[])
 
 		m_cummMap.setCellSize(m_fireParam.cellSize);
 
-		double wAdfGeoTransform[6] = { 0.00, m_fireParam.cellSize, 0.00, 600.00, 0.00, -m_fireParam.cellSize };//*
+		//double wAdfGeoTransform[6] = { 0.00, m_fireParam.cellSize, 0.00, 600.00, 0.00, -m_fireParam.cellSize };//*
 
 		float nodata = 0;
 

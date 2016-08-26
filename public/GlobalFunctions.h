@@ -56,11 +56,11 @@ void DLLFUNC createHarvestTypeMap(MAP8 &m);
 
 void DLLFUNC PutOutput_harvestBACut(char *fn);
 
-void DLLFUNC PutOutput_harvestBACut(char *fn, char *fn1);
+void DLLFUNC PutOutput_harvestBACut(char *fn, char *fn1, double wAdfGeoTransform[]);
 
 void DLLFUNC PutOutput_harvestBACut_spec(char *fn,int spec);//Add By Qia
 
-void DLLFUNC PutOutput_harvestBACut_spec(char *fn, char *fn1, int spec);//*
+void DLLFUNC PutOutput_harvestBACut_spec(char *fn, char *fn1, int spec, double wAdfGeoTransform[]);//*
 
 void DLLFUNC createHarvestDecadeMap(MAP8 &m);
 
@@ -70,7 +70,7 @@ void DLLFUNC CleanHarvest();
 
 void DLLFUNC output_harvest_Dec_Type(int itr, char str_htyp[200], char str_dec[200]);
 
-void DLLFUNC output_harvest_Dec_Type(int itr, char str_htyp[200], char str_htyp1[200], char str_dec[200], char str_dec1[200]);
+void DLLFUNC output_harvest_Dec_Type(int itr, char str_htyp[200], char str_htyp1[200], char str_dec[200], char str_dec1[200], double wAdfGeoTransform[]);
 
 void DLLFUNC HarvestPassInit(SITES*, int, char*, char*, PDP*);  //add by Vera
 

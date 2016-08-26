@@ -410,7 +410,7 @@ int MAP8::write(const char *fn)
 
 
 
-int MAP8::write(const char *fn, int *red, int *green, int *blue,   double wAdfGeoTransform[])
+int MAP8::write(const char *fn, int *red, int *green, int *blue, double wAdfGeoTransform[])
 
 //Write map to a file.  There is no extension on the file name.  Three
 

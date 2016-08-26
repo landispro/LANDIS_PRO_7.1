@@ -229,7 +229,7 @@ public:
 
 		char * strOutput,int randSeed);
 
-	void Activate(int itr, int freq[]);
+	void Activate(int itr, int freq[], double wAdfGeoTransform[]);
 
 	virtual ~CFIRE();
 	int flag_regime_update;
