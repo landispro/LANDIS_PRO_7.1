@@ -1829,7 +1829,7 @@ int main(int argc, char *argv[])
 	
 		if ((i%sites.TimeStep  == 0) || (i == sites.TimeStep*parameters.numberOfIterations)){
 
-			if ((i % (sites.TimeStep * freq[0]) ==0) &&(i / sites.TimeStep  <= parameters.numberOfIterations)){
+			if ((i % (sites.TimeStep * freq[0]) ==0) &&(i / sites.TimeStep  < parameters.numberOfIterations)){
 
 				putOutput_Landis70Pro(0, i / sites.TimeStep, freq, wAdfGeoTransform);
 			}
@@ -1839,7 +1839,7 @@ int main(int argc, char *argv[])
 				putOutput_Landis70Pro(0, parameters.numberOfIterations, frequency, wAdfGeoTransform);
 			}
 
-			if ((i % (sites.TimeStep * freq[4]) == 0) && (i / sites.TimeStep  <= parameters.numberOfIterations)){
+			if ((i % (sites.TimeStep * freq[4]) == 0) && (i / sites.TimeStep  < parameters.numberOfIterations)){
 
 				putOutput(0, i / sites.TimeStep, freq, wAdfGeoTransform);
 			}
