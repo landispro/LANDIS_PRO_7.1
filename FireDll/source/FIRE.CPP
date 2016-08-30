@@ -2085,17 +2085,7 @@ int CFIRE::damage(LDPOINT p, int &fireClass)
 					int tree_num_agecohort = siteptr->SpecieIndex(i)->getTreeNum(j,i);
 					DeadTree=tree_num_agecohort*prob_burn;
 					siteptr->SpecieIndex(i)->setTreeNum(j,i,tree_num_agecohort-DeadTree);
-					if((p.x == 293 && p.y == 378)||
-						(p.x == 152 && p.y == 331)||
-						(p.x == 855 && p.y == 728)||
-						(p.x == 223 && p.y == 530)||
-						(p.x == 172 && p.y == 63)
-						)
-					{
-							printf("debug fire: (x: %d y: %d): spec: %d, age: %d, prob: %lf, kill tree: %d\n",p.x,p.y, i, j,prob_burn, (int)DeadTree);
-							printf("Tolerance: %d, b1: %f, b2: %f, b3: %f, growth: %f, severity: %d, X: %f, prob: %lf\n",
-								tolerance_index, beta1, beta2,beta3,m_pLAND->GetGrowthRates(i,j,l->ltID),severity_index, X_value,  prob_burn);
-					}
+
 					if(siteptr->specAtt(i)->maxSproutAge/m_pLAND->TimeStep>=j)
 
 						{
