@@ -185,7 +185,7 @@ FILE *fpLogFileSEC; //Add By Qia on Apr 24 2012
 
 /////////////////////////////////////////////////////////////////////////////
 
-void singularLandisIteration(int, int, int, int, int, int, PDP*);
+void singularLandisIteration(int, int, int, int, int, int, double[6], PDP*);
 
 
 
@@ -285,7 +285,7 @@ int gDLLMode;
 
 
 
-void putHarvestOutput(int itr)
+void putHarvestOutput(int itr, double wAdfGeoTransform[])
 
 {
 
@@ -334,19 +334,19 @@ void putHarvestOutput(int itr)
 
 		sprintf(str_dec1, "%s/%s/hdec%d.img", parameters.outputDir, "Harvest", itr*freq[3] * sites.TimeStep_Harvest);//*
 
-		output_harvest_Dec_Type(itr, str_htyp, str_htyp1, str_dec, str_dec1);//*
+		output_harvest_Dec_Type(itr, str_htyp, str_htyp1, str_dec, str_dec1, wAdfGeoTransform);//*
 
 		for (int i = 0; i < sites.specNum; i++)
 		{
 
 			sprintf(str1, "%s/%s/%s_BACut%d.img", parameters.outputDir, "Harvest", speciesAttrs(i + 1)->name, itr*freq[3] * sites.TimeStep_Harvest);//*
 
-			PutOutput_harvestBACut_spec(str, str1, i);//*
+			PutOutput_harvestBACut_spec(str, str1, i, wAdfGeoTransform);//*
 		}
 
 		sprintf(str1, "%s/%s/BACut%d.img", parameters.outputDir, "Harvest", itr*freq[3] * sites.TimeStep_Harvest);//*
 
-		PutOutput_harvestBACut(str, str1);
+		PutOutput_harvestBACut(str, str1, wAdfGeoTransform);
 	}
 
 
@@ -357,17 +357,17 @@ void putHarvestOutput(int itr)
 
 				sprintf(str_dec1, "%s/%s/hdec%d.img", parameters.outputDir, "Harvest", parameters.numberOfIterations * sites.TimeStep_Harvest);//*
 
-				output_harvest_Dec_Type(itr, str_htyp, str_htyp1, str_dec, str_dec1);//*
+				output_harvest_Dec_Type(itr, str_htyp, str_htyp1, str_dec, str_dec1, wAdfGeoTransform);//*
 
 				for (int i = 0; i < sites.specNum; i++){
 
 					sprintf(str1, "%s/%s/%s_BACut%d.img", parameters.outputDir, "Harvest", speciesAttrs(i + 1)->name, parameters.numberOfIterations* sites.TimeStep_Harvest);//*
 
-					PutOutput_harvestBACut_spec(str, str1, i);//*
+					PutOutput_harvestBACut_spec(str, str1, i, wAdfGeoTransform);//*
 				}
 				sprintf(str1, "%s/%s/BACut%d.img", parameters.outputDir, "Harvest", parameters.numberOfIterations* sites.TimeStep_Harvest);//*
 
-				PutOutput_harvestBACut(str, str1);
+				PutOutput_harvestBACut(str, str1, wAdfGeoTransform);
 			}
 		////sprintf(str, "%s/%s/BACut%d.asc", parameters.outputDir, "Harvest", itr*sites.TimeStep_Harvest);
 
@@ -1824,7 +1824,7 @@ int main(int argc, char *argv[])
 
 
 
- 		singularLandisIteration(i, run_extraSeed, (numSitesActive / 1000), snr, snc, specAtNum, pPDP);
+		singularLandisIteration(i, run_extraSeed, (numSitesActive / 1000), snr, snc, specAtNum, wAdfGeoTransform, pPDP);
 
 	
 		if ((i%sites.TimeStep  == 0) || (i == sites.TimeStep*parameters.numberOfIterations)){
@@ -2178,7 +2178,7 @@ void KillTrees(int snr, int snc)
 
 
 
-void singularLandisIteration(int itr, int run_extraSeed, int numSitesActive, int snr, int snc, int specAtNum, PDP* ppdp)
+void singularLandisIteration(int itr, int run_extraSeed, int numSitesActive, int snr, int snc, int specAtNum, double wAdfGeoTransform[], PDP* ppdp)
 
 //This processes a singular Landis iteration.  It loops through each site
 
@@ -2283,7 +2283,7 @@ void singularLandisIteration(int itr, int run_extraSeed, int numSitesActive, int
 		time(&time1);
 		//cout << "time1 is " << ctime(&time1) << endl;
 
-		typedef CFIRE* (*GetFireACTIVATETYPE)(CFIRE* pf, int itr, int freq[]);
+		typedef CFIRE* (*GetFireACTIVATETYPE)(CFIRE* pf, int itr, int freq[], double wAdfGeoTransform[]);
 
 		gLibFire = LoadLibrary("FireDll.dll");
 
@@ -2310,7 +2310,7 @@ void singularLandisIteration(int itr, int run_extraSeed, int numSitesActive, int
 		time(&time4);
 		//cout << "time4 is " << ctime(&time4) << endl;
 
-		GetFireACTIVATE(pFire, itr / sites.TimeStep_Fire, freq);
+		GetFireACTIVATE(pFire, itr / sites.TimeStep_Fire, freq, wAdfGeoTransform);
 
 
 
@@ -2459,7 +2459,7 @@ void singularLandisIteration(int itr, int run_extraSeed, int numSitesActive, int
 
 		//fseed(parameters.randSeed+itr*6);//Commented By Qia on Dec 18 2008
 
-		putHarvestOutput(itr / sites.TimeStep_Harvest);
+		putHarvestOutput(itr / sites.TimeStep_Harvest, wAdfGeoTransform);
 
 		time(&ltimeTemp);
 

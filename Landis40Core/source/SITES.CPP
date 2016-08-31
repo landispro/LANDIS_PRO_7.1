@@ -238,10 +238,10 @@ if(map_landtype)
 
 if (SeedRain){
 
-	for (int l = 0; l < specNum; l++){
+	//for (int l = 0; l < specNum; l++){
 
-		delete[] SeedRain[l];
-	}
+	//	delete[] SeedRain[l];
+	//}
 
 	delete[] SeedRain;
 }

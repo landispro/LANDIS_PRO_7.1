@@ -32,12 +32,12 @@ CFIRE* GetFire(char* strfn, int mode, SITES* outsites, LANDUNITS* outlus,
 
 
 
-void GetFireACTIVATE(CFIRE* pf, int itr, int freq[])
+void GetFireACTIVATE(CFIRE* pf, int itr, int freq[], double wAdfGeoTransform[])
 
 {
 
   //  pw->activate(itr, freq, s, sp, cellSize, randSeed, numberOfIterations, gDLLMode);
 
-	pf->Activate(itr,freq);
+	pf->Activate(itr, freq, wAdfGeoTransform);
 
 }

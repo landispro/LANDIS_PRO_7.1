@@ -178,9 +178,9 @@ class DLLCLASS CFIRE
 
 public:
 
-	void WriteCummInitiationMap(int snr, int snc, int itr);
+	void WriteCummInitiationMap(int snr, int snc, int itr, double wAdfGeoTransform[]);
 
-	void WriteInitiationMap(int snr, int snc, int itr);
+	void WriteInitiationMap(int snr, int snc, int itr, double wAdfGeoTransform[]);
 
 	float fireDuration(float mean,float std);
 
@@ -229,7 +229,7 @@ public:
 
 		char * strOutput,int randSeed);
 
-	void Activate(int itr, int freq[]);
+	void Activate(int itr, int freq[], double wAdfGeoTransform[]);
 
 	virtual ~CFIRE();
 	int flag_regime_update;
@@ -293,7 +293,7 @@ private:
 
 	void PrintWindLog();
 
-	void WriteTSLF(int snr, int snc, int itr);
+	void WriteTSLF(int snr, int snc, int itr, double wAdfGeoTransform[]);
 
 	
 
