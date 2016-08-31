@@ -446,13 +446,6 @@ int MAP8::write(const char *fn, int *red, int *green, int *blue, double wAdfGeoT
 
 	return write(fn, (unsigned char*)&ured[0], (unsigned char*)&ugreen[0], (unsigned char*)&ublue[0],  wAdfGeoTransform);
 
-	/*cout << "wAdfGeoTransform" << endl;
-
-	for (int i = 0; i < 6; i++){
-		cout << wAdfGeoTransform[i];
-	}
-	cout << endl;*/
-
 }
 
 

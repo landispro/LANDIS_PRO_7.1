@@ -324,7 +324,7 @@ CFIRE::CFIRE(char*	strfn, int mode, SITES* outsites, LANDUNITS* outlus,
 
 	//write TSLF
 
-	WriteTSLF(outsites->numRows(),outsites->numColumns(),0);
+	WriteTSLF(outsites->numRows(), outsites->numColumns(), 0, wAdfGeoTransform);
 
 	m_FinneyDebugOutput = 0;
 
@@ -926,11 +926,11 @@ void CFIRE::Activate(int itr, int freq[], double wAdfGeoTransform[])
 
 
 
-		WriteInitiationMap(snr,snc,itr);
+		WriteInitiationMap(snr, snc, itr, wAdfGeoTransform);
 
 		//write time-since-last-fire map
 
-		WriteTSLF(snr,snc,itr);
+		WriteTSLF(snr, snc, itr, wAdfGeoTransform);
 
 
 
@@ -980,7 +980,7 @@ void CFIRE::Activate(int itr, int freq[], double wAdfGeoTransform[])
 
 		m_cummMap.write(str, red, green, blue, wAdfGeoTransform);
 
-		WriteCummInitiationMap(snr, snc, itr);
+		WriteCummInitiationMap(snr, snc, itr, wAdfGeoTransform);
 
 	}
 
@@ -3451,7 +3451,7 @@ void CFIRE::PrintWindLog()
 
 
 
-void CFIRE::WriteTSLF(int snr, int snc, int itr)
+void CFIRE::WriteTSLF(int snr, int snc, int itr, double wAdfGeoTransform[])
 
 {
 
@@ -3528,8 +3528,6 @@ void CFIRE::WriteTSLF(int snr, int snc, int itr)
 				sprintf(str,"%s%d",m_strTSLF,itr*m_pLAND->TimeStep_Fire);
 
 				m.setCellSize(m_fireParam.cellSize);
-
-				double wAdfGeoTransform[6] = { 0.00, m_fireParam.cellSize, 0.00, 600.00, 0.00, -m_fireParam.cellSize };//*
 
 				m.write(str, red, green, blue, wAdfGeoTransform);
 
@@ -5274,7 +5272,7 @@ float CFIRE::fireDuration(float mean, float std)
 
 
 
-void CFIRE::WriteInitiationMap(int snr, int snc, int itr)
+void CFIRE::WriteInitiationMap(int snr, int snc, int itr, double wAdfGeoTransform[])
 
 {
 
@@ -5308,15 +5306,13 @@ void CFIRE::WriteInitiationMap(int snr, int snc, int itr)
 
 	m_InitiationMap.setCellSize(m_fireParam.cellSize);
 
-	double wAdfGeoTransform[6] = { 0.00, m_fireParam.cellSize, 0.00, 600.00, 0.00, -m_fireParam.cellSize };//*
-
 	m_InitiationMap.write(str,red,green,blue,wAdfGeoTransform);
 
 }
 
 
 
-void CFIRE::WriteCummInitiationMap(int snr, int snc, int itr)
+void CFIRE::WriteCummInitiationMap(int snr, int snc, int itr, double wAdfGeoTransform[])
 
 {
 
@@ -5351,8 +5347,6 @@ void CFIRE::WriteCummInitiationMap(int snr, int snc, int itr)
 	sprintf(str,"%sCummInit",m_strFireOutputDirectory);
 
 	m_cummInitiationMap.setCellSize(m_fireParam.cellSize);
-
-	double wAdfGeoTransform[6] = { 0.00, m_fireParam.cellSize, 0.00, 600.00, 0.00, -m_fireParam.cellSize };//*
 
 	m_cummInitiationMap.write(str, red, green, blue, wAdfGeoTransform);
 
