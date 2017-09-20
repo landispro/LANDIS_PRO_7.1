@@ -383,7 +383,7 @@ void CFIRE::Activate(int itr, int freq[], double wAdfGeoTransform[])
 		   amtdamaged=0;
 
  
-
+	int numFRU = m_pFireRegimeUnits->number(); //Number of fire regime unit
 
 	time(&t1);
 
@@ -482,7 +482,14 @@ void CFIRE::Activate(int itr, int freq[], double wAdfGeoTransform[])
 		if (logfile==NULL)
 
 			errorSys("Error opening fire log file",STOP);		
+		LDfprintf0(logfile, "%s", "TIMESTEP,COL,ROW,TOTAREA,NUMSITES,NUMCOHORTS");
+		LDfflush(logfile);
+		for (int i = 0; i<numFRU; i++)
 
+			LDfprintf0(logfile, "%s%d", ",FRU", i);
+
+		LDfflush(logfile);
+		LDfprintf0(logfile, "%s", "\n");
 	}
 
 	else
@@ -760,9 +767,9 @@ void CFIRE::Activate(int itr, int freq[], double wAdfGeoTransform[])
 
 			}
 
+			int bernoulliProb = m_pStochastic->Bernoulli(probForSite);
 
-
-			if (m_pStochastic->Bernoulli(probForSite)==0)
+			if (bernoulliProb == 0)
 
 	 		{
 

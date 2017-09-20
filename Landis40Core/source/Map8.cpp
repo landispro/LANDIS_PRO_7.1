@@ -1526,7 +1526,7 @@ int MAP16::readImg(const char *fn, const int giRow, const int giCol)
 
 {
 
-	int i, j, numread = 1, xDim, yDim, mapValue;
+	int i, j, numread = 1, xDim, yDim, mapValue, noDataValue;
 
 	unsigned char c8bit;
 
@@ -1584,6 +1584,7 @@ int MAP16::readImg(const char *fn, const int giRow, const int giCol)
 
 	poBand->RasterIO(GF_Read, 0, 0, xDim, yDim, pafScanline, xDim, yDim, GDT_Float32, 0, 0);//*
 
+	noDataValue = GDALGetRasterNoDataValue(poBand, NULL);
 
 	for (i = yDim; i > 0; i--)
 	{
@@ -1598,9 +1599,8 @@ int MAP16::readImg(const char *fn, const int giRow, const int giCol)
 			//cout << mapValue << " ";
 #endif
 
-			// (*this)(i,j)=(unsigned short)mapValue;
-			
-			// %%# Changed 13
+			if (mapValue == noDataValue) mapValue = 0;
+
 			(*this).set_data(i, j, mapValue);
 
 			if (numread > 0)

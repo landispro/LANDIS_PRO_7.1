@@ -135,7 +135,7 @@ void FUELSTANDS::construct() {
                 stands[id-1].itsMaxPoint = pmax;
 
 				assert(stands[id - 1].itsMinPoint.x >= 1 && stands[id - 1].itsMinPoint.x <= snc);
-				assert(stands[id - 1].itsMinPoint.y >= 1 && stands[id - 1].itsMinPoint.x <= snr);
+				assert(stands[id - 1].itsMinPoint.y >= 1 && stands[id - 1].itsMinPoint.y <= snr);
 
 
 

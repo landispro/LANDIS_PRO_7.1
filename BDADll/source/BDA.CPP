@@ -2125,7 +2125,6 @@ void BDA::BDAOutputMap(int itr)
 	sprintf(str, "%s%s%d", m_strBDAOutput, m_strName, itr*pBDAsites->TimeStep_BDA);
 	m.setCellSize(cellSize);
 	double wAdfGeoTransform[6] = { 0.00, cellSize, 0.00, 600.00, 0.00, -cellSize };
-	float nodata = 0;
 	m.write(str, red2, green2, blue2, wAdfGeoTransform);
 
 }

@@ -182,7 +182,7 @@ void AGELIST::setTreeNum(int n, int specIndex, int num)
 
 	if(n<1||n>countofagevector[specIndex-1])
 
-		errorSys("set age error in agelist 70 Pro",STOP);
+		errorSys("Set age error in agelist 70 Pro",STOP);
 
 	agevector[n]=num;
 
@@ -1040,9 +1040,9 @@ void AGELIST::readBinary(FILE *infile)
 
 				{
 
-					printf("read map attribute age error\n");
+					printf("Read map attribute age error\n");
 
-					errorSys("read map attribute age error\n",STOP);
+					errorSys("Read map attribute age error\n",STOP);
 
 				}
 
@@ -1298,7 +1298,7 @@ void AGELIST::readTreeNum(FILE* infile, int specIndex)
 
 	if(numSet<1||numSet>countofagevector[specIndex])
 
-		errorSys("specie composition error",STOP);
+		errorSys("Species composition error",STOP);
 
 	return ;
 

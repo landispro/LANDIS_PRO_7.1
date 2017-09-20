@@ -440,7 +440,7 @@ void CFireRegimeUnits::readFireRegimeGIS(FILE* mapFile)
 
 				else
 
-					errorSys("illegel landtype class found7.",STOP);
+					errorSys("illegal landtype class found7.",STOP);
 
 			}
 
@@ -488,7 +488,7 @@ void CFireRegimeUnits::readFireRegimeGIS(FILE* mapFile)
 
 				else
 
-					errorSys("illegel landtype class found8.",STOP);
+					errorSys("illegal landtype class found8.",STOP);
 
 			}
 
@@ -510,7 +510,7 @@ void CFireRegimeUnits::readFireRegimeIMG(GDALDataset* fpImg)
 
 	//This will read fire regime .img map and associate fire regime Unit to each site.
 
-	int 	nCols, nRows, numRead, coverType;
+	int 	nCols, nRows, numRead, coverType, noDataValue;
 
 	FIRESITE * s;
 
@@ -521,7 +521,6 @@ void CFireRegimeUnits::readFireRegimeIMG(GDALDataset* fpImg)
 	GDALRasterBand  *poBand;//*
 
 	poBand = fpImg->GetRasterBand(1);//*
-
 
 	//LDfread((char*)dest, 4, 32, mapFile);
 
@@ -550,12 +549,17 @@ void CFireRegimeUnits::readFireRegimeIMG(GDALDataset* fpImg)
 
 	poBand->RasterIO(GF_Read, 0, 0, nCols, nRows, pafScanline, nCols, nRows, GDT_Float32, 0, 0);
 
+	noDataValue = GDALGetRasterNoDataValue(poBand, NULL);
+
 		for (int i = nRows; i>0; i--)
 		{
 			for (int j = 1; j <= nCols; j++)
 			{
 				coverType = (int)*(pafScanline + (nRows - i)*nCols + j - 1);//*
 
+				if (coverType == noDataValue) {
+					coverType = 0;
+				}
 				if (coverType >= 0)
 				{
 					m_pFireSites->BefStChg(i, j);
@@ -568,7 +572,7 @@ void CFireRegimeUnits::readFireRegimeIMG(GDALDataset* fpImg)
 
 				}else
 
-					errorSys("illegel landtype class found9.", STOP);
+					errorSys("Illegal fire site class found9.", STOP);
 
 			}
 

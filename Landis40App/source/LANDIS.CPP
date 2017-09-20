@@ -509,7 +509,7 @@ void updateLandtypeMap8(FILE * ltMapFile)
 
 				else
 
-					errorSys("illegel landtype class found4.", STOP);
+					errorSys("illegal landtype class found4.", STOP);
 
 			}
 
@@ -568,7 +568,7 @@ void updateLandtypeMap8(FILE * ltMapFile)
 
 				else
 
-					errorSys("illegel landtype class found5.", STOP);
+					errorSys("illegal landtype class found5.", STOP);
 
 			}
 
@@ -685,7 +685,7 @@ void updateLandtypeImg8(GDALDataset* ltimgFile)
 
 				else
 
-					errorSys("illegel landtype class found6.", STOP);
+					errorSys("illegal landtype class found6.", STOP);
 
 			}
 

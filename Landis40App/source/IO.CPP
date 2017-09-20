@@ -5242,7 +5242,7 @@ void inputImgSpec(FILE* classFile, GDALDataset* simgFileint, int yDim, int xDim)
 //classFile. 
 {
 
-	int coverType, numCovers = 0;
+	int coverType, numCovers = 0, noDataValue;
 
 	float *pafScanline; //*
 
@@ -5269,7 +5269,8 @@ void inputImgSpec(FILE* classFile, GDALDataset* simgFileint, int yDim, int xDim)
 
 	poBand->RasterIO(GF_Read, 0, 0, xDim, yDim, pafScanline, xDim, yDim, GDT_Float32, 0, 0);
 
-	
+	noDataValue = GDALGetRasterNoDataValue(poBand, NULL);
+
 //	printf("reading age cohort in inputImgSpec2\n");
 
 	//s = new SITE[adMax+2];
@@ -5329,7 +5330,7 @@ void inputImgSpec(FILE* classFile, GDALDataset* simgFileint, int yDim, int xDim)
 
 	//printf("Reading species composition map in inputImgSpec1\n");
 
-	cout << "number of class is " << numCovers << endl;
+	cout << "Number of attribute classes is " << numCovers << endl;
 	
 	for (int i = yDim; i>0; i--)
 	{
@@ -5338,8 +5339,11 @@ void inputImgSpec(FILE* classFile, GDALDataset* simgFileint, int yDim, int xDim)
 			coverType = (int)*(pafScanline + (yDim - i)*xDim + j - 1);//*
 
 			//cout << coverType << " ";
+			if (coverType == noDataValue) {
+				sites.fillinSitePt(i, j, sites.SortedIndex.at(combineMatrix[0]));
+			}
 
-			if ((coverType) < numCovers && coverType >= 0)
+			else if ((coverType) < numCovers && coverType >= 0)
 			{
 				if (sites.Pro0or401 == 0)
 				{
@@ -6135,7 +6139,7 @@ if (b16or8 == 8)  //8 bit
 
 		  else
 
-        		errorSys("illegel landtype class found1.",STOP);
+        		errorSys("Illegal landtype class found - 1.",STOP);
 
 	   }
 
@@ -6199,7 +6203,7 @@ else if (b16or8 == 16)	//16 bit
 
 			  else
 
-        			errorSys("illegel landtype class found2.",STOP);
+        			errorSys("Illegal landtype class found - 2.",STOP);
 
 		   }
 
@@ -6220,7 +6224,7 @@ void inputLandtypeImg(GDALDataset* ltimgFile, int xDim, int yDim, PDP* ppdp)
 	{
 
 		//cout << "reading landtypeImg" << endl;
-		int nRows, nCols, numRead, coverType;
+		int nRows, nCols, numRead, coverType, noDataValue;
 
 		SITE* s;
 
@@ -6249,6 +6253,8 @@ void inputLandtypeImg(GDALDataset* ltimgFile, int xDim, int yDim, PDP* ppdp)
 
 		poBand->RasterIO(GF_Read, 0, 0, xDim, yDim, pafScanline, xDim, yDim, GDT_Float32, 0, 0);
 
+		noDataValue = GDALGetRasterNoDataValue(poBand, NULL);
+
 		if ((nCols != xDim) && (nRows != yDim))
 
 			errorSys("landtype map and species map do not match.", STOP);
@@ -6258,8 +6264,10 @@ void inputLandtypeImg(GDALDataset* ltimgFile, int xDim, int yDim, PDP* ppdp)
 			for (int j = 1; j <= xDim; j++)
 			{
 				coverType = (int)*(pafScanline + (yDim - i)*xDim + j - 1);//*
-
-				if (coverType >= 0)
+				if (coverType == noDataValue) {
+					sites.fillinLanduPt(i, j, landUnits(0));
+				}
+				else if (coverType >= 0)
 				{
 					sites.fillinLanduPt(i, j, landUnits(coverType));
 
@@ -6267,9 +6275,9 @@ void inputLandtypeImg(GDALDataset* ltimgFile, int xDim, int yDim, PDP* ppdp)
 
 						(ppdp->sTSLWind)[i][j] = (short)sites.locateLanduPt(i, j)->initialLastWind;
 				}
-				else{
+				else {
 					cout << "i = " << i << "j = " << j << "coverType =" << coverType << endl;
-					errorSys("illegel landtype class found3.", STOP);
+					errorSys("illegal landtype class found3.", STOP);
 				}
 			}
 		}
