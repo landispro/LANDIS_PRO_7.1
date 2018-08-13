@@ -5156,34 +5156,34 @@ void SITES::Read70OutputOption(char *FileName)
 			}
 
 	////////////////////////
-
-	for(i=0;i<specNum;i++)
-
-		{
-
-		fscanc(fp,"%s",temp);
-
-		fscanf(fp,"%d",&count);
-
-		SetAgerangeCount(i,count);
-
-		for(j=1;j<=count;j++)
+		if (flagAgeRangeOutput == 1){
+			for (i = 0; i < specNum; i++)
 
 			{
 
-			fscanf(fp,"%d",&value1);
+				fscanc(fp, "%s", temp);
 
-			fscanf(fp,"%c",&ch);
+				fscanf(fp, "%d", &count);
 
-			fscanf(fp,"%d",&value2);
+				SetAgerangeCount(i, count);
 
-			SetSpeciesAgerangeArray(i,j, value1, value2);
+				for (j = 1; j <= count; j++)
+
+				{
+
+					fscanf(fp, "%d", &value1);
+
+					fscanf(fp, "%c", &ch);
+
+					fscanf(fp, "%d", &value2);
+
+					SetSpeciesAgerangeArray(i, j, value1, value2);
+
+				}
 
 			}
 
 		}
-
-
 
 	///////////////////////
 

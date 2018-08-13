@@ -2881,378 +2881,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 				CPLFree(pafScanline5);
 			}
 
-			/*if(sites.GetOutputGeneralFlagArray(sites.specNum,Seeds)){
-
-				for(i=0;i<sites.specNum;i++){
-
-				fclose(fpTempAvailableSeed[i]);
-
-				}
-
-				delete [] fpTempAvailableSeed;
-
-				}
-
-				if(sites.GetOutputGeneralFlagArray(sites.specNum,RDensity)){
-
-				for(i=0;i<sites.specNum;i++){
-
-				fclose(fpTempAvailableSeed[i]);
-
-				}
-
-				delete [] fpTempAvailableSeed;
-
-				}*/
-
-		//}
-
-		//if ( parameters.numberOfIterations % freq[0] !=0){
-
-		//	if (sites.GetOutputGeneralFlagArray(sites.specNum, Bio))
-		//	{
-
-		//		/*sprintf(str,"%s/TotalBio_%d.asc",parameters.outputDir,itr*sites.TimeStep);
-
-		//		if ((fpTotalBiomass= LDfopen(str, 3)) == NULL)
-
-		//		errorSys("can not open output file TotalBiomass",STOP);
-
-		//		outputFileheader(fpTotalBiomass);*/
-		//	//	pafScanline1 = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-
-		//		sprintf(str1, "%s/TotalBio_%d.img", parameters.outputDir, parameters.numberOfIterations * sites.TimeStep);//* change
-
-		//		poDstDS1 = poDriver->Create(str1, sites.numColumns(), sites.numRows(), 1, GDT_Float32, papszOptions);//*
-
-		//		if (poDstDS1 == NULL)
-
-		//			errorSys("Img file not be created.", STOP);//*
-
-		//		outPoBand1 = poDstDS1->GetRasterBand(1);//*
-
-		//		poDstDS1->SetGeoTransform(wAdfGeoTransform);//*
-
-
-		//	}
-		//	//2.Car
-		//	if (sites.GetOutputGeneralFlagArray(sites.specNum, Car))
-		//	{
-
-		//		/*sprintf(str,"%s/TotalCarbon_%d.asc",parameters.outputDir,itr*sites.TimeStep);
-
-		//		if ((fpTotalcarbon= LDfopen(str, 3)) == NULL)
-
-		//		errorSys("can not open output file TotalCarbon",STOP);
-
-		//		outputFileheader(fpTotalcarbon);*/
-
-		//		//pafScanline2 = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-
-		//		sprintf(str2, "%s/TotalCarbon_%d.img", parameters.outputDir, parameters.numberOfIterations* sites.TimeStep);//* change
-
-		//		poDstDS2 = poDriver->Create(str2, sites.numColumns(), sites.numRows(), 1, GDT_Float32, papszOptions);//*
-
-		//		if (poDstDS2 == NULL)
-
-		//			errorSys("Img file not be created.", STOP);//*
-
-		//		outPoBand2 = poDstDS2->GetRasterBand(1);//*
-
-		//		poDstDS2->SetGeoTransform(wAdfGeoTransform);//*
-
-		//	}
-
-
-		//	//3.BA
-		//	if (sites.GetOutputGeneralFlagArray(sites.specNum, BA))
-		//	{
-
-		//		/*sprintf(str,"%s/TotalBA_%d.asc",parameters.outputDir,itr*sites.TimeStep);
-
-		//		if ((fptotalbasal= LDfopen(str, 3)) == NULL)
-
-		//		errorSys("can not open output file TotalBasalArea",STOP);
-
-		//		outputFileheader(fptotalbasal);*/
-
-		//	//	pafScanline3 = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-
-		//		sprintf(str3, "%s/TotalBA_%d.img", parameters.outputDir, parameters.numberOfIterations* sites.TimeStep);//* change
-
-		//		poDstDS3 = poDriver->Create(str3, sites.numColumns(), sites.numRows(), 1, GDT_Float32, papszOptions);//*
-
-		//		if (poDstDS3 == NULL)
-
-		//			errorSys("Img file not be created.", STOP);//*
-
-		//		outPoBand3 = poDstDS3->GetRasterBand(1);//*
-
-		//		poDstDS3->SetGeoTransform(wAdfGeoTransform);//*
-
-		//	}
-
-
-		//	//4.TPA
-		//	if (sites.GetOutputGeneralFlagArray(sites.specNum, TPA))
-		//	{
-
-		//		/*sprintf(str,"%s/TotalTrees_%d.asc",parameters.outputDir,itr*sites.TimeStep);
-
-		//		if ((fptotaltrees= LDfopen(str, 3)) == NULL)
-
-		//		errorSys("can not open output file TotalTrees",STOP);
-
-		//		outputFileheader(fptotaltrees);*/
-
-		//	//	pintScanline = (unsigned int *)CPLMalloc(sizeof(unsigned int)* (sites.numColumns()*sites.numRows()));//*
-
-		//		sprintf(str4, "%s/TotalTrees_%d.img", parameters.outputDir, parameters.numberOfIterations* sites.TimeStep);//* change
-
-		//		poDstDS4 = poDriver->Create(str4, sites.numColumns(), sites.numRows(), 1, GDT_UInt32, papszOptions);//*
-
-		//		if (poDstDS4 == NULL)
-
-		//			errorSys("Img file not be created.", STOP);//*
-
-		//		outPoBand4 = poDstDS4->GetRasterBand(1);//*
-
-		//		poDstDS4->SetGeoTransform(wAdfGeoTransform);//*
-
-		//	}
-
-
-		//	//5.RDensity
-		//	if (sites.GetOutputGeneralFlagArray(sites.specNum, RDensity))
-		//	{
-
-		//		/*sprintf(str,"%s/RelativeDensity_%d.asc",parameters.outputDir,itr*sites.TimeStep);
-
-		//		if ((fpRD= LDfopen(str, 3)) == NULL)
-
-		//		errorSys("can not open output file TotalTrees",STOP);
-
-		//		outputFileheader(fpRD);*/
-
-		//	//	pafScanline5 = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-
-		//		sprintf(str5, "%s/RelativeDensity_%d.img", parameters.outputDir, parameters.numberOfIterations * sites.TimeStep);//* change
-
-		//		poDstDS5 = poDriver->Create(str5, sites.numColumns(), sites.numRows(), 1, GDT_Float32, papszOptions);//*
-
-		//		if (poDstDS5 == NULL)
-
-		//			errorSys("Img file not be created.", STOP);//*
-
-		//		outPoBand5 = poDstDS5->GetRasterBand(1);//*
-
-		//		poDstDS5->SetGeoTransform(wAdfGeoTransform);//*
-
-		//	}
-
-
-
-		//	for (i = sites.numRows(); i > 0; i--)
-
-		//	{
-
-		//		for (j = 1; j <= sites.numColumns(); j++)
-
-		//		{
-		//			LANDUNIT *l;
-		//			l = sites.locateLanduPt(i, j);
-		//			TmpBiomassT = 0;
-
-		//			TmpBasalAreaT = 0;
-
-		//			TmpTreeT = 0;
-
-		//			TmpCarbon = 0;
-
-		//			TmpCarbonTotal = 0;
-
-		//			for (k = 1; k <= sites.specNum; k++)
-
-		//			{
-
-		//				TmpCarbon = 0;
-
-
-
-		//				if (speciesAttrs(k)->SpType >= 0)
-
-		//				{
-
-		//					for (m = 1; m <= speciesAttrs(k)->longevity / sites.TimeStep; m++)
-
-		//					{
-
-		//						if (sites.GetGrowthRates(k, m, l->ltID) >= sites.GetBiomassThreshold() && sites.GetOutputGeneralFlagArray(sites.specNum, Bio))
-
-		//							TmpBiomassT += exp(sites.GetBiomassData(speciesAttrs(k)->BioMassCoef, 1) + sites.GetBiomassData(speciesAttrs(k)->BioMassCoef, 2)*log(sites.GetGrowthRates(k, m, l->ltID)))*sites(i, j)->SpecieIndex(k)->getTreeNum(m, k) / 1000.00;
-
-		//						if (sites.GetOutputGeneralFlagArray(sites.specNum, BA))
-
-		//							TmpBasalAreaT += sites.GetGrowthRates(k, m, l->ltID)*sites.GetGrowthRates(k, m, l->ltID) / 4 * 3.1415926*sites(i, j)->SpecieIndex(k)->getTreeNum(m, k) / 10000.00;
-
-
-
-		//						//TmpBasalAreaT+=0.005454*sites.GetGrowthRates(k,m)*sites.GetGrowthRates(k,m)*sites(i,j)->SpecieIndex(k)->getTreeNum(m,k);
-
-		//						if (sites.GetOutputGeneralFlagArray(sites.specNum, TPA))
-
-		//							TmpTreeT += sites(i, j)->SpecieIndex(k)->getTreeNum(m, k);
-
-		//						if (sites.GetOutputGeneralFlagArray(sites.specNum, Car))
-
-		//							TmpCarbon += exp(sites.GetBiomassData(speciesAttrs(k)->BioMassCoef, 1) + sites.GetBiomassData(speciesAttrs(k)->BioMassCoef, 2)*log(sites.GetGrowthRates(k, m, l->ltID)))*sites(i, j)->SpecieIndex(k)->getTreeNum(m, k);
-
-		//					}
-
-		//				}
-
-		//				if (sites.GetOutputGeneralFlagArray(sites.specNum, Car))
-
-		//					TmpCarbonTotal = TmpCarbonTotal + TmpCarbon*speciesAttrs(k)->CarbonCoEfficient;
-
-		//				/*if(sites.GetOutputGeneralFlagArray(sites.specNum,Seeds))
-
-		//				fprintf(fpTempAvailableSeed[k-1],"%u ",sites(i,j)->SpecieIndex(k)->AvailableSeed);*/
-
-		//			}
-		//			//1.Bio
-		//			if (sites.GetOutputGeneralFlagArray(sites.specNum, Bio)){
-
-		//				//fprintf(fpTotalBiomass, "%f ", TmpBiomassT);
-
-		//				*(pafScanline1 + (sites.numRows() - i)*sites.numColumns() + j - 1) = TmpBiomassT;//*
-
-
-		//			}
-		//			//2.Car
-		//			if (sites.GetOutputGeneralFlagArray(sites.specNum, Car)){
-
-		//				//fprintf(fpTotalcarbon, "%f ", TmpCarbonTotal / 1000.00);
-
-		//				*(pafScanline2 + (sites.numRows() - i)*sites.numColumns() + j - 1) = TmpCarbonTotal / 1000.00;//*
-		//			}
-		//			//3.BA
-		//			if (sites.GetOutputGeneralFlagArray(sites.specNum, BA)){
-
-		//				//fprintf(fptotalbasal, "%f ", TmpBasalAreaT);
-
-		//				*(pafScanline3 + (sites.numRows() - i)*sites.numColumns() + j - 1) = TmpBasalAreaT;//*
-		//			}
-		//			//5.RDensity
-		//			if (sites.GetOutputGeneralFlagArray(sites.specNum, RDensity)){
-
-		//				//fprintf(fpRD,"%f ",sites(i,j)->RD);
-
-		//				*(pafScanline5 + (sites.numRows() - i)*sites.numColumns() + j - 1) = sites(i, j)->RD;//*
-
-		//			}
-		//			//4.TPA
-		//			if (sites.GetOutputGeneralFlagArray(sites.specNum, TPA)){
-
-		//				//fprintf(fptotaltrees, "%d ", TmpTreeT);
-
-		//				*(pintScanline + (sites.numRows() - i)*sites.numColumns() + j - 1) = TmpTreeT;//*
-		//			}
-
-		//		}
-
-		//	}
-		//	//1.Bio
-		//	if (sites.GetOutputGeneralFlagArray(sites.specNum, Bio))
-		//	{
-
-		//		//fclose(fpTotalBiomass);
-
-		//		outPoBand1->RasterIO(GF_Write, 0, 0, sites.numColumns(), sites.numRows(), pafScanline1, sites.numColumns(), sites.numRows(), GDT_Float32, 0, 0);//*
-
-		//		if (poDstDS1 != NULL)
-		//			GDALClose((GDALDatasetH)poDstDS1);//*
-
-		//		//CPLFree(pafScanline1);
-		//	}
-		//	//2.Car
-		//	if (sites.GetOutputGeneralFlagArray(sites.specNum, Car)){
-
-		//		//fclose(fpTotalcarbon);
-
-		//		outPoBand2->RasterIO(GF_Write, 0, 0, sites.numColumns(), sites.numRows(), pafScanline2, sites.numColumns(), sites.numRows(), GDT_Float32, 0, 0);//*
-
-		//		if (poDstDS2 != NULL)
-		//			GDALClose((GDALDatasetH)poDstDS2);//*
-
-		//		//CPLFree(pafScanline2);
-		//	}
-		//	//3.BA
-		//	if (sites.GetOutputGeneralFlagArray(sites.specNum, BA))
-		//	{
-
-		//		//fclose(fptotalbasal);
-
-		//		outPoBand3->RasterIO(GF_Write, 0, 0, sites.numColumns(), sites.numRows(), pafScanline3, sites.numColumns(), sites.numRows(), GDT_Float32, 0, 0);//*
-
-		//		if (poDstDS3 != NULL)
-		//			GDALClose((GDALDatasetH)poDstDS3);//*
-
-		//	//	CPLFree(pafScanline3);
-
-		//	}
-		//	//4.TPA
-		//	if (sites.GetOutputGeneralFlagArray(sites.specNum, TPA))
-		//	{
-
-		//		//fclose(fptotaltrees);
-
-		//		outPoBand4->RasterIO(GF_Write, 0, 0, sites.numColumns(), sites.numRows(), pintScanline, sites.numColumns(), sites.numRows(), GDT_UInt32, 0, 0);//*
-
-		//		if (poDstDS4 != NULL)
-		//			GDALClose((GDALDatasetH)poDstDS4);//*
-
-		//		//CPLFree(pintScanline);
-		//	}
-		//	//5.RDensity
-		//	if (sites.GetOutputGeneralFlagArray(sites.specNum, RDensity))
-		//	{
-
-		//		//fclose(fpRD);
-
-		//		outPoBand5->RasterIO(GF_Write, 0, 0, sites.numColumns(), sites.numRows(), pafScanline5, sites.numColumns(), sites.numRows(), GDT_Float32, 0, 0);//*
-
-		//		if (poDstDS5 != NULL)
-		//			GDALClose((GDALDatasetH)poDstDS5);//*
-
-		//		//CPLFree(pafScanline5);
-		//	}
-
-		//	/*if(sites.GetOutputGeneralFlagArray(sites.specNum,Seeds)){
-
-		//	for(i=0;i<sites.specNum;i++){
-
-		//	fclose(fpTempAvailableSeed[i]);
-
-		//	}
-
-		//	delete [] fpTempAvailableSeed;
-
-		//	}
-
-		//	if(sites.GetOutputGeneralFlagArray(sites.specNum,RDensity)){
-
-		//	for(i=0;i<sites.specNum;i++){
-
-		//	fclose(fpTempAvailableSeed[i]);
-
-		//	}
-
-		//	delete [] fpTempAvailableSeed;
-
-		//	}*/
-
-		//}
 	}
 	//below is for species age range
 
@@ -3347,65 +2975,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 								GDALClose((GDALDatasetH)poDstDS);//*
 							CPLFree(pafScanline);
 							CSLDestroy(papszOptions); //
-							//CPLFree(pafScanline);
-						//}
-
-						//if (parameters.numberOfIterations % freq[0] !=0){
-
-						//	//pafScanline = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-
-						//	sprintf(str1, "%s/%s_Age%d_Age%d_%d.img", parameters.outputDir, BioMassFileNames[k - 1].c_str(), Agerangeage1, Agerangeage2, parameters.numberOfIterations* sites.TimeStep);//* change
-
-						//	poDstDS = poDriver->Create(str1, sites.numColumns(), sites.numRows(), 1, GDT_Float32, papszOptions);//*
-
-						//	if (poDstDS == NULL)
-
-						//		errorSys("Img file not be created.", STOP);//*
-
-						//	outPoBand = poDstDS->GetRasterBand(1);//*
-
-						//	poDstDS->SetGeoTransform(wAdfGeoTransform);//*
-
-						//	for (i = sites.numRows(); i > 0; i--)
-
-						//	{
-
-						//		//printf("\r%3d%%",100*i/sites.numRows());
-
-						//		for (j = 1; j <= sites.numColumns(); j++)
-
-						//		{
-						//			LANDUNIT *l;
-						//			l = sites.locateLanduPt(i, j);
-						//			TmpBiomassS = 0;
-
-						//			for (m = min(speciesAttrs(k)->longevity, Agerangeage1) / sites.TimeStep; m <= min(speciesAttrs(k)->longevity, Agerangeage2) / sites.TimeStep; m++)
-
-						//			{
-
-						//				if (sites.GetGrowthRates(k, m, l->ltID) >= sites.GetBiomassThreshold())
-
-						//					TmpBiomassS += exp(sites.GetBiomassData(speciesAttrs(k)->BioMassCoef, 1) + sites.GetBiomassData(speciesAttrs(k)->BioMassCoef, 2)*log(sites.GetGrowthRates(k, m, l->ltID)))*sites(i, j)->SpecieIndex(k)->getTreeNum(m, k) / 1000.00;
-
-						//			}
-
-						//			//fprintf(fpbiomass,"%f ",TmpBiomassS);		
-
-						//			*(pafScanline + (sites.numRows() - i)*sites.numColumns() + j - 1) = TmpBiomassS;//*
-
-						//		}
-
-						//	}
-
-						//	//fclose(fpbiomass);
-
-						//	outPoBand->RasterIO(GF_Write, 0, 0, sites.numColumns(), sites.numRows(), pafScanline, sites.numColumns(), sites.numRows(), GDT_Float32, 0, 0);//*
-
-						//	if (poDstDS != NULL)
-						//		GDALClose((GDALDatasetH)poDstDS);//*
-
-						//	//CPLFree(pafScanline);
-						//}
 					}
 
 				}
@@ -3432,20 +3001,8 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 						papszOptions = NULL;
 
 						pafScanline = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-						/*sprintf(str,"%s/%s_Age%d_Age%d_%d.asc",parameters.outputDir,BasalFileNames[k-1].c_str(),Agerangeage1,Agerangeage2,itr*sites.TimeStep);
 
-						if ((fpbasal= LDfopen(str, 3)) == NULL)
-
-						errorSys("can not open output file 1",STOP);
-
-						outputFileheader(fpbasal);
-						*/
-					//	if (itr*freq[0] <= parameters.numberOfIterations){
-
-						//	pafScanline = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-
-
-							sprintf(str1, "%s/%s_Age%d_Age%d_%d.img", parameters.outputDir, BasalFileNames[k - 1].c_str(), Agerangeage1, Agerangeage2, itr* sites.TimeStep);//* change
+						sprintf(str1, "%s/%s_Age%d_Age%d_%d.img", parameters.outputDir, BasalFileNames[k - 1].c_str(), Agerangeage1, Agerangeage2, itr* sites.TimeStep);//* change
 
 							poDstDS = poDriver->Create(str1, sites.numColumns(), sites.numRows(), 1, GDT_Float32, papszOptions);//*
 
@@ -3500,69 +3057,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 							CPLFree(pafScanline);
 							CSLDestroy(papszOptions); //*
 
-						//	CPLFree(pafScanline);
-					//	}
-
-						//if (parameters.numberOfIterations % freq[0] !=0){
-
-						////	pafScanline = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-
-
-						//	sprintf(str1, "%s/%s_Age%d_Age%d_%d.img", parameters.outputDir, BasalFileNames[k - 1].c_str(), Agerangeage1, Agerangeage2, parameters.numberOfIterations* sites.TimeStep);//* change
-
-						//	poDstDS = poDriver->Create(str1, sites.numColumns(), sites.numRows(), 1, GDT_Float32, papszOptions);//*
-
-						//	if (poDstDS == NULL)
-
-						//		errorSys("Img file not be created.", STOP);//*
-
-						//	outPoBand = poDstDS->GetRasterBand(1);//*
-
-						//	poDstDS->SetGeoTransform(wAdfGeoTransform);//*
-
-						//	for (i = sites.numRows(); i > 0; i--)
-
-						//	{
-
-						//		//printf("\r%3d%%",100*i/sites.numRows());
-
-						//		for (j = 1; j <= sites.numColumns(); j++)
-
-						//		{
-						//			LANDUNIT *l;
-						//			l = sites.locateLanduPt(i, j);
-						//			TmpBasalAreaS = 0;
-
-						//			for (m = min(speciesAttrs(k)->longevity, Agerangeage1) / sites.TimeStep; m <= min(speciesAttrs(k)->longevity, Agerangeage2) / sites.TimeStep; m++)
-
-						//			{
-
-						//				TmpBasalAreaS += sites.GetGrowthRates(k, m, l->ltID)*sites.GetGrowthRates(k, m, l->ltID) / 4 * 3.1415926*sites(i, j)->SpecieIndex(k)->getTreeNum(m, k) / 10000.00;
-
-						//				//TmpBasalAreaS+=0.005454*sites.GetGrowthRates(k,m)*sites.GetGrowthRates(k,m)*sites(i,j)->SpecieIndex(k)->getTreeNum(m,k);
-
-
-
-						//			}
-
-						//			//fprintf(fpbasal,"%f ",TmpBasalAreaS);
-
-						//			*(pafScanline + (sites.numRows() - i)*sites.numColumns() + j - 1) = TmpBasalAreaS;//*
-
-						//		}
-
-						//	}
-
-						//	//fclose(fpbasal);
-
-						//	outPoBand->RasterIO(GF_Write, 0, 0, sites.numColumns(), sites.numRows(), pafScanline, sites.numColumns(), sites.numRows(), GDT_Float32, 0, 0);//*
-
-						//	if (poDstDS != NULL)
-						//		GDALClose((GDALDatasetH)poDstDS);//*
-
-						//	//CPLFree(pafScanline);
-						//}
-
 					}
 
 				}
@@ -3587,18 +3081,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 						papszOptions = NULL;
 
 						pintScanline = (unsigned int *)CPLMalloc(sizeof(unsigned int)* (sites.numColumns()*sites.numRows()));//*
-
-						/*sprintf(str,"%s/%s_Age%d_Age%d_%d.asc",parameters.outputDir,TreesFileNames[k-1].c_str(),Agerangeage1,Agerangeage2,itr*sites.TimeStep);
-
-						if ((fptree= LDfopen(str, 3)) == NULL)
-
-						errorSys("can not open output file 1",STOP);
-
-						outputFileheader(fptree);*/
-
-					//	if (itr*freq[0] <= parameters.numberOfIterations){
-
-						//	pintScanline = (unsigned int *)CPLMalloc(sizeof(unsigned int)* (sites.numColumns()*sites.numRows()));//*
 
 							sprintf(str1, "%s/%s_Age%d_Age%d_%d.img", parameters.outputDir, TreesFileNames[k - 1].c_str(), Agerangeage1, Agerangeage2, itr * sites.TimeStep);//* change
 
@@ -3648,62 +3130,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 							CPLFree(pintScanline);
 							CSLDestroy(papszOptions); //*
 
-							//CPLFree(pintScanline);
-
-					//	}
-
-						//if (parameters.numberOfIterations % freq[0] !=0){
-
-						//	//pintScanline = (unsigned int *)CPLMalloc(sizeof(unsigned int)* (sites.numColumns()*sites.numRows()));//*
-
-						//	sprintf(str1, "%s/%s_Age%d_Age%d_%d.img", parameters.outputDir, TreesFileNames[k - 1].c_str(), Agerangeage1, Agerangeage2, parameters.numberOfIterations * sites.TimeStep);//* change
-
-						//	poDstDS = poDriver->Create(str1, sites.numColumns(), sites.numRows(), 1, GDT_UInt32, papszOptions);//*
-
-						//	if (poDstDS == NULL)
-
-						//		errorSys("Img file not be created.", STOP);//*
-
-						//	outPoBand = poDstDS->GetRasterBand(1);//*
-
-						//	poDstDS->SetGeoTransform(wAdfGeoTransform);//*
-
-						//	for (i = sites.numRows(); i > 0; i--)
-
-						//	{
-
-						//		//printf("\r%3d%%",100*i/sites.numRows());
-
-						//		for (j = 1; j <= sites.numColumns(); j++)
-
-						//		{
-						//			TmpTreesS = 0;
-
-						//			for (m = min(speciesAttrs(k)->longevity, Agerangeage1) / sites.TimeStep; m <= min(speciesAttrs(k)->longevity, Agerangeage2) / sites.TimeStep; m++)
-
-						//			{
-
-						//				TmpTreesS += sites(i, j)->SpecieIndex(k)->getTreeNum(m, k);
-
-						//			}
-
-						//			//fprintf(fptree,"%d ",TmpTreesS);
-
-						//			*(pintScanline + (sites.numRows() - i)*sites.numColumns() + j - 1) = TmpTreesS;//*
-
-						//		}
-
-						//	}
-
-						//	//fclose(fptree);
-						//	outPoBand->RasterIO(GF_Write, 0, 0, sites.numColumns(), sites.numRows(), pintScanline, sites.numColumns(), sites.numRows(), GDT_UInt32, 0, 0);//*
-
-						//	if (poDstDS != NULL)
-						//		GDALClose((GDALDatasetH)poDstDS);//*
-
-						//	//CPLFree(pintScanline);
-
-						//}
 					}
 
 				}
@@ -3733,17 +3159,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 
 						pafScanline = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
 
-						/*sprintf(str,"%s/%s_Age%d_Age%d_%d.asc",parameters.outputDir,IVFileNames[k-1].c_str(),Agerangeage1,Agerangeage2,itr*sites.TimeStep);
-
-						if ((fpIV= LDfopen(str, 3)) == NULL)
-
-						errorSys("can not open output file 1",STOP);
-
-						outputFileheader(fpIV);*/
-
-					//	if (itr*freq[0] <= parameters.numberOfIterations){
-
-							//pafScanline = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
 
 							sprintf(str1, "%s/%s_Age%d_Age%d_%d.img", parameters.outputDir, IVFileNames[k - 1].c_str(), Agerangeage1, Agerangeage2, itr* sites.TimeStep);//* change
 
@@ -3840,127 +3255,12 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 
 							}
 
-
-
-							//fclose(fpIV);
 							outPoBand->RasterIO(GF_Write, 0, 0, sites.numColumns(), sites.numRows(), pafScanline, sites.numColumns(), sites.numRows(), GDT_Float32, 0, 0);//*
 
 							if (poDstDS != NULL)
 								GDALClose((GDALDatasetH)poDstDS);//*
 							CPLFree(pafScanline);
 							CSLDestroy(papszOptions); //*
-							//CPLFree(pafScanline);
-					//	}
-
-						//if ( parameters.numberOfIterations % freq[0] !=0){
-
-						//	//pafScanline = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-
-						//	sprintf(str1, "%s/%s_Age%d_Age%d_%d.img", parameters.outputDir, IVFileNames[k - 1].c_str(), Agerangeage1, Agerangeage2, parameters.numberOfIterations * sites.TimeStep);//* change
-
-						//	poDstDS = poDriver->Create(str1, sites.numColumns(), sites.numRows(), 1, GDT_Float32, papszOptions);//*
-
-						//	if (poDstDS == NULL)
-
-						//		errorSys("Img file not be created.", STOP);//*
-
-						//	outPoBand = poDstDS->GetRasterBand(1);//*
-
-						//	poDstDS->SetGeoTransform(wAdfGeoTransform);//*
-
-						//	for (i = sites.numRows(); i > 0; i--)
-
-						//	{
-
-						//		//printf("\r%3d%%",100*i/sites.numRows());
-
-						//		for (j = 1; j <= sites.numColumns(); j++)
-
-						//		{
-						//			LANDUNIT *l;
-						//			l = sites.locateLanduPt(i, j);
-						//			TmpBasalAreaT = 0;
-
-						//			TmpTreeT = 0;
-
-						//			for (kk = 1; kk <= sites.specNum; kk++)
-
-						//			{
-
-						//				if (speciesAttrs(kk)->SpType >= 0)
-
-						//				{
-
-						//					for (m = 1; m <= speciesAttrs(kk)->longevity / sites.TimeStep; m++)
-
-						//					{
-
-						//						//if(sites.GetGrowthRates(kk,m)>=sites.GetBiomassThreshold())
-
-						//						//TmpBasalAreaT+=exp(sites.GetBiomassData(speciesAttrs(kk)->BioMassCoef,1)+sites.GetBiomassData(speciesAttrs(kk)->BioMassCoef,2)*log(sites.GetGrowthRates(kk,m)))*sites(i,j)->SpecieIndex(kk)->getTreeNum(m,kk)/1000.00;
-						//						TmpBasalAreaT += sites.GetGrowthRates(kk, m, l->ltID)*sites.GetGrowthRates(kk, m, l->ltID) / 4 * 3.1415926*sites(i, j)->SpecieIndex(kk)->getTreeNum(m, kk) / 10000.00;
-						//						TmpTreeT += sites(i, j)->SpecieIndex(kk)->getTreeNum(m, kk);
-
-						//					}
-
-						//				}
-
-						//			}
-
-
-
-						//			TmpBasalAreaS = 0;
-
-						//			for (m = 1; m <= speciesAttrs(k)->longevity / sites.TimeStep; m++)
-
-						//			{
-
-						//				//if(sites.GetGrowthRates(k,m)>=sites.GetBiomassThreshold())
-
-						//				//TmpBasalAreaS+=exp(sites.GetBiomassData(speciesAttrs(k)->BioMassCoef,1)+sites.GetBiomassData(speciesAttrs(k)->BioMassCoef,2)*log(sites.GetGrowthRates(k,m)))*sites(i,j)->SpecieIndex(k)->getTreeNum(m,k)/1000.00;
-						//				TmpBasalAreaS += sites.GetGrowthRates(k, m, l->ltID)*sites.GetGrowthRates(k, m, l->ltID) / 4 * 3.1415926*sites(i, j)->SpecieIndex(k)->getTreeNum(m, k) / 10000.00;
-						//			}
-
-
-
-						//			TmpTreesS = 0;
-
-						//			for (m = 1; m <= speciesAttrs(k)->longevity / sites.TimeStep; m++)
-
-						//			{
-
-						//				TmpTreesS += sites(i, j)->SpecieIndex(k)->getTreeNum(m, k);
-
-						//			}
-
-						//			if (TmpTreeT == 0 || TmpBasalAreaT < 0.0001){
-
-						//				//fprintf(fpIV, "0 ");
-						//				*(pafScanline + (sites.numRows() - i)*sites.numColumns() + j - 1) = 0;//*
-
-						//			}
-
-						//			else{
-
-						//				//fprintf(fpIV, "%f ", (double)TmpTreesS / (double)TmpTreeT + TmpBasalAreaS / TmpBasalAreaT);
-
-						//				*(pafScanline + (sites.numRows() - i)*sites.numColumns() + j - 1) = (double)TmpTreesS / (double)TmpTreeT + TmpBasalAreaS / TmpBasalAreaT;//*
-						//			}
-
-						//		}
-
-						//	}
-
-
-
-						//	//fclose(fpIV);
-						//	outPoBand->RasterIO(GF_Write, 0, 0, sites.numColumns(), sites.numRows(), pafScanline, sites.numColumns(), sites.numRows(), GDT_Float32, 0, 0);//*
-
-						//	if (poDstDS != NULL)
-						//		GDALClose((GDALDatasetH)poDstDS);//*
-
-						//	//CPLFree(pafScanline);
-						//}
 
 					}
 
@@ -3989,17 +3289,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 			if (sites.GetOutputAgerangeFlagArray(sites.specNum, Bio))
 			{
 
-				/*sprintf(str,"%s/TotalBio_AgeRange_%d.asc",parameters.outputDir,itr*sites.TimeStep);
-
-				if ((fpTotalBiomass= LDfopen(str, 3)) == NULL)
-
-				errorSys("can not open output file TotalBiomass",STOP);
-
-				outputFileheader(fpTotalBiomass);*/
-
-
-				//pafScanline1 = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-
 				sprintf(str1, "%s/TotalBio_AgeRange_%d.img", parameters.outputDir, itr * sites.TimeStep);//* change
 
 				poDstDS1 = poDriver->Create(str1, sites.numColumns(), sites.numRows(), 1, GDT_Float32, papszOptions);//*
@@ -4017,15 +3306,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 			//2.TPA
 			if (sites.GetOutputAgerangeFlagArray(sites.specNum, TPA))
 			{
-
-				/*sprintf(str,"%s/TotalTrees_AgeRange_%d.asc",parameters.outputDir,itr*sites.TimeStep);
-
-				if ((fptotaltrees= LDfopen(str, 3)) == NULL)
-
-				errorSys("can not open output file totaltrees",STOP);
-
-				outputFileheader(fptotaltrees);*/
-				//pintScanline = (unsigned int *)CPLMalloc(sizeof(unsigned int)* (sites.numColumns()*sites.numRows()));//*
 
 				sprintf(str2, "%s/TotalTrees_AgeRange_%d.img", parameters.outputDir, itr * sites.TimeStep);//* change
 
@@ -4046,15 +3326,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 			if (sites.GetOutputAgerangeFlagArray(sites.specNum, BA))
 			{
 
-				/*sprintf(str,"%s/TotalBasal_AgeRange_%d.asc",parameters.outputDir,itr*sites.TimeStep);
-
-				if ((fptotalbasal= LDfopen(str, 3)) == NULL)
-
-				errorSys("can not open output file totalBA",STOP);
-
-				outputFileheader(fptotalbasal);*/
-			//	pafScanline3 = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-
 				sprintf(str3, "%s/TotalBasal_AgeRange_%d.img", parameters.outputDir, itr* sites.TimeStep);//* change
 
 				poDstDS3 = poDriver->Create(str3, sites.numColumns(), sites.numRows(), 1, GDT_Float32, papszOptions);//*
@@ -4074,15 +3345,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 			if (sites.GetOutputAgerangeFlagArray(sites.specNum, Car))
 			{
 
-				/*sprintf(str,"%s/TotalCarbon_AgeRange_%d.asc",parameters.outputDir,itr*sites.TimeStep);
-
-				if ((fpTotalcarbon= LDfopen(str, 3)) == NULL)
-
-				errorSys("can not open output file totalBA",STOP);
-
-				outputFileheader(fpTotalcarbon);*/
-			//	pafScanline4 = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-
 				sprintf(str4, "%s/TotalCarbon_AgeRange_%d.img", parameters.outputDir, itr* sites.TimeStep);//* change
 
 				poDstDS4 = poDriver->Create(str4, sites.numColumns(), sites.numRows(), 1, GDT_Float32, papszOptions);//*
@@ -4100,14 +3362,6 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 			//5.RDensity
 			if (sites.GetOutputAgerangeFlagArray(sites.specNum, RDensity))
 			{
-
-				/*sprintf(str,"%s/TotalRD_AgeRange_%d.asc",parameters.outputDir,itr*sites.TimeStep);
-				if ((fptotalRD= LDfopen(str, 3)) == NULL)
-
-				errorSys("can not open output file totalBA",STOP);
-
-				outputFileheader(fptotalRD);*/
-				//pafScanline5 = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
 
 				sprintf(str5, "%s/TotalRD_AgeRange_%d.img", parameters.outputDir, itr * sites.TimeStep);//* change
 
@@ -4297,324 +3551,294 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 				CPLFree(pafScanline5);
 			}
 
-	//	}
-
-		//if ( parameters.numberOfIterations % freq[0] !=0){
-		//	//1.Bio
-		//	if (sites.GetOutputAgerangeFlagArray(sites.specNum, Bio))
-		//	{
-
-		//		/*sprintf(str,"%s/TotalBio_AgeRange_%d.asc",parameters.outputDir,itr*sites.TimeStep);
-
-		//		if ((fpTotalBiomass= LDfopen(str, 3)) == NULL)
-
-		//		errorSys("can not open output file TotalBiomass",STOP);
-
-		//		outputFileheader(fpTotalBiomass);*/
-
-
-		//		//pafScanline1 = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-
-		//		sprintf(str1, "%s/TotalBio_AgeRange_%d.img", parameters.outputDir, parameters.numberOfIterations* sites.TimeStep);//* change
-
-		//		poDstDS1 = poDriver->Create(str1, sites.numColumns(), sites.numRows(), 1, GDT_Float32, papszOptions);//*
-
-		//		if (poDstDS1 == NULL)
-
-		//			errorSys("Img file not be created.", STOP);//*
-
-		//		outPoBand1 = poDstDS1->GetRasterBand(1);//*
-
-		//		poDstDS1->SetGeoTransform(wAdfGeoTransform);//*
-
-		//	}
-
-		//	//2.TPA
-		//	if (sites.GetOutputAgerangeFlagArray(sites.specNum, TPA))
-		//	{
-
-		//		/*sprintf(str,"%s/TotalTrees_AgeRange_%d.asc",parameters.outputDir,itr*sites.TimeStep);
-
-		//		if ((fptotaltrees= LDfopen(str, 3)) == NULL)
-
-		//		errorSys("can not open output file totaltrees",STOP);
-
-		//		outputFileheader(fptotaltrees);*/
-		//		//pintScanline = (unsigned int *)CPLMalloc(sizeof(unsigned int)* (sites.numColumns()*sites.numRows()));//*
-
-		//		sprintf(str2, "%s/TotalTrees_AgeRange_%d.img", parameters.outputDir, parameters.numberOfIterations * sites.TimeStep);//* change
-
-		//		poDstDS2 = poDriver->Create(str2, sites.numColumns(), sites.numRows(), 1, GDT_UInt32, papszOptions);//*
-
-		//		if (poDstDS2 == NULL)
-
-		//			errorSys("Img file not be created.", STOP);//*
-
-		//		outPoBand2 = poDstDS2->GetRasterBand(1);//*
-
-		//		poDstDS2->SetGeoTransform(wAdfGeoTransform);//*
-
-
-		//	}
-
-		//	//3.BA
-		//	if (sites.GetOutputAgerangeFlagArray(sites.specNum, BA))
-		//	{
-
-		//		/*sprintf(str,"%s/TotalBasal_AgeRange_%d.asc",parameters.outputDir,itr*sites.TimeStep);
-
-		//		if ((fptotalbasal= LDfopen(str, 3)) == NULL)
-
-		//		errorSys("can not open output file totalBA",STOP);
-
-		//		outputFileheader(fptotalbasal);*/
-		//		//pafScanline3 = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-
-		//		sprintf(str3, "%s/TotalBasal_AgeRange_%d.img", parameters.outputDir, parameters.numberOfIterations * sites.TimeStep);//* change
-
-		//		poDstDS3 = poDriver->Create(str3, sites.numColumns(), sites.numRows(), 1, GDT_Float32, papszOptions);//*
-
-		//		if (poDstDS3 == NULL)
-
-		//			errorSys("Img file not be created.", STOP);//*
-
-		//		outPoBand3 = poDstDS3->GetRasterBand(1);//*
-
-		//		poDstDS3->SetGeoTransform(wAdfGeoTransform);//*
-
-
-		//	}
-
-		//	//4.Car
-		//	if (sites.GetOutputAgerangeFlagArray(sites.specNum, Car))
-		//	{
-
-		//		/*sprintf(str,"%s/TotalCarbon_AgeRange_%d.asc",parameters.outputDir,itr*sites.TimeStep);
-
-		//		if ((fpTotalcarbon= LDfopen(str, 3)) == NULL)
-
-		//		errorSys("can not open output file totalBA",STOP);
-
-		//		outputFileheader(fpTotalcarbon);*/
-		//	//	pafScanline4 = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-
-		//		sprintf(str4, "%s/TotalCarbon_AgeRange_%d.img", parameters.outputDir, parameters.numberOfIterations* sites.TimeStep);//* change
-
-		//		poDstDS4 = poDriver->Create(str4, sites.numColumns(), sites.numRows(), 1, GDT_Float32, papszOptions);//*
-
-		//		if (poDstDS4 == NULL)
-
-		//			errorSys("Img file not be created.", STOP);//*
-
-		//		outPoBand4 = poDstDS4->GetRasterBand(1);//*
-
-		//		poDstDS4->SetGeoTransform(wAdfGeoTransform);//*
-
-		//	}
-
-		//	//5.RDensity
-		//	if (sites.GetOutputAgerangeFlagArray(sites.specNum, RDensity))
-		//	{
-
-		//		/*sprintf(str,"%s/TotalRD_AgeRange_%d.asc",parameters.outputDir,itr*sites.TimeStep);
-		//		if ((fptotalRD= LDfopen(str, 3)) == NULL)
-
-		//		errorSys("can not open output file totalBA",STOP);
-
-		//		outputFileheader(fptotalRD);*/
-		//	//	pafScanline5 = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));//*
-
-		//		sprintf(str5, "%s/TotalRD_AgeRange_%d.img", parameters.outputDir, parameters.numberOfIterations * sites.TimeStep);//* change
-
-		//		poDstDS5 = poDriver->Create(str5, sites.numColumns(), sites.numRows(), 1, GDT_Float32, papszOptions);//*
-
-		//		if (poDstDS5 == NULL)
-
-		//			errorSys("Img file not be created.", STOP);//*
-
-		//		outPoBand5 = poDstDS5->GetRasterBand(1);//*
-
-		//		poDstDS5->SetGeoTransform(wAdfGeoTransform);//*
-
-		//	}
-
-
-
-		//	for (i = sites.numRows(); i > 0; i--)
-
-		//	{
-
-		//		for (j = 1; j <= sites.numColumns(); j++)
-
-		//		{
-		//			LANDUNIT *l;
-		//			l = sites.locateLanduPt(i, j);
-		//			TmpBiomassT = 0;
-
-		//			TmpBasalAreaT = 0;
-
-		//			TmpTreeT = 0;
-
-		//			TmpCarbon = 0;
-
-		//			TmpCarbonTotal = 0;
-
-		//			TmpRDTotal = 0;
-
-		//			for (k = 1; k <= sites.specNum; k++)
-
-		//			{
-
-		//				TmpCarbon = 0;
-
-		//				Agerangecount = sites.GetAgerangeCount(k - 1);
-
-		//				for (Agerangeii = 1; Agerangeii <= Agerangecount; Agerangeii++){
-
-		//					sites.GetSpeciesAgerangeArray(k - 1, Agerangeii, &Agerangeage1, &Agerangeage2);
-
-		//					if (speciesAttrs(k)->SpType >= 0)
-
-		//					{
-
-		//						for (m = min(speciesAttrs(k)->longevity, Agerangeage1) / sites.TimeStep; m <= min(speciesAttrs(k)->longevity, Agerangeage2) / sites.TimeStep; m++)
-
-		//						{
-
-		//							if (sites.GetGrowthRates(k, m, l->ltID) >= sites.GetBiomassThreshold())
-
-		//								TmpBiomassT += exp(sites.GetBiomassData(speciesAttrs(k)->BioMassCoef, 1) + sites.GetBiomassData(speciesAttrs(k)->BioMassCoef, 2)*log(sites.GetGrowthRates(k, m, l->ltID)))*sites(i, j)->SpecieIndex(k)->getTreeNum(m, k) / 1000.00;
-
-		//							TmpBasalAreaT += sites.GetGrowthRates(k, m, l->ltID)*sites.GetGrowthRates(k, m, l->ltID) / 4 * 3.1415926*sites(i, j)->SpecieIndex(k)->getTreeNum(m, k) / 10000.00;
-
-
-
-		//							//TmpBasalAreaT+=0.005454*sites.GetGrowthRates(k,m)*sites.GetGrowthRates(k,m)*sites(i,j)->SpecieIndex(k)->getTreeNum(m,k);
-
-		//							TmpTreeT += sites(i, j)->SpecieIndex(k)->getTreeNum(m, k);
-
-		//							TmpCarbon += exp(sites.GetBiomassData(speciesAttrs(k)->BioMassCoef, 1) + sites.GetBiomassData(speciesAttrs(k)->BioMassCoef, 2)*log(sites.GetGrowthRates(k, m, l->ltID)))*sites(i, j)->SpecieIndex(k)->getTreeNum(m, k);
-
-		//							TmpRDTotal += pow((sites.GetGrowthRates(k, m, l->ltID) / 25.4), 1.605)*sites(i, j)->specAtt(k)->MaxAreaOfSTDTree*sites(i, j)->SpecieIndex(k)->getTreeNum(m, k) / sites.CellSize / sites.CellSize;
-
-		//						}
-
-		//					}
-
-		//					TmpCarbonTotal = TmpCarbonTotal + TmpCarbon*speciesAttrs(k)->CarbonCoEfficient;
-
-		//				}
-
-		//				/*if(sites.GetOutputGeneralFlagArray(sites.specNum,Seeds))
-
-		//				fprintf(fpTempAvailableSeed[k-1],"%u ",sites(i,j)->SpecieIndex(k)->AvailableSeed);*/
-
-		//			}
-		//			//1.Bio
-		//			if (sites.GetOutputAgerangeFlagArray(sites.specNum, Bio)){
-
-		//				//fprintf(fpTotalBiomass, "%f ", TmpBiomassT);
-
-		//				*(pafScanline1 + (sites.numRows() - i)*sites.numColumns() + j - 1) = TmpBiomassT;//*
-		//			}
-		//			//4.Car
-		//			if (sites.GetOutputAgerangeFlagArray(sites.specNum, Car)){
-
-		//				//fprintf(fpTotalcarbon, "%f ", TmpCarbonTotal / 1000.00);
-
-		//				*(pafScanline4 + (sites.numRows() - i)*sites.numColumns() + j - 1) = TmpCarbonTotal / 1000.00;//*
-		//			}
-		//			//3.BA
-		//			if (sites.GetOutputAgerangeFlagArray(sites.specNum, BA)){
-
-		//				//fprintf(fptotalbasal, "%f ", TmpBasalAreaT);
-
-		//				*(pafScanline3 + (sites.numRows() - i)*sites.numColumns() + j - 1) = TmpBasalAreaT;//*
-		//			}
-		//			//5.RDensity
-		//			if (sites.GetOutputAgerangeFlagArray(sites.specNum, RDensity)){
-
-		//				//fprintf(fptotalRD,"%f ",TmpRDTotal);
-
-		//				*(pafScanline5 + (sites.numRows() - i)*sites.numColumns() + j - 1) = TmpRDTotal;//*
-
-		//			}
-		//			//2.TPA
-		//			if (sites.GetOutputAgerangeFlagArray(sites.specNum, TPA)){
-
-		//				//fprintf(fptotaltrees, "%d ", TmpTreeT);
-
-		//				*(pintScanline + (sites.numRows() - i)*sites.numColumns() + j - 1) = TmpTreeT;//*
-		//			}
-
-		//		}
-
-		//	}
-
-
-		//	//1.Bio
-		//	if (sites.GetOutputAgerangeFlagArray(sites.specNum, Bio)){
-
-		//		//fclose(fpTotalBiomass);
-
-		//		outPoBand1->RasterIO(GF_Write, 0, 0, sites.numColumns(), sites.numRows(), pafScanline1, sites.numColumns(), sites.numRows(), GDT_Float32, 0, 0);//*
-
-		//		if (poDstDS1 != NULL)
-		//			GDALClose((GDALDatasetH)poDstDS1);//*
-
-		//		//CPLFree(pafScanline1);
-		//	}
-		//	//4.Car
-		//	if (sites.GetOutputAgerangeFlagArray(sites.specNum, Car)){
-
-		//		//fclose(fpTotalcarbon);
-		//		outPoBand4->RasterIO(GF_Write, 0, 0, sites.numColumns(), sites.numRows(), pafScanline4, sites.numColumns(), sites.numRows(), GDT_Float32, 0, 0);//*
-
-		//		if (poDstDS4 != NULL)
-		//			GDALClose((GDALDatasetH)poDstDS4);//*
-
-		//		//CPLFree(pafScanline4);
-		//	}
-		//	//3.BA
-		//	if (sites.GetOutputAgerangeFlagArray(sites.specNum, BA)){
-
-		//		//fclose(fptotalbasal);
-
-		//		outPoBand3->RasterIO(GF_Write, 0, 0, sites.numColumns(), sites.numRows(), pafScanline3, sites.numColumns(), sites.numRows(), GDT_Float32, 0, 0);//*
-
-		//		if (poDstDS3 != NULL)
-		//			GDALClose((GDALDatasetH)poDstDS3);//*
-
-		//		//CPLFree(pafScanline3);
-		//	}
-		//	//2.TPA
-		//	if (sites.GetOutputAgerangeFlagArray(sites.specNum, TPA)){
-
-		//		//fclose(fptotaltrees);
-
-		//		outPoBand2->RasterIO(GF_Write, 0, 0, sites.numColumns(), sites.numRows(), pintScanline, sites.numColumns(), sites.numRows(), GDT_UInt32, 0, 0);//*
-
-		//		if (poDstDS2 != NULL)
-		//			GDALClose((GDALDatasetH)poDstDS2);//*
-
-		//		//CPLFree(pintScanline);
-		//	}
-		//	//5.RDensity
-		//	if (sites.GetOutputAgerangeFlagArray(sites.specNum, RDensity)){
-
-		//		//fclose(fptotalRD);
-
-		//		outPoBand5->RasterIO(GF_Write, 0, 0, sites.numColumns(), sites.numRows(), pafScanline5, sites.numColumns(), sites.numRows(), GDT_Float32, 0, 0);//*
-
-		//		if (poDstDS5 != NULL)
-		//			GDALClose((GDALDatasetH)poDstDS5);//*
-
-		//		//CPLFree(pafScanline5);
-		//	}
-		//}
 	}
 
 }
+
+// Jacob - Custom agerange tree number output
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------//
+int treeNumFlag = 1;
+if (treeNumFlag == 1){
+	int agerangeLow[5] = { 0, 20, 40, 70, 90 };
+	int agerangeHigh[5] = { 10, 30, 60, 80, 300 };
+
+	for (int ar = 0; ar < 5; ar++){
+		papszOptions = NULL;
+		pintScanline = (unsigned int *)CPLMalloc(sizeof(unsigned int)* (sites.numColumns()*sites.numRows()));
+
+		sprintf(str1, "%s/TotalTrees_Age%d_Age%d_%d.img", parameters.outputDir, agerangeLow[ar], agerangeHigh[ar], itr * sites.TimeStep);
+
+		poDstDS = poDriver->Create(str1, sites.numColumns(), sites.numRows(), 1, GDT_UInt32, papszOptions);
+
+		if (poDstDS == NULL)
+
+			errorSys("Img file not be created.", STOP);
+
+		outPoBand = poDstDS->GetRasterBand(1);
+
+		poDstDS->SetGeoTransform(wAdfGeoTransform);
+
+		for (i = sites.numRows(); i > 0; i--){
+			for (j = 1; j <= sites.numColumns(); j++){
+				TmpTreesS = 0;
+				for (k = 1; k <= sites.specNum; k++){
+					for (m = min(speciesAttrs(k)->longevity, agerangeLow[ar]) / sites.TimeStep; m <= min(speciesAttrs(k)->longevity, agerangeHigh[ar]) / sites.TimeStep; m++){
+						TmpTreesS += sites(i, j)->SpecieIndex(k)->getTreeNum(m, k);
+					}
+				}
+				*(pintScanline + (sites.numRows() - i)*sites.numColumns() + j - 1) = TmpTreesS;
+			}
+		}
+
+		outPoBand->RasterIO(GF_Write, 0, 0, sites.numColumns(), sites.numRows(), pintScanline, sites.numColumns(), sites.numRows(), GDT_UInt32, 0, 0);
+
+		if (poDstDS != NULL)
+			GDALClose((GDALDatasetH)poDstDS);
+
+		CPLFree(pintScanline);
+		CSLDestroy(papszOptions);
+	}
+}
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+// Jacob - Custom agerange basal area output
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------//
+int treeBasalFlag = 1;
+if (treeBasalFlag == 1){
+	int agerangeLow[5] = { 10, 20, 40, 70, 90 };
+	int agerangeHigh[5] = { 10, 30, 60, 80, 300 };
+
+	for (int ar = 0; ar < 5; ar++){
+		papszOptions = NULL;
+		pafScanline = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));
+
+		sprintf(str1, "%s/TotalBA_Age%d_Age%d_%d.img", parameters.outputDir, agerangeLow[ar], agerangeHigh[ar], itr * sites.TimeStep);
+
+		poDstDS = poDriver->Create(str1, sites.numColumns(), sites.numRows(), 1, GDT_Float32, papszOptions);
+
+		if (poDstDS == NULL)
+
+			errorSys("Img file not be created.", STOP);
+
+		outPoBand = poDstDS->GetRasterBand(1);
+
+		poDstDS->SetGeoTransform(wAdfGeoTransform);
+
+		for (i = sites.numRows(); i > 0; i--){
+
+			for (j = 1; j <= sites.numColumns(); j++){
+				LANDUNIT *l;
+				l = sites.locateLanduPt(i, j);
+				if (l->active()){
+					TmpBasalAreaS = 0;
+					for (k = 1; k <= sites.specNum; k++){
+						for (m = min(speciesAttrs(k)->longevity, agerangeLow[ar]) / sites.TimeStep; m <= min(speciesAttrs(k)->longevity, agerangeHigh[ar]) / sites.TimeStep; m++){
+							float tempGrowth = sites.GetGrowthRates(k, m, l->ltID);
+							int tempTreenum = sites(i, j)->SpecieIndex(k)->getTreeNum(m, k);
+							double TmpBasal = sites.GetGrowthRates(k, m, l->ltID)*sites.GetGrowthRates(k, m, l->ltID) / 4 * 3.1415926*sites(i, j)->SpecieIndex(k)->getTreeNum(m, k) / 10000.00;
+							TmpBasalAreaS += TmpBasal;
+						}
+					}
+				} else {
+					TmpBasalAreaS = 0;
+				}
+				*(pafScanline + (sites.numRows() - i)*sites.numColumns() + j - 1) = TmpBasalAreaS;
+			}
+		}
+
+		outPoBand->RasterIO(GF_Write, 0, 0, sites.numColumns(), sites.numRows(), pafScanline, sites.numColumns(), sites.numRows(), GDT_Float32, 0, 0);
+
+		if (poDstDS != NULL)
+			GDALClose((GDALDatasetH)poDstDS);
+
+		CPLFree(pafScanline);
+		CSLDestroy(papszOptions);
+	}
+}
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+// Jacob - Custom diameter class basal area output
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------//
+int diameterBasalFlag = 0;
+if (diameterBasalFlag == 1){
+	int diameterLow[8] = { 0, 5, 10, 15, 20, 25, 30, 35};
+	int diameterHigh[8] = { 5, 10, 15, 20, 25, 30, 35, 999 };
+
+	for (int ar = 0; ar < 8; ar++){
+		papszOptions = NULL;
+		pafScanline = (float *)CPLMalloc(sizeof(float)* (sites.numColumns()*sites.numRows()));
+
+		sprintf(str1, "%s/TotalBA_Dia%d_Dia%d_%d.img", parameters.outputDir, diameterLow[ar], diameterHigh[ar], itr * sites.TimeStep);
+
+		poDstDS = poDriver->Create(str1, sites.numColumns(), sites.numRows(), 1, GDT_Float32, papszOptions);
+
+		if (poDstDS == NULL)
+
+			errorSys("Img file not be created.", STOP);
+
+		outPoBand = poDstDS->GetRasterBand(1);
+
+		poDstDS->SetGeoTransform(wAdfGeoTransform);
+
+		for (i = sites.numRows(); i > 0; i--){
+
+			for (j = 1; j <= sites.numColumns(); j++){
+				LANDUNIT *l;
+				l = sites.locateLanduPt(i, j);
+				if (l->active()){
+					TmpBasalAreaS = 0;
+					for (k = 1; k <= sites.specNum; k++){
+						for (m = 1; m <= speciesAttrs(k)->longevity / sites.TimeStep; m++){
+							float tempGrowth = sites.GetGrowthRates(k, m, l->ltID);
+							if (tempGrowth > diameterLow[ar] & tempGrowth <= diameterHigh[ar]){
+								double TmpBasal = sites.GetGrowthRates(k, m, l->ltID)*sites.GetGrowthRates(k, m, l->ltID) / 4 * 3.1415926*sites(i, j)->SpecieIndex(k)->getTreeNum(m, k) / 10000.00;
+								TmpBasalAreaS += TmpBasal;
+							}
+						}
+					}
+				}
+				else {
+					TmpBasalAreaS = 0;
+				}
+				*(pafScanline + (sites.numRows() - i)*sites.numColumns() + j - 1) = TmpBasalAreaS;
+			}
+		}
+
+		outPoBand->RasterIO(GF_Write, 0, 0, sites.numColumns(), sites.numRows(), pafScanline, sites.numColumns(), sites.numRows(), GDT_Float32, 0, 0);
+
+		if (poDstDS != NULL)
+			GDALClose((GDALDatasetH)poDstDS);
+
+		CPLFree(pafScanline);
+		CSLDestroy(papszOptions);
+	}
+}
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+// Jacob - Custom diameter class tree number output
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------//
+int diameterTreeFlag = 0;
+if (diameterTreeFlag == 1){
+	int diameterLow[8] = { 0, 5, 10, 15, 20, 25, 30, 35 };
+	int diameterHigh[8] = { 5, 10, 15, 20, 25, 30, 35, 999 };
+
+	for (int ar = 0; ar < 8; ar++){
+		papszOptions = NULL;
+		pintScanline = (unsigned int *)CPLMalloc(sizeof(unsigned int)* (sites.numColumns()*sites.numRows()));
+
+		sprintf(str1, "%s/TotalTrees_Dia%d_Dia%d_%d.img", parameters.outputDir, diameterLow[ar], diameterHigh[ar], itr * sites.TimeStep);
+
+		poDstDS = poDriver->Create(str1, sites.numColumns(), sites.numRows(), 1, GDT_UInt32, papszOptions);
+
+		if (poDstDS == NULL)
+
+			errorSys("Img file not be created.", STOP);
+
+		outPoBand = poDstDS->GetRasterBand(1);
+
+		poDstDS->SetGeoTransform(wAdfGeoTransform);
+
+		for (i = sites.numRows(); i > 0; i--){
+			for (j = 1; j <= sites.numColumns(); j++){
+				LANDUNIT *l;
+				l = sites.locateLanduPt(i, j);
+				TmpTreesS = 0;
+				for (k = 1; k <= sites.specNum; k++){
+					for (m = 1; m <= speciesAttrs(k)->longevity / sites.TimeStep; m++){
+						float tempGrowth = sites.GetGrowthRates(k, m, l->ltID);
+						if (tempGrowth > diameterLow[ar] & tempGrowth <= diameterHigh[ar]){
+							TmpTreesS += sites(i, j)->SpecieIndex(k)->getTreeNum(m, k);
+						}
+					}
+				}
+				*(pintScanline + (sites.numRows() - i)*sites.numColumns() + j - 1) = TmpTreesS;
+			}
+		}
+
+		outPoBand->RasterIO(GF_Write, 0, 0, sites.numColumns(), sites.numRows(), pintScanline, sites.numColumns(), sites.numRows(), GDT_UInt32, 0, 0);
+
+		if (poDstDS != NULL)
+			GDALClose((GDALDatasetH)poDstDS);
+
+		CPLFree(pintScanline);
+		CSLDestroy(papszOptions);
+	}
+}
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+// Jacob - Custom diameter class tree number output - Cohort kill design
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------//
+int cohortTreeFlag = 0;
+if (cohortTreeFlag == 1){
+	int diameterLow[8] = { 0, 5, 10, 15, 20, 25, 30, 35 };
+	int diameterHigh[8] = { 5, 10, 15, 20, 25, 30, 35, 999 };
+
+	for (int ar = 0; ar < 8; ar++){
+		papszOptions = NULL;
+		pintScanline = (unsigned int *)CPLMalloc(sizeof(unsigned int)* (sites.numColumns()*sites.numRows()));
+
+		sprintf(str1, "%s/CohortDesign_Dia%d_Dia%d_%d.img", parameters.outputDir, diameterLow[ar], diameterHigh[ar], itr * sites.TimeStep);
+
+		poDstDS = poDriver->Create(str1, sites.numColumns(), sites.numRows(), 1, GDT_UInt32, papszOptions);
+
+		if (poDstDS == NULL)
+
+			errorSys("Img file not be created.", STOP);
+
+		outPoBand = poDstDS->GetRasterBand(1);
+
+		poDstDS->SetGeoTransform(wAdfGeoTransform);
+
+		for (i = sites.numRows(); i > 0; i--){
+			for (j = 1; j <= sites.numColumns(); j++){
+				LANDUNIT *l;
+				l = sites.locateLanduPt(i, j);
+				TmpTreesS = 0;
+				for (k = 1; k <= sites.specNum; k++){
+					int fireDiff = 1 - speciesAttrs(k)->fireTolerance;
+					float cohortRemove = 0.0;
+					if (fireDiff == -2) {
+						cohortRemove = 0.2;
+					}
+					else if (fireDiff == -1) {
+
+						cohortRemove = 0.5;
+					}
+					else if (fireDiff == 0) {
+						cohortRemove == 0.85;
+					}
+					else if (fireDiff == 1) {
+						cohortRemove == 1.0;
+					}
+					for (m = 1; m <= speciesAttrs(k)->longevity / sites.TimeStep; m++){
+						if ((m * sites.TimeStep) <= (speciesAttrs(k)->longevity * cohortRemove)) {
+							float tempGrowth = sites.GetGrowthRates(k, m, l->ltID);
+							if (tempGrowth > diameterLow[ar] & tempGrowth <= diameterHigh[ar]){
+								TmpTreesS += 0;
+							}
+						}
+						else {
+							float tempGrowth = sites.GetGrowthRates(k, m, l->ltID);
+							if (tempGrowth > diameterLow[ar] & tempGrowth <= diameterHigh[ar]){
+								TmpTreesS += sites(i, j)->SpecieIndex(k)->getTreeNum(m, k);
+							}
+						}
+					}
+				}
+				*(pintScanline + (sites.numRows() - i)*sites.numColumns() + j - 1) = TmpTreesS;
+			}
+		}
+
+		outPoBand->RasterIO(GF_Write, 0, 0, sites.numColumns(), sites.numRows(), pintScanline, sites.numColumns(), sites.numRows(), GDT_UInt32, 0, 0);
+
+		if (poDstDS != NULL)
+			GDALClose((GDALDatasetH)poDstDS);
+
+		CPLFree(pintScanline);
+		CSLDestroy(papszOptions);
+	}
+}
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------//
 
 time(&ltimeTemp);
 
@@ -4749,7 +3973,7 @@ printf("Start 6.0 Style writing output at %s",ctime(&ltime));
 		sprintf(str,"%s.age",ageMaps[i]);*/
 		//if (itr*freq[4] <= parameters.numberOfIterations){
 
-			printf("creating %d %d %s %s\n", sites.specNum, rep, speciesAttrs(i)->name, "age map");
+			//printf("creating %d %d %s %s\n", sites.specNum, rep, speciesAttrs(i)->name, "age map");
 
 			speciesAgeMap(m, speciesAttrs(i)->name);
 

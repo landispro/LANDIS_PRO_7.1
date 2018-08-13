@@ -200,6 +200,7 @@ void CFireSites::create_FireRegimeUnitsListByIndex()
 
 LDPOINT CFireSites::return_a_point_from_index(int index, int cellNo){
 	if(cellNo>FireRegimeUnitsList[index].size()){
+		cout << "Fire index error -" << index << "\n";
 		errorSys("Fire index error, contact development team\n",STOP);
 	}
 	cellNo--;

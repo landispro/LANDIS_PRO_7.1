@@ -1253,6 +1253,7 @@ void PutOutput_harvestBACut(char *fn, char *fn1, double wAdfGeoTransform[]){
 		for (j = 1; j <= pCoresites->numColumns(); j++){
 
 			//fprintf(fpOutput,"%f ", pHarvestsites->GetValueHarvestBA(i,j));
+			double tmpBAout = pHarvestsites->GetValueHarvestBA(i, j);
 
 			*(pafScanline + (pCoresites->numRows() - i)*pCoresites->numColumns() + j - 1) = pHarvestsites->GetValueHarvestBA(i, j);//* 
 

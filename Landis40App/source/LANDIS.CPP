@@ -1323,7 +1323,7 @@ int main(int argc, char *argv[])
 
 
 
-		printf("Finish Fire initiliation \n");
+		printf("Finish Fire initialization \n");
 
 		fflush(stdout);
 
@@ -1826,7 +1826,7 @@ int main(int argc, char *argv[])
 
 		singularLandisIteration(i, run_extraSeed, (numSitesActive / 1000), snr, snc, specAtNum, wAdfGeoTransform, pPDP);
 
-	
+		
 		if ((i%sites.TimeStep  == 0) || (i == sites.TimeStep*parameters.numberOfIterations)){
 
 			if ((i % (sites.TimeStep * freq[0]) ==0) &&(i / sites.TimeStep  < parameters.numberOfIterations)){
@@ -1854,7 +1854,7 @@ int main(int argc, char *argv[])
 
 
 		}
-
+		
 
 
 		if ((gDLLMode & G_FUEL) != 0 && i%sites.TimeStep_Fuel == 0)
@@ -2526,7 +2526,6 @@ void singularLandisIteration(int itr, int run_extraSeed, int numSitesActive, int
 		landUnits.ReprodUpdate(itr / sites.TimeStep);
 
 		//</Add By Qia on Jan 20 2009>
-
 
 
 		Succession_Landis70(snr, snc, ppdp);//Add By Qia on July 6 2009

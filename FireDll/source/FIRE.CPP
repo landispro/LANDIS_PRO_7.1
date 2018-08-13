@@ -573,7 +573,7 @@ void CFIRE::Activate(int itr, int freq[], double wAdfGeoTransform[])
 		printf("%d ",m_lptrIgnitionOccurance[i]);
 
 #endif
-
+		
 		if (m_lptrIgnitionOccurance[i]>0) 
 
 			m_iptrValidLandUnits[k++] = i;
@@ -582,6 +582,7 @@ void CFIRE::Activate(int itr, int freq[], double wAdfGeoTransform[])
 
 			m_iNumLU --;
 
+		
 	}
 
 	time(&t10);
@@ -2057,176 +2058,43 @@ int CFIRE::damage(LDPOINT p, int &fireClass)
 
 	//</Add By Qia on Nov 24 2008>
 
-	for (i=1;i<=specAtNum;i++)
-
+	for (i = 1; i <= specAtNum; i++)
 	{
-
 		//<Add By Qia on Aug 03 2009>
 
-		//siteptr->SpecieIndex(i)->TreesFromVeg=0;
+		if (siteptr->specAtt(i)->SpType >= 0){
 
-		if(siteptr->specAtt(i)->SpType>=0){
+			for (j = 1; j <= siteptr->specAtt(i)->longevity / m_pLAND->TimeStep; j++){
+				int tolerance_index = siteptr->specAtt(i)->fireTolerance;
 
-			for(j=1;j<=siteptr->specAtt(i)->longevity/m_pLAND->TimeStep;j++){
+				int severity_index = fireClass;
+				if (tolerance_index<1 || tolerance_index>5){
+					errorSys("fire tolerance index error.", STOP);
+				}
+				if (severity_index<1 || severity_index>5){
+					errorSys("fire severity index error.", STOP);
+				}
+				float beta1 = m_fireParam.fire_betavalues[tolerance_index - 1][0];
+				float beta2 = m_fireParam.fire_betavalues[tolerance_index - 1][1];
+				float beta3 = m_fireParam.fire_betavalues[tolerance_index - 1][2];
+				float X_value = m_fireParam.fire_X2values[severity_index - 1];
+				double tempGrow = m_pLAND->GetGrowthRates(i, j, l->ltID);
+				double prob_burn_param = beta1 + beta2 * tempGrow + beta3 * X_value;
+				double prob_burn = pow((1.0 + exp(0.0 - prob_burn_param)), -1.0);
+				int tree_num_agecohort = siteptr->SpecieIndex(i)->getTreeNum(j, i);
+				DeadTree = tree_num_agecohort*prob_burn;
+				siteptr->SpecieIndex(i)->setTreeNum(j, i, tree_num_agecohort - DeadTree);
 
-				for(int k=1;k<=m_pLAND->TimeStep;k++){
+				if ((siteptr->specAtt(i)->maxSproutAge / m_pLAND->TimeStep >= j) & (siteptr->specAtt(i)->MinSproutAge / m_pLAND->TimeStep <= j))
 
-					//TmpMortality=0.01/(1+exp(3.25309-0.00072647*tmpDQ+0.01668809*m_pLAND->GetGrowthRates(i,j)/2.54));
+				{
 
-					//DeadTree=siteptr->SpecieIndex(i)->getTreeNum(j,i)*TmpMortality/siteptr->specAtt(i)->shadeTolerance;
-					int tolerance_index = siteptr->specAtt(i)->fireTolerance;
-					
-					int severity_index = fireClass;
-					if(tolerance_index<1||tolerance_index>5){
-						errorSys("fire tolerance index error.",STOP);
-					}
-					if(severity_index<1||severity_index>5){
-						errorSys("fire severity index error.",STOP);
-					}
-					float beta1 = m_fireParam.fire_betavalues[tolerance_index-1][0];
-					float beta2 = m_fireParam.fire_betavalues[tolerance_index-1][1];
-					float beta3 = m_fireParam.fire_betavalues[tolerance_index-1][2];
-					float X_value = m_fireParam.fire_X2values[severity_index-1];
-					double prob_burn_param = beta1+beta2*m_pLAND->GetGrowthRates(i,j,l->ltID)+ beta3*X_value;
-					double prob_burn = 1.0/(1.0+exp(0.0-prob_burn_param));
-					int tree_num_agecohort = siteptr->SpecieIndex(i)->getTreeNum(j,i);
-					DeadTree=tree_num_agecohort*prob_burn;
-					siteptr->SpecieIndex(i)->setTreeNum(j,i,tree_num_agecohort-DeadTree);
-
-					if(siteptr->specAtt(i)->maxSproutAge/m_pLAND->TimeStep>=j)
-
-						{
-
-						siteptr->SpecieIndex(i)->TreesFromVeg+=(int)DeadTree;
-
-						}
-
-					}
+					siteptr->SpecieIndex(i)->TreesFromVeg += (int)(DeadTree * siteptr->specAtt(i)->vegProb);
 
 				}
-
 			}
-
-		//</Add By Qia on Aug 03 2009>
-
-		/*SPECIE *s = (* (*m_pLAND) (p.y,p.x)) (i);
-
-		SPECIESATTR *sa = (*m_pLAND) (p.y,p.x)->specAtt();
-
-		if ((fireClass==5) || (fireClass - sa->fireTolerance>=1))
-
-		{
-
-			numCohorts+=s->number();
-
-			//<Add By Qia on Feb 10 2010>
-
-			for(count70=m_pLAND->TimeStep_Fire;count70<=sa->longevity/m_pLAND->TimeStep;count70+=m_pLAND->TimeStep_Fire){
-
-				tmpBiomass=exp(m_pLAND->GetBiomassData(sa->BioMassCoef,1)+m_pLAND->GetBiomassData(sa->BioMassCoef,2)*log(m_pLAND->GetGrowthRates(i,count70/m_pLAND->TimeStep)))*((*m_pLAND) (p.y,p.x)->SpecieIndex(i)->getTreeNum(count70,i))/1000.00;
-
-				m_pLAND->Fire70outputIncreaseBiomassvalue(p.y,p.x,tmpBiomass);
-
-				tmpCarbon=exp(m_pLAND->GetBiomassData(sa->BioMassCoef,1)+m_pLAND->GetBiomassData(sa->BioMassCoef,2)*log(m_pLAND->GetGrowthRates(i,count70/m_pLAND->TimeStep)))*(*m_pLAND) (p.y,p.x)->SpecieIndex(i)->getTreeNum(count70,i);
-
-				m_pLAND->Fire70outputIncreaseCarbonvalue(p.y,p.x,tmpCarbon*sa->CarbonCoEfficient);
-
-			}
-
-			//</Add By Qia on Feb 10 2010>
-
-			s->kill(m_pLAND->TimeStep_Fire,sa->longevity);
-
-			
-
 		}
-
-		else if (fireClass-sa->fireTolerance==0) 
-
-		{
-
-			for(j=m_pLAND->TimeStep_Fire; j< (sa->longevity)*lifespan[3]; j+=m_pLAND->TimeStep_Fire) 
-
-				if(s->query(j))
-
-				{
-
-					
-
-					tmpBiomass=exp(m_pLAND->GetBiomassData(sa->BioMassCoef,1)+m_pLAND->GetBiomassData(sa->BioMassCoef,2)*log(m_pLAND->GetGrowthRates(i,j/m_pLAND->TimeStep)))*((*m_pLAND) (p.y,p.x)->SpecieIndex(i)->getTreeNum(j/m_pLAND->TimeStep,i))/1000.00;
-
-					m_pLAND->Fire70outputIncreaseBiomassvalue(p.y,p.x,tmpBiomass);
-
-					tmpCarbon=exp(m_pLAND->GetBiomassData(sa->BioMassCoef,1)+m_pLAND->GetBiomassData(sa->BioMassCoef,2)*log(m_pLAND->GetGrowthRates(i,j/m_pLAND->TimeStep)))*(*m_pLAND) (p.y,p.x)->SpecieIndex(i)->getTreeNum(j/m_pLAND->TimeStep,i);
-
-					m_pLAND->Fire70outputIncreaseCarbonvalue(p.y,p.x,tmpCarbon*sa->CarbonCoEfficient);
-
-					s->kill(j);
-
-					numCohorts++;
-
-				}
-
-		}
-
-		else if ((fireClass-sa->fireTolerance)==-1)
-
-		{
-
-			for(j=m_pLAND->TimeStep_Fire; j< (sa->longevity)*lifespan[2]; j+=m_pLAND->TimeStep_Fire) 
-
-				if(s->query(j))
-
-				{
-
-					tmpBiomass=exp(m_pLAND->GetBiomassData(sa->BioMassCoef,1)+m_pLAND->GetBiomassData(sa->BioMassCoef,2)*log(m_pLAND->GetGrowthRates(i,j/m_pLAND->TimeStep)))*((*m_pLAND) (p.y,p.x)->SpecieIndex(i)->getTreeNum(j/m_pLAND->TimeStep,i))/1000.00;
-
-					m_pLAND->Fire70outputIncreaseBiomassvalue(p.y,p.x,tmpBiomass);
-
-					tmpCarbon=exp(m_pLAND->GetBiomassData(sa->BioMassCoef,1)+m_pLAND->GetBiomassData(sa->BioMassCoef,2)*log(m_pLAND->GetGrowthRates(i,j/m_pLAND->TimeStep)))*(*m_pLAND) (p.y,p.x)->SpecieIndex(i)->getTreeNum(j/m_pLAND->TimeStep,i);
-
-					m_pLAND->Fire70outputIncreaseCarbonvalue(p.y,p.x,tmpCarbon*sa->CarbonCoEfficient);
-
-					s->kill(j);
-
-					numCohorts++;
-
-				}
-
-		}
-
-		else if ((fireClass-sa->fireTolerance)==-2)
-
-		{
-
-			for(j=m_pLAND->TimeStep_Fire; j< (sa->longevity)*lifespan[1]; j+=m_pLAND->TimeStep_Fire) 
-
-				if(s->query(j))
-
-				{
-
-					tmpBiomass=exp(m_pLAND->GetBiomassData(sa->BioMassCoef,1)+m_pLAND->GetBiomassData(sa->BioMassCoef,2)*log(m_pLAND->GetGrowthRates(i,j/m_pLAND->TimeStep)))*((*m_pLAND) (p.y,p.x)->SpecieIndex(i)->getTreeNum(j/m_pLAND->TimeStep,i))/1000.00;
-
-					m_pLAND->Fire70outputIncreaseBiomassvalue(p.y,p.x,tmpBiomass);
-
-					tmpCarbon=exp(m_pLAND->GetBiomassData(sa->BioMassCoef,1)+m_pLAND->GetBiomassData(sa->BioMassCoef,2)*log(m_pLAND->GetGrowthRates(i,j/m_pLAND->TimeStep)))*(*m_pLAND) (p.y,p.x)->SpecieIndex(i)->getTreeNum(j/m_pLAND->TimeStep,i);
-
-					m_pLAND->Fire70outputIncreaseCarbonvalue(p.y,p.x,tmpCarbon*sa->CarbonCoEfficient);
-
-					s->kill(j);
-
-					numCohorts++;
-
-				}
-
-		}
-
-
-
-		s->updateDispropagules(sa->maturity);*/
-
 	}
-
 	//<Add By Qia on Nov 24 2008>
 
 	m_pLAND->AftStChg(p.y,p.x);
@@ -3139,6 +3007,11 @@ void CFIRE::CalculateFSFactor(long lCurrentFS, long lFS)
 void CFIRE::updateFire_Regime_Map(int i){
 	char FireRegimeNametemp[100];
 	char FireMapGIS[100];
+
+	GDALDataset *fpImg;
+
+	double adfGeoTransform[6];
+	
 	if(i/m_pLAND->TimeStep_Fire==1){
 		FILE * FpFireupdate;
 		Fire_regime_files.clear();
@@ -3172,19 +3045,20 @@ void CFIRE::updateFire_Regime_Map(int i){
 				//update landtype attribute
 				m_pFireRegimeUnits->read(luFile);
 				LDfclose(luFile);
+				m_pFireRegimeUnits->updateIGDensity(m_fireParam.cellSize);
 			}
 			
 			printf("\Fire regime parameter updated.\n");
-			FILE *GISmap;
+
 			strcpy(m_fireParam.fireRegimeDataFn,FireMapGIS);
-			if ((GISmap=LDfopen(m_fireParam.fireRegimeDataFn, 2))==NULL){
-				printf("File regime map file %s not found.\n",m_fireParam.fireRegimeDataFn);		
-				errorSys(m_fireParam.fireRegimeDataFn,STOP);
+			if ((fpImg = (GDALDataset *)GDALOpen(m_fireParam.fireRegimeDataFn, GA_ReadOnly)) == NULL){ //* landtype.img
+				printf("File regime map file %s not found.\n", m_fireParam.fireRegimeDataFn);
+				errorSys(m_fireParam.fireRegimeDataFn, STOP);//*
 			}
 			else{
 				//update landtype attribute
-				m_pFireRegimeUnits->readFireRegimeGIS(GISmap); 
-				LDfclose(GISmap);
+				m_pFireRegimeUnits->readFireRegimeIMG(fpImg);
+				GDALClose((GDALDatasetH)fpImg);
 			}
 			printf("\nFire Regime map Updated.\n");
 		}
@@ -3204,19 +3078,20 @@ void CFIRE::updateFire_Regime_Map(int i){
 				//update landtype attribute
 				m_pFireRegimeUnits->read(luFile);
 				LDfclose(luFile);
+				m_pFireRegimeUnits->updateIGDensity(m_fireParam.cellSize);
 			}
 			
 			printf("\nFire regime parameter updated.\n");
-			FILE *GISmap;
-			strcpy(m_fireParam.fireRegimeDataFn,FireMapGIS);
-			if ((GISmap=LDfopen(m_fireParam.fireRegimeDataFn, 2))==NULL){
-				printf("Land Map file %s not found.\n",m_fireParam.fireRegimeDataFn);		
-				errorSys(m_fireParam.fireRegimeDataFn,STOP);
+			
+			strcpy(m_fireParam.fireRegimeDataFn, FireMapGIS);
+			if ((fpImg = (GDALDataset *)GDALOpen(m_fireParam.fireRegimeDataFn, GA_ReadOnly)) == NULL){ //* landtype.img
+				printf("File regime map file %s not found.\n", m_fireParam.fireRegimeDataFn);
+				errorSys(m_fireParam.fireRegimeDataFn, STOP);//*
 			}
 			else{
 				//update landtype attribute
-				m_pFireRegimeUnits->readFireRegimeGIS(GISmap); 
-				LDfclose(GISmap);
+				m_pFireRegimeUnits->readFireRegimeIMG(fpImg);
+				GDALClose((GDALDatasetH)fpImg);
 			}
 			printf("\nFire Regime map Updated.\n");		
 		}
