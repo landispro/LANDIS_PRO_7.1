@@ -202,6 +202,10 @@ int FuelInit(PDP* ppdp, char* strfuelInitFile, int specAttrsNo, int luNo, char* 
 
 	pPDP = ppdp;
 
+	int giRow = pPDP->iRows;
+
+	int giCol = pPDP->iCols;
+
 
 
 	strfuelInputFile = new char[FNSIZE];	//Fuel input file name
@@ -416,13 +420,13 @@ _mkdir(str1);
 
 	else{
 
-			standMap.read(strpstandMapFile);
+			standMap.readImg(strpstandMapFile, giRow, giCol);
 
 		}
 
 	  //</Add By Qia on Nov 20 2008>  
 
-	    managementAreaMap.read(strpmgtAreaMapFile);
+		managementAreaMap.readImg(strpmgtAreaMapFile, giRow, giCol);
 
 		fuelpstands = new FUELSTANDS(); //change by Qia on Nov 20 2008
 
