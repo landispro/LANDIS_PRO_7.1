@@ -556,13 +556,16 @@ double StockingCuttingRegime::CutShareStockinginACell_LifeSpanPercent(int i, int
 
 	double TmpStockingS=0,tempStocking,StockingcutSpecie;
 
+	double tempBA, singleTreeBA;
+
 	int treeNum_save;
 
 	int treeNum_original;
 
 	double Stocking_actual_cut_cell = 0;
 
-
+	LANDUNIT *l;
+	l = pCoresites->locateLanduPt(i, j);
 
 	for(k=0;k<pCoresites->specNum;k++){
 
@@ -662,7 +665,7 @@ double StockingCuttingRegime::CutShareStockinginACell_LifeSpanPercent(int i, int
 
 					{
 
-						m= AgeArraySmall[pos];
+						m = AgeArraySmall[pos];
 
 						if(flag_cut[speciesOrder[k]-1]){
 
@@ -670,7 +673,8 @@ double StockingCuttingRegime::CutShareStockinginACell_LifeSpanPercent(int i, int
 
 							if(TmpStockingS < target){
 
-								//tempBA = pCoresites->GetGrowthRates(speciesOrder[k],m)*pCoresites->GetGrowthRates(speciesOrder[k],m)/4*3.1415926*(*pCoresites)(i,j)->SpecieIndex(speciesOrder[k])->getTreeNum(m,speciesOrder[k])/10000.00;
+								singleTreeBA = pCoresites->GetGrowthRates(speciesOrder[k], m, l->ltID)*pCoresites->GetGrowthRates(speciesOrder[k], m, l->ltID) / 4 * 3.1415926 / 10000;
+								tempBA = singleTreeBA * (*pCoresites)(i,j)->SpecieIndex(speciesOrder[k])->getTreeNum(m,speciesOrder[k]);
 								tempStocking = GetStockinginACell_spec_age(i,j,speciesOrder[k],m);
 								if(tempStocking<=target-TmpStockingS){
 
@@ -685,9 +689,9 @@ double StockingCuttingRegime::CutShareStockinginACell_LifeSpanPercent(int i, int
 
 									TmpStockingS+=tempStocking;
 
-									//pHarvestsites->AddMoreValueHarvestBA_spec(i,j,speciesOrder[k]-1,tempBA);
+									pHarvestsites->AddMoreValueHarvestBA_spec(i,j,speciesOrder[k]-1,tempBA);
 
-									//pHarvestsites->AddMoreValueHarvestBA(i,j,tempBA);
+									pHarvestsites->AddMoreValueHarvestBA(i,j,tempBA);
 
 								}
 
@@ -695,6 +699,7 @@ double StockingCuttingRegime::CutShareStockinginACell_LifeSpanPercent(int i, int
 
 									treeNum_save = (*pCoresites)(i,j)->SpecieIndex(speciesOrder[k])->getTreeNum(m,speciesOrder[k])*(1-(target-TmpStockingS)/tempStocking);
 
+									
 									if(treeNum_save>0){
 
 										treeNum_original = (*pCoresites)(i,j)->SpecieIndex(speciesOrder[k])->getTreeNum(m,speciesOrder[k]);
@@ -707,9 +712,10 @@ double StockingCuttingRegime::CutShareStockinginACell_LifeSpanPercent(int i, int
 										(*pCoresites)(i,j)->SpecieIndex(speciesOrder[k])->setTreeNum(m,speciesOrder[k],treeNum_save);
 										TmpStockingS+=(target-TmpStockingS);
 
-										//pHarvestsites->AddMoreValueHarvestBA_spec(i,j,speciesOrder[k]-1,(target-TmpBasalAreaS));
+										tempBA = tempBA - (treeNum_save * singleTreeBA);
+										pHarvestsites->AddMoreValueHarvestBA_spec(i, j, speciesOrder[k] - 1, tempBA);
 
-										//pHarvestsites->AddMoreValueHarvestBA(i,j,(target-TmpBasalAreaS));
+										pHarvestsites->AddMoreValueHarvestBA(i, j, tempBA);
 
 									}
 
@@ -727,9 +733,10 @@ double StockingCuttingRegime::CutShareStockinginACell_LifeSpanPercent(int i, int
 
 										TmpStockingS+=tempStocking;
 
-										//pHarvestsites->AddMoreValueHarvestBA_spec(i,j,speciesOrder[k]-1,tempBA);
+										tempBA = tempBA - (treeNum_save * singleTreeBA);
+										pHarvestsites->AddMoreValueHarvestBA_spec(i, j, speciesOrder[k] - 1, tempBA);
 
-										//pHarvestsites->AddMoreValueHarvestBA(i,j,tempBA);
+										pHarvestsites->AddMoreValueHarvestBA(i, j, tempBA);
 
 									}
 
@@ -795,7 +802,8 @@ double StockingCuttingRegime::CutShareStockinginACell_LifeSpanPercent(int i, int
 
 							if(TmpStockingS < target){
 
-								//tempBA = pCoresites->GetGrowthRates(speciesOrder[k],m)*pCoresites->GetGrowthRates(speciesOrder[k],m)/4*3.1415926*(*pCoresites)(i,j)->SpecieIndex(speciesOrder[k])->getTreeNum(m,speciesOrder[k])/10000.00;
+								singleTreeBA = pCoresites->GetGrowthRates(speciesOrder[k], m, l->ltID)*pCoresites->GetGrowthRates(speciesOrder[k], m, l->ltID) / 4 * 3.1415926 / 10000;
+								tempBA = singleTreeBA * (*pCoresites)(i, j)->SpecieIndex(speciesOrder[k])->getTreeNum(m, speciesOrder[k]);
 								tempStocking = GetStockinginACell_spec_age(i,j,speciesOrder[k],m);
 								if(tempStocking<=target-TmpStockingS){
 
@@ -812,9 +820,9 @@ double StockingCuttingRegime::CutShareStockinginACell_LifeSpanPercent(int i, int
 
 									TmpStockingS+=tempStocking;
 
-									//pHarvestsites->AddMoreValueHarvestBA_spec(i,j,speciesOrder[k]-1,tempBA);
+									pHarvestsites->AddMoreValueHarvestBA_spec(i,j,speciesOrder[k]-1,tempBA);
 
-									//pHarvestsites->AddMoreValueHarvestBA(i,j,tempBA);
+									pHarvestsites->AddMoreValueHarvestBA(i,j,tempBA);
 
 								}
 
@@ -834,9 +842,10 @@ double StockingCuttingRegime::CutShareStockinginACell_LifeSpanPercent(int i, int
 										(*pCoresites)(i,j)->SpecieIndex(speciesOrder[k])->setTreeNum(m,speciesOrder[k],treeNum_save);
 										TmpStockingS+=(target-TmpStockingS);
 
-										//pHarvestsites->AddMoreValueHarvestBA_spec(i,j,speciesOrder[k]-1,(target-TmpBasalAreaS));
+										tempBA = tempBA - (treeNum_save * singleTreeBA);
+										pHarvestsites->AddMoreValueHarvestBA_spec(i, j, speciesOrder[k] - 1, tempBA);
 
-										//pHarvestsites->AddMoreValueHarvestBA(i,j,(target-TmpBasalAreaS));
+										pHarvestsites->AddMoreValueHarvestBA(i, j, tempBA);
 
 									}
 
@@ -854,9 +863,10 @@ double StockingCuttingRegime::CutShareStockinginACell_LifeSpanPercent(int i, int
 
 										TmpStockingS+=tempStocking;
 
-										//pHarvestsites->AddMoreValueHarvestBA_spec(i,j,speciesOrder[k]-1,tempBA);
+										tempBA = tempBA - (treeNum_save * singleTreeBA);
+										pHarvestsites->AddMoreValueHarvestBA_spec(i, j, speciesOrder[k] - 1, tempBA);
 
-										//pHarvestsites->AddMoreValueHarvestBA(i,j,tempBA);
+										pHarvestsites->AddMoreValueHarvestBA(i, j, tempBA);
 
 									}
 
