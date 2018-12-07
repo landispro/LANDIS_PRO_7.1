@@ -3557,7 +3557,7 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 
 // Jacob - Custom agerange tree number output
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------//
-int treeNumFlag = 1;
+int treeNumFlag = 0;
 if (treeNumFlag == 1){
 	int agerangeLow[5] = { 0, 20, 40, 70, 90 };
 	int agerangeHigh[5] = { 10, 30, 60, 80, 300 };
@@ -3603,7 +3603,7 @@ if (treeNumFlag == 1){
 
 // Jacob - Custom agerange basal area output
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------//
-int treeBasalFlag = 1;
+int treeBasalFlag = 0;
 if (treeBasalFlag == 1){
 	int agerangeLow[5] = { 10, 20, 40, 70, 90 };
 	int agerangeHigh[5] = { 10, 30, 60, 80, 300 };

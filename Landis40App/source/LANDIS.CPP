@@ -1416,7 +1416,7 @@ int main(int argc, char *argv[])
 
 	if ((gDLLMode & G_FUEL) != 0)
 
-		FuelputFuelOutput(reclYear / sites.TimeStep_Fuel, parameters.outputDir, parameters.cellSize);
+		FuelputFuelOutput(reclYear / sites.TimeStep_Fuel, parameters.outputDir, wAdfGeoTransform);
 
 
 
@@ -1859,7 +1859,7 @@ int main(int argc, char *argv[])
 
 		if ((gDLLMode & G_FUEL) != 0 && i%sites.TimeStep_Fuel == 0)
 
-			FuelputFuelOutput(i / sites.TimeStep_Fuel, parameters.outputDir, parameters.cellSize);
+			FuelputFuelOutput(i / sites.TimeStep_Fuel, parameters.outputDir, wAdfGeoTransform);
 
 
 
@@ -2491,8 +2491,8 @@ void singularLandisIteration(int itr, int run_extraSeed, int numSitesActive, int
 
 		//</Add By Qia on Dec 18 2008>
 
-		FuelManageProcessEvents(itr / sites.TimeStep_Fuel);
-
+		FuelManageProcessEvents(itr);
+		//FuelManageProcessEvents(itr / sites.TimeStep_Fuel);
 		//fseed(parameters.randSeed+itr*7);//Commented By Qia on Dec 18 2008
 
 		time(&ltimeTemp);

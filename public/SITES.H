@@ -577,8 +577,8 @@ float *Volume;
 //<Add By Qia on March 04 2011>
 
 void ListbubbleSort();
-
-
+void ListRandomSort();
+void ListShadeSort();
 
 std::vector<float> AreaList;
 
@@ -586,7 +586,7 @@ std::vector<int>	SpecIndexArray;
 
 std::vector<int>	AgeIndexArray;
 
-
+std::vector<int>	SpecShadeArray;
 
 //</Add By Qia on March 04 2011>
 

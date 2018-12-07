@@ -4,6 +4,12 @@
 
 #include <iostream>
 
+#include <random>       // std::default_random_engine
+
+#include <chrono>       // std::chrono::system_clock
+
+#include <algorithm>
+
 #include "system1.h"
 
 #include "error.h"
@@ -2527,7 +2533,54 @@ void SITES::ListbubbleSort()//Bubble sort function
 
 }
 
+void SITES::ListShadeSort()//Bubble sort function 
 
+{
+
+	int i, j;
+
+	for (i = (AreaList.size() - 1); i > 0; i--)
+
+	{
+
+		for (j = 1; j <= i; j++)
+
+		{
+
+			if (SpecShadeArray.at(j - 1) > SpecShadeArray.at(j)) {
+				
+				std::swap(SpecShadeArray[j - 1], SpecShadeArray[j]);
+
+				std::swap(AreaList[j - 1], AreaList[j]);
+
+				std::swap(SpecIndexArray[j - 1], SpecIndexArray[j]);
+
+				std::swap(AgeIndexArray[j - 1], AgeIndexArray[j]);
+			}
+
+			if (SpecShadeArray.at(j-1) == SpecShadeArray.at(j) && AreaList.at(j - 1) > AreaList.at(j))
+
+			{
+
+				std::swap(AreaList[j - 1], AreaList[j]);
+
+				std::swap(SpecIndexArray[j - 1], SpecIndexArray[j]);
+
+				std::swap(AgeIndexArray[j - 1], AgeIndexArray[j]);
+
+			}
+		}
+	}
+}
+
+void SITES::ListRandomSort()//Bubble sort function 
+{
+	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+	
+	std::shuffle(AreaList.begin(), AreaList.end(), std::default_random_engine(seed));
+	std::shuffle(SpecIndexArray.begin(), SpecIndexArray.end(), std::default_random_engine(seed));
+	std::shuffle(AgeIndexArray.begin(), AgeIndexArray.end(), std::default_random_engine(seed));
+}
 
 void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
@@ -2535,7 +2588,8 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 	int *quaterPercent = new int[specNum*5];
 
-	float thinning_percentatge[5];
+	float base_percentage[5];
+	float thinning_percentage[5];
 
 	double Area_tobeThin;
 
@@ -2555,15 +2609,25 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 		}
 
-	thinning_percentatge[0]= 0.95;
+	base_percentage[0] = 0.95;
 
-	thinning_percentatge[1]= 0.9;
+	base_percentage[1] = 0.9;
+	
+	base_percentage[2] = 0.85;
 
-	thinning_percentatge[2]= 0.85;
+	base_percentage[3] = 0.8;
 
-	thinning_percentatge[3]= 0.80;
+	base_percentage[4] = 0.75;
 
-	thinning_percentatge[4]= 0.75;
+	//base_percentage[0] = 0.65;
+
+	//base_percentage[1] = 0.6;
+
+	//base_percentage[2] = 0.55;
+	
+	//base_percentage[3] = 0.5;
+
+	//base_percentage[4] = 0.45;
 
 	for(i=1;i<=siteptr->number();i++){
 
@@ -2577,7 +2641,7 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 		quaterPercent[(i-1)*4+4] = siteptr->specAtt(i)->longevity/TimeStep;
 
-		}
+	}
 
 	for(j = 0 ; j<4 ;j++){
 
@@ -2587,7 +2651,15 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 		AgeIndexArray.clear();
 
+		SpecShadeArray.clear();
+
 		if(j==0){
+
+			for (i = 0; i <= 4; i++){
+				double ts_pow;
+				ts_pow = (double)TimeStep / 10;
+				thinning_percentage[i] = 1 - pow((1 - base_percentage[i]), ts_pow);
+			}
 
 			float subArea_tobeThin = 0.0;
 
@@ -2597,21 +2669,25 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 					{
 
-						subArea_tobeThin += thinning_percentatge[siteptr->specAtt(spec_i)->shadeTolerance-1]*pow((SITES::GetGrowthRates(spec_i,age_i,l->ltID)/25.4), 1.605)*siteptr->SpecieIndex(spec_i)->getTreeNum(age_i,spec_i)*siteptr->specAtt(spec_i)->MaxAreaOfSTDTree;
+						subArea_tobeThin += thinning_percentage[siteptr->specAtt(spec_i)->shadeTolerance-1]*pow((SITES::GetGrowthRates(spec_i,age_i,l->ltID)/25.4), 1.605)*siteptr->SpecieIndex(spec_i)->getTreeNum(age_i,spec_i)*siteptr->specAtt(spec_i)->MaxAreaOfSTDTree;
 
-					float temp = pow((SITES::GetGrowthRates(spec_i,age_i,l->ltID)/25.4), 1.605)*siteptr->specAtt(spec_i)->MaxAreaOfSTDTree;
+						float temp = pow((SITES::GetGrowthRates(spec_i,age_i,l->ltID)/25.4), 1.605)*siteptr->specAtt(spec_i)->MaxAreaOfSTDTree;
 
-					AreaList.push_back(temp);
+						AreaList.push_back(temp);
 
-					SpecIndexArray.push_back(spec_i);
+						SpecIndexArray.push_back(spec_i);
 
-					AgeIndexArray.push_back(age_i);
+						AgeIndexArray.push_back(age_i);
+
+						SpecShadeArray.push_back(siteptr->specAtt(spec_i)->shadeTolerance);
 
 					}
 
 				}
 
+			//ListShadeSort();
 			ListbubbleSort();
+			//ListRandomSort();
 
 			if(subArea_tobeThin >= Area_tobeThin){
 
@@ -2621,7 +2697,7 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 							float tempAreaInvolveTreeNum ;
 
-							tempAreaInvolveTreeNum = AreaList.at(i)*siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*thinning_percentatge[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]; 
+							tempAreaInvolveTreeNum = AreaList.at(i)*siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*thinning_percentage[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]; 
 
 							if(tempAreaInvolveTreeNum > Area_tobeThin){
 
@@ -2629,18 +2705,14 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 								treesToremove = Area_tobeThin/(AreaList.at(i));
 
-								
-
 								treesLeft = siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))- treesToremove;
 
 								//if(0)//
-								if(col == 1 && row == 20 && wenjuan_debug)
+								if(col == 8 && row == 95 && wenjuan_debug)
 
-									{
+									{								
 
-									printf("Col:%d, Row:%d:\n", col, row);
-
-									printf("area: %f, Spec: %d, Age: %d, TreeInit: %d, TreeLeft: %d\n", AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i),  siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i)), max(0,treesLeft));
+									printf("J: %d, area: %.1f, Spec: %d, Age: %d, Dia: %.1f, TreeInit: %d, TreeLeft: %d\n", j, AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i), SITES::GetGrowthRates(SpecIndexArray.at(i), AgeIndexArray.at(i), l->ltID), siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i), SpecIndexArray.at(i)), max(0, treesLeft));
 
 									}
 
@@ -2658,18 +2730,14 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 							else{
 
-								
-
-								int treesLeft = siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*(1-thinning_percentatge[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]);
+								int treesLeft = siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*(1-thinning_percentage[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]);
 
 								//if(0)//
-								if(col == 1 && row == 20 &&wenjuan_debug)
+								if(col == 8 && row == 95 && wenjuan_debug)
 
 									{
 
-									printf("Col:%d, Row:%d:\n", col, row);
-
-									printf("area: %f, Spec: %d, Age: %d, TreeInit: %d, TreeLeft: %d\n", AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i),  siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i)), max(0,treesLeft));
+									printf("J: %d, area: %.1f, Spec: %d, Age: %d, Dia: %.1f, TreeInit: %d, TreeLeft: %d\n", j, AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i), SITES::GetGrowthRates(SpecIndexArray.at(i), AgeIndexArray.at(i), l->ltID), siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i), SpecIndexArray.at(i)), max(0, treesLeft));
 
 									}
 
@@ -2693,24 +2761,20 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 							float tempAreaInvolveTreeNum ;
 
-							tempAreaInvolveTreeNum = AreaList.at(i)*siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*thinning_percentatge[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]; 
+							tempAreaInvolveTreeNum = AreaList.at(i)*siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*thinning_percentage[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]; 
 
 							
 
 							{
 
-								
-
-								int treesLeft = siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*(1-thinning_percentatge[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]);
+								int treesLeft = siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*(1-thinning_percentage[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]);
 
 								//if(0)//
-								if(col == 1 && row == 20 &&wenjuan_debug)
+								if(col == 8 && row == 95 && wenjuan_debug)
 
 									{
 
-									printf("Col:%d, Row:%d:\n", col, row);
-
-									printf("area: %f, Spec: %d, Age: %d, TreeInit: %d, TreeLeft: %d\n", AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i),  siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i)), max(0,treesLeft));
+									printf("J: %d, area: %.1f, Spec: %d, Age: %d, Dia: %.1f, TreeInit: %d, TreeLeft: %d\n", j, AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i), SITES::GetGrowthRates(SpecIndexArray.at(i), AgeIndexArray.at(i), l->ltID), siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i), SpecIndexArray.at(i)), max(0, treesLeft));
 
 									}
 
@@ -2730,11 +2794,19 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 		AreaList.clear();
 
+		SpecShadeArray.clear();
+
 		SpecIndexArray.clear();
 
 		AgeIndexArray.clear();
 
 		if(j==1){
+
+			for (i = 0; i <= 4; i++){
+				double ts_pow;
+				ts_pow = (double)TimeStep / 10;
+				thinning_percentage[i] = 1 - pow((1 - base_percentage[i] / 2), ts_pow);
+			}
 
 			float subArea_tobeThin = 0.0;
 
@@ -2744,7 +2816,7 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 					{
 
-					subArea_tobeThin += thinning_percentatge[siteptr->specAtt(spec_i)->shadeTolerance-1]*pow((SITES::GetGrowthRates(spec_i,age_i,l->ltID)/25.4), 1.605)*siteptr->SpecieIndex(spec_i)->getTreeNum(age_i,spec_i)*siteptr->specAtt(spec_i)->MaxAreaOfSTDTree;
+					subArea_tobeThin += thinning_percentage[siteptr->specAtt(spec_i)->shadeTolerance-1]*pow((SITES::GetGrowthRates(spec_i,age_i,l->ltID)/25.4), 1.605)*siteptr->SpecieIndex(spec_i)->getTreeNum(age_i,spec_i)*siteptr->specAtt(spec_i)->MaxAreaOfSTDTree;
 
 					float temp = pow((SITES::GetGrowthRates(spec_i,age_i, l->ltID)/25.4), 1.605)*siteptr->specAtt(spec_i)->MaxAreaOfSTDTree;
 
@@ -2754,11 +2826,15 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 					AgeIndexArray.push_back(age_i);
 
+					SpecShadeArray.push_back(siteptr->specAtt(spec_i)->shadeTolerance);
+
 					}
 
 				}
 
+			//ListShadeSort();
 			ListbubbleSort();
+			//ListRandomSort();
 
 			if(subArea_tobeThin >= Area_tobeThin){
 
@@ -2768,7 +2844,7 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 							float tempAreaInvolveTreeNum ;
 
-							tempAreaInvolveTreeNum = AreaList.at(i)*siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*thinning_percentatge[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]/2; 
+							tempAreaInvolveTreeNum = AreaList.at(i)*siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*thinning_percentage[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]; 
 
 							if(tempAreaInvolveTreeNum > Area_tobeThin){
 
@@ -2776,16 +2852,14 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 								treesToremove = Area_tobeThin/(AreaList.at(i));
 
-								treesLeft = siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))- treesToremove;
+								treesLeft = siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i), SpecIndexArray.at(i)) - treesToremove;
 
 								//if(0)//
-								if(col == 1 && row == 20 &&wenjuan_debug)
+								if(col == 8 && row == 95 && wenjuan_debug)
 
 									{
 
-									printf("Col:%d, Row:%d:\n", col, row);
-
-									printf("area: %f, Spec: %d, Age: %d, TreeInit: %d, TreeLeft: %d\n", AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i),  siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i)), max(0,treesLeft));
+									printf("J: %d, area: %.1f, Spec: %d, Age: %d, Dia: %.1f, TreeInit: %d, TreeLeft: %d\n", j, AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i), SITES::GetGrowthRates(SpecIndexArray.at(i), AgeIndexArray.at(i), l->ltID), siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i), SpecIndexArray.at(i)), max(0, treesLeft));
 
 									}
 
@@ -2801,16 +2875,14 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 							else{
 
-								int treesLeft = siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*(1-thinning_percentatge[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]/2);
+								int treesLeft = siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*(1-thinning_percentage[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]);
 
 								//if(0)//
-								if(col == 1 && row == 20 &&wenjuan_debug)
+								if(col == 8 && row == 95 && wenjuan_debug)
 
 									{
 
-									printf("Col:%d, Row:%d:\n", col, row);
-
-									printf("area: %f, Spec: %d, Age: %d, TreeInit: %d, TreeLeft: %d\n", AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i),  siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i)), max(0,treesLeft));
+									printf("J: %d, area: %.1f, Spec: %d, Age: %d, Dia: %.1f, TreeInit: %d, TreeLeft: %d\n", j, AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i), SITES::GetGrowthRates(SpecIndexArray.at(i), AgeIndexArray.at(i), l->ltID), siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i), SpecIndexArray.at(i)), max(0, treesLeft));
 
 									}
 
@@ -2834,20 +2906,18 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 							float tempAreaInvolveTreeNum ;
 
-							tempAreaInvolveTreeNum = AreaList.at(i)*siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*thinning_percentatge[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]/2; 
+							tempAreaInvolveTreeNum = AreaList.at(i)*siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*thinning_percentage[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]; 
 
 							{
 
-								int treesLeft = siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*(1-thinning_percentatge[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]/2);
+								int treesLeft = siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*(1-thinning_percentage[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]);
 
 								//if(0)//
-								if(col == 1 && row == 20 &&wenjuan_debug)
+								if(col == 8 && row == 95 && wenjuan_debug)
 
 									{
 
-									printf("Col:%d, Row:%d:\n", col, row);
-
-									printf("area: %f, Spec: %d, Age: %d, TreeInit: %d, TreeLeft: %d\n", AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i),  siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i)), max(0,treesLeft));
+									printf("J: %d, area: %.1f, Spec: %d, Age: %d, Dia: %.1f, TreeInit: %d, TreeLeft: %d\n", j, AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i), SITES::GetGrowthRates(SpecIndexArray.at(i), AgeIndexArray.at(i), l->ltID), siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i), SpecIndexArray.at(i)), max(0, treesLeft));
 
 									}
 
@@ -2867,11 +2937,19 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 		AreaList.clear();
 
+		SpecShadeArray.clear();
+
 		SpecIndexArray.clear();
 
 		AgeIndexArray.clear();
 
 		if(j==2){
+
+			for (i = 0; i <= 4; i++){
+				double ts_pow;
+				ts_pow = (double)TimeStep / 10;
+				thinning_percentage[i] = 1 - pow((1 - base_percentage[i] / 4), ts_pow);
+			}
 
 			float subArea_tobeThin = 0.0;
 
@@ -2881,7 +2959,7 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 					{
 
-					subArea_tobeThin += thinning_percentatge[siteptr->specAtt(spec_i)->shadeTolerance-1]*pow((SITES::GetGrowthRates(spec_i,age_i, l->ltID)/25.4), 1.605)*siteptr->SpecieIndex(spec_i)->getTreeNum(age_i,spec_i)*siteptr->specAtt(spec_i)->MaxAreaOfSTDTree;
+					subArea_tobeThin += thinning_percentage[siteptr->specAtt(spec_i)->shadeTolerance-1]*pow((SITES::GetGrowthRates(spec_i,age_i, l->ltID)/25.4), 1.605)*siteptr->SpecieIndex(spec_i)->getTreeNum(age_i,spec_i)*siteptr->specAtt(spec_i)->MaxAreaOfSTDTree;
 
 					float temp = pow((SITES::GetGrowthRates(spec_i,age_i,l->ltID)/25.4), 1.605)*siteptr->specAtt(spec_i)->MaxAreaOfSTDTree;
 
@@ -2891,11 +2969,15 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 					AgeIndexArray.push_back(age_i);
 
+					SpecShadeArray.push_back(siteptr->specAtt(spec_i)->shadeTolerance);
+
 					}
 
 				}
 
+			//ListShadeSort();
 			ListbubbleSort();
+			//ListRandomSort();
 
 			if(subArea_tobeThin >= Area_tobeThin){
 
@@ -2905,24 +2987,22 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 							float tempAreaInvolveTreeNum ;
 
-							tempAreaInvolveTreeNum = AreaList.at(i)*siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*thinning_percentatge[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]/4; 
+							tempAreaInvolveTreeNum = AreaList.at(i)*siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*thinning_percentage[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]; 
 
 							if(tempAreaInvolveTreeNum > Area_tobeThin){
 
 								int treesToremove, treesLeft;
 
 								treesToremove = Area_tobeThin/(AreaList.at(i));
-
-								treesLeft = siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))- treesToremove;
+								
+								treesLeft = siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i), SpecIndexArray.at(i)) - treesToremove;
 
 								//if(0)//
-								if(col == 1 && row == 20 &&wenjuan_debug)
+								if(col == 8 && row == 95 && wenjuan_debug)
 
 									{
 
-									printf("Col:%d, Row:%d:\n", col, row);
-
-									printf("area: %f, Spec: %d, Age: %d, TreeInit: %d, TreeLeft: %d\n", AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i),  siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i)), max(0,treesLeft));
+									printf("J: %d, area: %.1f, Spec: %d, Age: %d, Dia: %.1f, TreeInit: %d, TreeLeft: %d\n", j, AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i), SITES::GetGrowthRates(SpecIndexArray.at(i), AgeIndexArray.at(i), l->ltID), siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i), SpecIndexArray.at(i)), max(0, treesLeft));
 
 									}
 
@@ -2938,16 +3018,14 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 							else{
 
-								int treesLeft = siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*(1-thinning_percentatge[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]/4);
+								int treesLeft = siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*(1-thinning_percentage[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]);
 
 								//if(0)//
-								if(col == 1 && row == 20 &&wenjuan_debug)
+								if(col == 8 && row == 95 && wenjuan_debug)
 
 									{
 
-									printf("Col:%d, Row:%d:\n", col, row);
-
-									printf("area: %f, Spec: %d, Age: %d, TreeInit: %d, TreeLeft: %d\n", AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i),  siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i)), max(0,treesLeft));
+									printf("J: %d, area: %.1f, Spec: %d, Age: %d, Dia: %.1f, TreeInit: %d, TreeLeft: %d\n", j, AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i), SITES::GetGrowthRates(SpecIndexArray.at(i), AgeIndexArray.at(i), l->ltID), siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i), SpecIndexArray.at(i)), max(0, treesLeft));
 
 									}
 
@@ -2971,20 +3049,18 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 							float tempAreaInvolveTreeNum ;
 
-							tempAreaInvolveTreeNum = AreaList.at(i)*siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*thinning_percentatge[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]/4; 
+							tempAreaInvolveTreeNum = AreaList.at(i)*siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*thinning_percentage[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]; 
 
 							{
 
-								int treesLeft = siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*(1-thinning_percentatge[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]/4);
+								int treesLeft = siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*(1-thinning_percentage[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]);
 
 								//if(0)//
-								if(col == 1 && row == 20 &&wenjuan_debug)
+								if(col == 8 && row == 95 && wenjuan_debug)
 
 									{
 
-									printf("Col:%d, Row:%d:\n", col, row);
-
-									printf("area: %f, Spec: %d, Age: %d, TreeInit: %d, TreeLeft: %d\n", AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i),  siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i)), max(0,treesLeft));
+									printf("J: %d, area: %.1f, Spec: %d, Age: %d, Dia: %.1f, TreeInit: %d, TreeLeft: %d\n", j, AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i), SITES::GetGrowthRates(SpecIndexArray.at(i), AgeIndexArray.at(i), l->ltID), siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i), SpecIndexArray.at(i)), max(0, treesLeft));
 
 									}
 
@@ -3004,11 +3080,19 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 		AreaList.clear();
 
+		SpecShadeArray.clear();
+
 		SpecIndexArray.clear();
 
 		AgeIndexArray.clear();
 
 		if(j==3){
+
+			for (i = 0; i <= 4; i++){
+				double ts_pow;
+				ts_pow = (double)TimeStep / 10;
+				thinning_percentage[i] = 1 - pow((1 - base_percentage[i] / 8), ts_pow);
+			}
 
 			float subArea_tobeThin = 0.0;
 
@@ -3018,7 +3102,7 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 					{
 
-					subArea_tobeThin += thinning_percentatge[siteptr->specAtt(spec_i)->shadeTolerance-1]*pow((SITES::GetGrowthRates(spec_i,age_i,l->ltID)/25.4), 1.605)*siteptr->SpecieIndex(spec_i)->getTreeNum(age_i,spec_i)*siteptr->specAtt(spec_i)->MaxAreaOfSTDTree;
+					subArea_tobeThin += thinning_percentage[siteptr->specAtt(spec_i)->shadeTolerance-1]*pow((SITES::GetGrowthRates(spec_i,age_i,l->ltID)/25.4), 1.605)*siteptr->SpecieIndex(spec_i)->getTreeNum(age_i,spec_i)*siteptr->specAtt(spec_i)->MaxAreaOfSTDTree;
 
 					float temp = pow((SITES::GetGrowthRates(spec_i,age_i,l->ltID)/25.4), 1.605)*siteptr->specAtt(spec_i)->MaxAreaOfSTDTree;
 
@@ -3028,11 +3112,15 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 					AgeIndexArray.push_back(age_i);
 
+					SpecShadeArray.push_back(siteptr->specAtt(spec_i)->shadeTolerance);
+
 					}
 
 				}
 
+			//ListShadeSort();
 			ListbubbleSort();
+			//ListRandomSort();
 
 			if(subArea_tobeThin >= Area_tobeThin){
 
@@ -3042,24 +3130,22 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 							float tempAreaInvolveTreeNum ;
 
-							tempAreaInvolveTreeNum = AreaList.at(i)*siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*thinning_percentatge[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]/8; 
+							tempAreaInvolveTreeNum = AreaList.at(i)*siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*thinning_percentage[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]; 
 
 							if(tempAreaInvolveTreeNum > Area_tobeThin){
 
 								int treesToremove, treesLeft;
 
 								treesToremove = Area_tobeThin/(AreaList.at(i));
-
-								treesLeft = siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))- treesToremove;
+					
+								treesLeft = siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i), SpecIndexArray.at(i)) - treesToremove;
 
 								//if(0)//
-								if(col == 1 && row == 20 &&wenjuan_debug)
+								if(col == 8 && row == 95 && wenjuan_debug)
 
 									{
 
-									printf("Col:%d, Row:%d:\n", col, row);
-
-									printf("area: %f, Spec: %d, Age: %d, TreeInit: %d, TreeLeft: %d\n", AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i),  siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i)), max(0,treesLeft));
+									printf("J: %d, area: %.1f, Spec: %d, Age: %d, Dia: %.1f, TreeInit: %d, TreeLeft: %d\n", j, AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i), SITES::GetGrowthRates(SpecIndexArray.at(i), AgeIndexArray.at(i), l->ltID), siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i), SpecIndexArray.at(i)), max(0, treesLeft));
 
 									}
 
@@ -3075,16 +3161,14 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 							else{
 
-								int treesLeft = siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*(1-thinning_percentatge[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]/8);
+								int treesLeft = siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*(1-thinning_percentage[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]);
 
 								//if(0)//
-								if(col == 1 && row == 20 &&wenjuan_debug)
+								if(col == 8 && row == 95 && wenjuan_debug)
 
 									{
 
-									printf("Col:%d, Row:%d:\n", col, row);
-
-									printf("area: %f, Spec: %d, Age: %d, TreeInit: %d, TreeLeft: %d\n", AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i),  siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i)), max(0,treesLeft));
+									printf("J: %d, area: %.1f, Spec: %d, Age: %d, Dia: %.1f, TreeInit: %d, TreeLeft: %d\n", j, AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i), SITES::GetGrowthRates(SpecIndexArray.at(i), AgeIndexArray.at(i), l->ltID), siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i), SpecIndexArray.at(i)), max(0, treesLeft));
 
 									}
 
@@ -3108,20 +3192,18 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 							float tempAreaInvolveTreeNum ;
 
-							tempAreaInvolveTreeNum = AreaList.at(i)*siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*thinning_percentatge[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]/8; 
+							tempAreaInvolveTreeNum = AreaList.at(i)*siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*thinning_percentage[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]; 
 
 							{
 
-								int treesLeft = siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*(1-thinning_percentatge[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]/8);
+								int treesLeft = siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i))*(1-thinning_percentage[siteptr->specAtt(SpecIndexArray.at(i))->shadeTolerance-1]);
 
 								//if(0)//
-								if(col == 1 && row == 20 &&wenjuan_debug)
+								if(col == 8 && row == 95 && wenjuan_debug)
 
 									{
 
-									printf("Col:%d, Row:%d:\n", col, row);
-
-									printf("area: %f, Spec: %d, Age: %d, TreeInit: %d, TreeLeft: %d\n", AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i),  siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i),SpecIndexArray.at(i)), max(0,treesLeft));
+									printf("J: %d, area: %.1f, Spec: %d, Age: %d, Dia: %.1f, TreeInit: %d, TreeLeft: %d\n", j, AreaList.at(i), SpecIndexArray.at(i), AgeIndexArray.at(i), SITES::GetGrowthRates(SpecIndexArray.at(i), AgeIndexArray.at(i), l->ltID), siteptr->SpecieIndex(SpecIndexArray.at(i))->getTreeNum(AgeIndexArray.at(i), SpecIndexArray.at(i)), max(0, treesLeft));
 
 									}
 
@@ -3140,8 +3222,6 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 			}
 
 		}
-
-	
 
 	delete quaterPercent;
 
@@ -4204,7 +4284,7 @@ if (StartAge==0)
 
 			{
 
-			if(siteptr->specAtt(i)->SpType>=0)
+			if(siteptr->specAtt(i)->SpType>=0) // Jacob !!!
 
 			for(j=1;j<=siteptr->specAtt(i)->longevity/TimeStep;j++)
 
@@ -4269,7 +4349,7 @@ if (StartAge==0)
 
 					{
 
-					siteptr->SpecieIndex(i)->setTreeNum(j,i,CellSize*CellSize);
+					siteptr->SpecieIndex(i)->setTreeNum(j,i,CellSize*CellSize); // Jacob !!!
 
 					}
 
