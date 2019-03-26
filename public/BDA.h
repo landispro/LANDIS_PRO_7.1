@@ -136,7 +136,19 @@ public:
 
 	int		m_iTimeStep;
 
+	int     n_numInterval; // Added on April 5th by Nancy
 
+	int     startYear[MAX_SPECIES], endYear[MAX_SPECIES]; // Added on April 5th by Nancy
+
+	char    swiImgMapFile[FNSIZE], iniImgMapFile[FNSIZE];//* added by Nancy on July 23th 2016
+
+	char	ecoImgMapFile[FNSIZE]; // Added on April 6th 2018 by Cheney
+
+	float  p1, p2, p3; //* added by Nancy on July 23th 2016
+
+	double wAdfGeoTransform[6]; //*Added by Nancy on July 23th 2016
+
+	double wEcoTransform[6];  //*Added by Cheney on April 10th 2016
 
 	bool	m_bEpidemicYear;
 
@@ -189,7 +201,10 @@ public:
 	int				m_iMaxROS;					//max Regional Outbreak Status
 
 	int				m_iROS;						//Regional Outbreak Status
-
+	int econum; 
+	int iterationNumber;
+	float r;
+	float m;
 
 
 	//Temporal Parameters 2
@@ -238,7 +253,7 @@ public:
 
 	InitialCondition	m_enumInitialCondition;	//map or none
 
-	
+	float intensityThre1, intensityThre2;
 
 	//Host Preference array
 
@@ -247,6 +262,8 @@ public:
 	int*	SecondaryHostAge;
 
 	int*	PrimaryHostAge;
+
+	int   ecoArr[100][200];
 
 
 
@@ -258,7 +275,19 @@ public:
 
 	int*	VulnerableHostAge;
 
+	// The percentage of killing trees
 
+	double* ResistantPercentage; // added on April 5th 2016 by Nancy
+
+	double* TolerantPercentage; // added on April 5th 2016 by Nancy
+
+	double* VulnerablePercentage; // added on April 5th 2016 by Nancy
+
+	double* MinorHostThreshold; // added on May 5th 2016 by Nancy
+
+	double* SecondaryHostThreshold; // added on May 5th 2016 by Nancy
+
+	double* PrimaryThreshold;// added on May 5th 2016 by Nancy
 
 	//BDA Sites Map
 
@@ -279,6 +308,11 @@ public:
 	//dispersal template
 
 	int			m_iDispersalTemplate;
+
+	int             m_OutSRD;                   //Added by Nancy May 16 2016
+
+	int             m_OutBDP;                  //Added by Nancy May 16 2016
+
 
 	Dilation*	m_pDilation;
 
@@ -304,17 +338,17 @@ public:
 
 	void	dump			(int);
 
-	void	BDAOutputMap	(int);	//BDA map output
+	void	BDAOutputMap(int, int, double wAdfGeoTransform[]);	//BDA map output
 
 
 
-	void	BDAActive			();				//main function of BDA module
+	void	BDAActive			(int itr);				//main function of BDA module
 
 	int		Temporal			();
 
 	int		Temporal2			();
 
-	void	SiteResDom			();	
+	void	SiteResDom			(int id);	
 
 	void	SiteResDomMod		();
 
@@ -324,7 +358,7 @@ public:
 
 
 
-	void	SiteVulnerability	(bool);
+	void	SiteVulnerability	(bool,int);
 
 	void	DisturbSite			();
 

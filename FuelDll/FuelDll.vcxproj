@@ -149,7 +149,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\public;..\GDAL\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;FUELDLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -168,10 +168,10 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>LandisProCore.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>cairo.lib;fontconfig.lib;freetype2411.lib;freexl.lib;freexl_i.lib;fribidi.lib;cfitsio.lib;clientlib.lib;expat.lib;gd.lib;gdal_i.lib;geos.lib;giflib.lib;harfbuzz.lib;hdf5.lib;hdf5_cpp.lib;hdf5_hl.lib;hdf5_hl_cpp.lib;hdfdll.lib;libecwj2.lib;spatialite_i.lib;ssleay32.lib;szip.lib;xdrdll.lib;xerces-c_2.lib;zdll.lib;zlib.lib;iconv.lib;minizip.lib;netcdf.lib;openjp2.lib;pixman-1.lib;poppler.lib;proj.lib;proj_i.lib;spatialite.lib;libcurl_imp.lib;libtiff_i.lib;libxml2.lib;mapserver.lib;mfhdfdll.lib;libeay32.lib;libmysql.lib;libpng.lib;libpq.lib;libpqdll.lib;libsvg.lib;libsvg-cairo.lib;libfcgi.lib;libkmldom.lib;libkmlengine.lib;libkmlregionator.lib;libkmlxsd.lib;libjbig.lib;libjpeg.lib;libkea.lib;libkmlbase.lib;libkmlconvenience.lib;odbc32.lib;odbccp32.lib;LandisProCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>..\$(Platform)\$(Configuration)\FuelDll.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>../output;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../output;%(AdditionalLibraryDirectories);..\GDAL\lib</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\source\Fuel.def</ModuleDefinitionFile>
       <ProgramDatabaseFile>.\..\output/FuelDll.pdb</ProgramDatabaseFile>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -234,7 +234,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\public;..\GDAL\lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;FUELDLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -253,10 +253,10 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;LandisProCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>cairo.lib;fontconfig.lib;freetype2411.lib;freexl.lib;freexl_i.lib;fribidi.lib;cfitsio.lib;clientlib.lib;expat.lib;gd.lib;gdal_i.lib;geos.lib;giflib.lib;harfbuzz.lib;hdf5.lib;hdf5_cpp.lib;hdf5_hl.lib;hdf5_hl_cpp.lib;hdfdll.lib;libecwj2.lib;spatialite_i.lib;ssleay32.lib;szip.lib;xdrdll.lib;xerces-c_2.lib;zdll.lib;zlib.lib;iconv.lib;minizip.lib;netcdf.lib;openjp2.lib;pixman-1.lib;poppler.lib;proj.lib;proj_i.lib;spatialite.lib;libcurl_imp.lib;libtiff_i.lib;libxml2.lib;mapserver.lib;mfhdfdll.lib;libeay32.lib;libmysql.lib;libpng.lib;libpq.lib;libpqdll.lib;libsvg.lib;libsvg-cairo.lib;libfcgi.lib;libkmldom.lib;libkmlengine.lib;libkmlregionator.lib;libkmlxsd.lib;libjbig.lib;libjpeg.lib;libkea.lib;libkmlbase.lib;libkmlconvenience.lib;odbc32.lib;odbccp32.lib;LandisProCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>..\$(Platform)\$(Configuration)\FuelDll.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>..\output;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\output;%(AdditionalLibraryDirectories);..\GDAL\lib</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>.\source\Fuel.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>.\..\output/FuelDll.pdb</ProgramDatabaseFile>

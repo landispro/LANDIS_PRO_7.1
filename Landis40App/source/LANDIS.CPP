@@ -2352,7 +2352,7 @@ void singularLandisIteration(int itr, int run_extraSeed, int numSitesActive, int
 
 
 
-		typedef void(*GetBDAACTIVETYPE)(BDAS* pBDAS, int itr);
+		typedef void(*GetBDAACTIVETYPE)(BDAS* pBDAS, int itr, double  wAdfGeoTransform[]);
 
 
 
@@ -2374,7 +2374,7 @@ void singularLandisIteration(int itr, int run_extraSeed, int numSitesActive, int
 
 
 
-		GetBDAACTIVE(pBDAS, itr / sites.TimeStep_BDA);
+		GetBDAACTIVE(pBDAS, itr / sites.TimeStep_BDA, wAdfGeoTransform);  //wAdfGeoTransform
 
 		//	pBDAS->Active();
 

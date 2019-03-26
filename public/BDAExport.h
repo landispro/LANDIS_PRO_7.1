@@ -36,7 +36,7 @@ Author:			Vera W. Li
 
 
 
- void GetBDAACTIVE(BDAS* pBDAS, int itr);
+ void GetBDAACTIVE(BDAS* pBDAS, int itr, double  wAdfGeoTransform[]);
 
 
 

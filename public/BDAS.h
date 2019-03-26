@@ -54,7 +54,7 @@ public:
 
 
 
-	void Active(int);
+	void Active(int, double wAdfGeoTransform[]);
 
 
 

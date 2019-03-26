@@ -52,6 +52,8 @@ unsigned long AvailableSeed;
 
 int TreesFromVeg;
 
+int flag_herb;
+
 //</Add By Qia on June 29 2009>
 
 int MatureTree;

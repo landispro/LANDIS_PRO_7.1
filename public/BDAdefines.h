@@ -1,6 +1,6 @@
 #define FNSIZE 256
 
-#define MAX_SPECIES 30
+#define MAX_SPECIES 50
 
 #define MAX_LANDUNITS 65535 //Changed By Qia on Jan 15 2009
 
@@ -10,7 +10,7 @@
 
 
 
-#define	BDA_MAX_LANDTYPEMOD	50	//max land type modifiers
+#define	BDA_MAX_LANDTYPEMOD	600	//max land type modifiers
 
 #define	BDA_MAX_DISTURNMOD	50	//max disturnbance modifiers
 

@@ -4564,7 +4564,9 @@ void inputImgSpec(FILE* classFile, GDALDataset* simgFileint, int yDim, int xDim)
 
 			//cout << coverType << " ";
 			if (coverType == noDataValue) {
-				sites.fillinSitePt(i, j, sites.SortedIndex.at(combineMatrix[0]));
+				//Causing error with NoData in map -- Jacob 01/29/2019
+				//sites.fillinSitePt(i, j, sites.SortedIndex.at(combineMatrix[0]));
+				*(sites(i, j)) = s[0];
 			}
 
 			else if ((coverType) < numCovers && coverType >= 0)

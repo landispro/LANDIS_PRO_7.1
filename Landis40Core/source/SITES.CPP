@@ -2609,25 +2609,25 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 
 		}
 
-	base_percentage[0] = 0.95;
+	//base_percentage[0] = 0.95;
 
-	base_percentage[1] = 0.9;
+	//base_percentage[1] = 0.9;
 	
-	base_percentage[2] = 0.85;
+	//base_percentage[2] = 0.85;
 
-	base_percentage[3] = 0.8;
+	//base_percentage[3] = 0.8;
 
-	base_percentage[4] = 0.75;
+	//base_percentage[4] = 0.75;
 
-	//base_percentage[0] = 0.65;
+	base_percentage[0] = 0.7;
 
-	//base_percentage[1] = 0.6;
+	base_percentage[1] = 0.6;
 
-	//base_percentage[2] = 0.55;
+	base_percentage[2] = 0.5;
 	
-	//base_percentage[3] = 0.5;
+	base_percentage[3] = 0.4;
 
-	//base_percentage[4] = 0.45;
+	base_percentage[4] = 0.3;
 
 	for(i=1;i<=siteptr->number();i++){
 
@@ -2805,7 +2805,7 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 			for (i = 0; i <= 4; i++){
 				double ts_pow;
 				ts_pow = (double)TimeStep / 10;
-				thinning_percentage[i] = 1 - pow((1 - base_percentage[i] / 2), ts_pow);
+				thinning_percentage[i] = 1 - pow((1 - base_percentage[i]), ts_pow);
 			}
 
 			float subArea_tobeThin = 0.0;
@@ -2948,7 +2948,7 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 			for (i = 0; i <= 4; i++){
 				double ts_pow;
 				ts_pow = (double)TimeStep / 10;
-				thinning_percentage[i] = 1 - pow((1 - base_percentage[i] / 4), ts_pow);
+				thinning_percentage[i] = 1 - pow((1 - base_percentage[i]), ts_pow);
 			}
 
 			float subArea_tobeThin = 0.0;
@@ -3091,7 +3091,7 @@ void SITES::Selfthinning(SITE* siteptr, LANDUNIT *l, int row, int col){
 			for (i = 0; i <= 4; i++){
 				double ts_pow;
 				ts_pow = (double)TimeStep / 10;
-				thinning_percentage[i] = 1 - pow((1 - base_percentage[i] / 8), ts_pow);
+				thinning_percentage[i] = 1 - pow((1 - base_percentage[i]), ts_pow);
 			}
 
 			float subArea_tobeThin = 0.0;
@@ -3660,7 +3660,9 @@ void SITES::SeedGermination(SITE* siteptr, LANDUNIT *l, int RDFlag)
 
 		{
 
-		//agetemp=(int)(TempRD*Seedling[i-1]/WholeSeedling/((SITES::GetGrowthRates(i,1)/25.4)*(SITES::GetGrowthRates(i,1)/25.4))/siteptr->specAtt(i)->MaxAreaOfSTDTree*CellSize*CellSize);
+			if (siteptr->SpecieIndex(i)->flag_herb == 1){
+				Seedling[i - 1] = 0;
+			}
 
 		if(Seedling[i-1]>0)
 

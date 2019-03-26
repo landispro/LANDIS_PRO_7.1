@@ -6,7 +6,7 @@
 
 #define FNSIZE 256
 
-#define MAX_SPECIES 30
+#define MAX_SPECIES 50
 
 #define MAX_LANDUNITS 65535 //Changed on Jan 15 2009
 

@@ -599,7 +599,82 @@ int FuelSites::getFireRiskClass(int row, int col) {
 }
 
 
+void FuelSites::readFireRegimeIMG(char* fn, const int giRow, const int giCol)
 
+{
+
+	//This will read fire regime .img map and associate fire regime Unit to each site.
+
+	int nCols, nRows, numRead, coverType, noDataValue;
+
+	double wAdfGeoTransform[6];
+	double adfGeoTransform[6];
+
+	GDALRasterBand  *poBand;
+
+	float *pafScanline;
+
+	GDALDataset  *fsImg; 
+
+	GDALAllRegister(); 
+
+	if ((fsImg = (GDALDataset *)GDALOpen(fn, GA_ReadOnly)) == NULL) 
+
+		errorSys("landtype img map input file not found.", STOP);
+
+	if (fsImg->GetGeoTransform(adfGeoTransform) == CE_None)
+	{
+		for (int i = 0; i < 6; i++)
+		{
+			wAdfGeoTransform[i] = adfGeoTransform[i];
+		}
+
+	}
+
+	nCols = fsImg->GetRasterXSize();
+
+	nRows = fsImg->GetRasterYSize();
+
+
+	if ((nCols != (cols - 1)) || (nRows != (rows - 1)))
+
+		errorSys("The dimension of fuel fire regime map is not consistent.", STOP);
+
+	pafScanline = (float *)CPLMalloc(sizeof(float)* (nCols * nRows));
+
+	poBand = fsImg->GetRasterBand(1);
+
+	poBand->RasterIO(GF_Read, 0, 0, nCols, nRows, pafScanline, nCols, nRows, GDT_Float32, 0, 0);
+
+	noDataValue = GDALGetRasterNoDataValue(poBand, NULL);
+
+	for (int i = nRows; i>0; i--)
+	{
+		for (int j = 1; j <= nCols; j++)
+		{
+			coverType = (int)*(pafScanline + (nRows - i)*nCols + j - 1);
+
+			if (coverType == noDataValue) {
+				coverType = 0;
+			}
+			if (coverType >= 0)
+			{
+				fuelsites.BefStChg(i, j);
+
+				fuelsites(i, j)->fireRegime = (char)coverType;
+
+				fuelsites.AftStChg(i, j);
+
+			}
+			else
+
+				errorSys("Illegal fuel fire site class found.", STOP);
+
+		}
+
+	}
+
+}
 
 
 void FuelSites::readFireRegimeMap(char* mapName) {

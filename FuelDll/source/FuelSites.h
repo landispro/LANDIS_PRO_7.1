@@ -18,7 +18,13 @@
 
 #include "FuelDEFINES.H"
 
+#include "gdal_priv.h"
 
+#include "cpl_conv.h" // for CPLMalloc()
+
+#include "cpl_string.h"
+
+#include "ogr_spatialref.h"
 
 //<Add By Qia on Nov 19 2008>
 
@@ -339,6 +345,8 @@ public:
 	void readFireRegimeAttr(char*);				// read in the fire regime attributes
 
 	void readFireRegimeMap(char*);				// read in the fire regime maps
+
+	void readFireRegimeIMG(char* fn, const int giRow, const int giCol);
 
 	void updateFuelManSite();					// add the time since last fuel management by 10 yr
 

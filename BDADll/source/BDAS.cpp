@@ -80,7 +80,8 @@ BDAS::BDAS(char* strfn, SITES* s, int cellsize, char* OutputDir, LANDUNITS* lus,
 		printf("get the %s\n",strBDAName);
 		fflush(stdin);
 
-
+		printf("Here is processed  \n");
+		fflush(stdin);
 		m_pBDAList[i] = new BDA(strBDAName, s, cellsize, lus, sa, ppdp, ifBDArepeat, gDllMd, i);
 
 
@@ -121,15 +122,16 @@ Description:perform biological Disturbance for BDAs stored in
 
 ***************************************************************/
 //##ModelId=3F01D0EA0131
-void BDAS::Active(int itr)
+void BDAS::Active(int itr, double wAdfGeoTransform[])
 {
 	int	i;
+	
 
 	for (i = 0; i < m_iBDANum; i++)
 	{
 		printf("\nBDA %s is being processed\n", m_pBDAList[i]->m_strName);
-		m_pBDAList[i]->BDAActive();
-		m_pBDAList[i]->BDAOutputMap(itr);
+		m_pBDAList[i]->BDAActive(itr);
+		m_pBDAList[i]->BDAOutputMap(i,itr, wAdfGeoTransform);
 	}
 
 }

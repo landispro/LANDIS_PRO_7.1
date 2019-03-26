@@ -1520,7 +1520,7 @@ int MAP16::read(const char *fn, const int giRow, const int giCol)
 
 int MAP16::readImg(const char *fn, const int giRow, const int giCol)
 
-//Read map from a file.   Input file is an 16-bit ERDAS GIS File with no extension.
+//Use GDAL to read .IMG map file
 
 
 

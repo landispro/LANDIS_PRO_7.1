@@ -18,10 +18,9 @@ BDAS* GetBDAS(char* str, SITES* s, int i, char* outputdir, LANDUNITS* plu, SPECI
 
 }
 
-void GetBDAACTIVE(BDAS* pBDAS, int itr)
+void GetBDAACTIVE(BDAS* pBDAS, int itr, double wAdfGeoTransform[])
 {
-  pBDAS->Active(itr);
-
+	pBDAS->Active(itr, wAdfGeoTransform);
 }
 
 
