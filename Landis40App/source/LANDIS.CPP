@@ -1073,7 +1073,7 @@ int main(int argc, char *argv[])
 	PDP* pPDP;
 
 	double wAdfGeoTransform[6];
-
+	
 	getInput(infile, freq, reMethods, ageMaps, &pPDP, BDANo, wAdfGeoTransform); // Need to change in this function Qia Oct 06 2008
 
 

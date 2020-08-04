@@ -38,7 +38,7 @@ DLLFUNC	void		FuelProcessEvent	();
 
 DLLFUNC void		FuelManageProcessEvents	(int);
 
-DLLFUNC void		FuelputFuelOutput(int, char*, double wAdfGeoTransform[]);
+DLLFUNC void		FuelputFuelOutput			(int, char*, int);
 
 
 

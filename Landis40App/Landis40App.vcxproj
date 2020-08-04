@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -22,29 +22,30 @@
     <ProjectGuid>{8D089B87-2999-462B-86EB-A994CCE87886}</ProjectGuid>
     <RootNamespace>Landis40App</RootNamespace>
     <ProjectName>Landis40App</ProjectName>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <UseOfMfc>Dynamic</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <UseOfMfc>Dynamic</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <UseOfMfc>Dynamic</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <UseOfMfc>Dynamic</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -165,9 +166,9 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>cairo.lib;fontconfig.lib;freetype2411.lib;freexl.lib;freexl_i.lib;fribidi.lib;cfitsio.lib;clientlib.lib;expat.lib;gd.lib;gdal_i.lib;geos.lib;giflib.lib;harfbuzz.lib;hdf5.lib;hdf5_cpp.lib;hdf5_hl.lib;hdf5_hl_cpp.lib;hdfdll.lib;libecwj2.lib;spatialite_i.lib;ssleay32.lib;szip.lib;xdrdll.lib;xerces-c_2.lib;zdll.lib;zlib.lib;iconv.lib;minizip.lib;netcdf.lib;openjp2.lib;pixman-1.lib;poppler.lib;proj.lib;proj_i.lib;spatialite.lib;libcurl_imp.lib;libtiff_i.lib;libxml2.lib;mapserver.lib;mfhdfdll.lib;libeay32.lib;libmysql.lib;libpng.lib;libpq.lib;libpqdll.lib;libsvg.lib;libsvg-cairo.lib;libfcgi.lib;libkmldom.lib;libkmlengine.lib;libkmlregionator.lib;libkmlxsd.lib;libjbig.lib;libjpeg.lib;libkea.lib;libkmlbase.lib;libkmlconvenience.lib</AdditionalDependencies>
-      <OutputFile>..\$(Platform)\$(Configuration)\Landis70ProApp.exe</OutputFile>
+      <OutputFile>..\$(Platform)\$(Configuration)\LANDISPRO.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>..\GDAL\lib;$(VSInstallDir)\VC\lib\amd64;$(ExtensionSDKDirectoryRoot)\Windows\v7.1A\Lib\x64;$(VSInstallDir)\VC\atlmfc\lib\amd64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\GDAL\lib;$(VCToolsInstallDir)lib\$(Platform);$(WindowsSDK_LibraryPath)\$(Platform);$(VC_LibraryPath_ATL_x64);$(UniversalCRT_LibraryPath_x64)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>.\..\output/LandisProApp.pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -242,9 +243,9 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <OutputFile>..\$(Platform)\$(Configuration)\Landis70ProApp.exe</OutputFile>
+      <OutputFile>..\$(Platform)\$(Configuration)\LANDISPRO.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>..\GDAL\lib;$(VSInstallDir)\VC\lib\amd64;$(ExtensionSDKDirectoryRoot)\Windows\v7.1A\Lib\x64;$(VSInstallDir)\VC\atlmfc\lib\amd64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\GDAL\lib;$(VCToolsInstallDir)lib\$(Platform);$(WindowsSDK_LibraryPath)\$(Platform);$(VC_LibraryPath_ATL_x64);$(UniversalCRT_LibraryPath_x64)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>.\..\output/LandisProApp.pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>

@@ -5279,7 +5279,7 @@ void SITES::Read70OutputOption(char *FileName)
 
 			{
 
-				errorSys("Can not open Read70OutputOption file",STOP);
+				errorSys("Cannot open output age distribution file",STOP);
 
 			}
 

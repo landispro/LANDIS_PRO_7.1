@@ -124,9 +124,9 @@ void FuelManEvent::read (FILE *inFile) {
 
 		errorSys("Error when read entryDecade in fuel management file.",STOP);
 
-	       //if (entryDecade < pfuelcoresites->TimeStep_Fuel) entryDecade=1;//Bu, Rencang April 28, 2009
+	       if (entryDecade < pfuelcoresites->TimeStep_Fuel) entryDecade=1;//Bu, Rencang April 28, 2009
 
-		//else entryDecade=entryDecade/pfuelcoresites->TimeStep_Fuel;
+		else entryDecade=entryDecade/pfuelcoresites->TimeStep_Fuel;
 
 	//printf("entryDecade: %d\n", entryDecade);
 
@@ -138,9 +138,9 @@ void FuelManEvent::read (FILE *inFile) {
 
 		errorSys("Error when read finalDecade in fuel management file.",STOP);
 
-	       //if (finalDecade < pfuelcoresites->TimeStep_Fuel) finalDecade=1;//Bu, Rencang April 28, 2009
+	       if (finalDecade < pfuelcoresites->TimeStep_Fuel) finalDecade=1;//Bu, Rencang April 28, 2009
 
-		//else finalDecade=finalDecade/pfuelcoresites->TimeStep_Fuel;
+		else finalDecade=finalDecade/pfuelcoresites->TimeStep_Fuel;
 
 	//printf("finalDecade: %d\n", finalDecade);
 
@@ -152,9 +152,9 @@ void FuelManEvent::read (FILE *inFile) {
 
 		errorSys("Error when read in reentryInterval in fuel management file.",STOP);
 
-	       //if (reentryInterval < pfuelcoresites->TimeStep_Fuel) reentryInterval=1;//Bu, Rencang April 28, 2009
+	       if (reentryInterval < pfuelcoresites->TimeStep_Fuel) reentryInterval=1;//Bu, Rencang April 28, 2009
 
-		//else reentryInterval=reentryInterval/pfuelcoresites->TimeStep_Fuel;
+		else reentryInterval=reentryInterval/pfuelcoresites->TimeStep_Fuel;
 
 	//printf("reentryInterval: %d\n", reentryInterval);
 
@@ -356,7 +356,7 @@ int FuelManEvent::damage_FireinFuel(LDPOINT p, int fireClass)
 
 		//<Add By Qia on Nov 30 2012>
 		SITE * siteptr=(*pfuelcoresites) (p.y,p.x);
-		//printf("qia, fire burned \n");
+		printf("qia, fire burned \n");
 		for (i=1;i<=specAtNum;i++)
 		{
 			if(siteptr->specAtt(i)->SpType>=0){
@@ -386,15 +386,14 @@ int FuelManEvent::damage_FireinFuel(LDPOINT p, int fireClass)
 					int tree_num_agecohort = siteptr->SpecieIndex(i)->getTreeNum(j,i);
 					DeadTree=tree_num_agecohort*prob_burn;
 					siteptr->SpecieIndex(i)->setTreeNum(j,i,tree_num_agecohort-DeadTree);
-					//if((p.x == 293 && p.y == 378)||
-					//	(p.x == 152 && p.y == 331)||
-					//	(p.x == 855 && p.y == 728)||
-					//	(p.x == 223 && p.y == 530)||
-					//	(p.x == 172 && p.y == 63)
-					//	)
-					if(tree_num_agecohort > 0)
+					if((p.x == 293 && p.y == 378)||
+						(p.x == 152 && p.y == 331)||
+						(p.x == 855 && p.y == 728)||
+						(p.x == 223 && p.y == 530)||
+						(p.x == 172 && p.y == 63)
+						)
 					{
-							printf("debug fire: (x: %d y: %d): spec: %d, age: %d, prob: %lf, Trees: %d kill tree: %d\n",p.x,p.y, i, j,prob_burn, tree_num_agecohort, (int)DeadTree);
+							printf("debug fire: (x: %d y: %d): spec: %d, age: %d, prob: %lf, kill tree: %d\n",p.x,p.y, i, j,prob_burn, (int)DeadTree);
 							printf("Tolerance: %d, b1: %f, b2: %f, b3: %f, growth: %f, severity: %d, X: %f, prob: %lf\n",
 								tolerance_index, beta1, beta2,beta3,pfuelcoresites->GetGrowthRates(i,j,l->ltID),severity_index, X_value,  prob_burn);
 					}
@@ -451,6 +450,11 @@ void FuelManEvent::Treatment(int itr, FILE *fuelManageFile, FILE *fuelManOutStan
 	//  use tre-entry interval to decide whether treat or not.
 
 	
+
+//	printf("fuelmanageevent2222-> treatment");
+
+	//printf("come to reatment");
+
     List<int> rankedList;
 
     FUELStand* stand;
@@ -793,11 +797,11 @@ void FuelManEvent::Treatment(int itr, FILE *fuelManageFile, FILE *fuelManOutStan
 
 		// output fuel management record for each stand
 
-		fprintf(fuelManOutStand, "%4d,%4d,", itr, manageAreaIdentify);
+		fprintf(fuelManOutStand, "%4d %4d ", itr, manageAreaIdentify);
 
 		// output the management area identify
 
-		fprintf(fuelManOutStand, "%6d,%6d,", it.current(), standTreatCells, risk);		
+		fprintf(fuelManOutStand, "%6d %6d ", it.current(), standTreatCells, risk);		
 
 		//fprintf(fuelManOutStand, "%6.2f %6.2f ", stand->itMeanFineFuel, FFTotal/standTreatCells);
 
@@ -807,7 +811,7 @@ void FuelManEvent::Treatment(int itr, FILE *fuelManageFile, FILE *fuelManOutStan
 
 		//fprintf(fuelManOutStand, "%6.2f %6.2f ", stand->itMeanFireIntensity, IntensityTotal/standTreatCells);
 
-		fprintf(fuelManOutStand, "%6.2f,%6.2f", risk, (float)RiskTotal/(float)standTreatCells);
+		fprintf(fuelManOutStand, "%6.2f %6.2f ", risk, (float)RiskTotal/(float)standTreatCells);
 
 
 

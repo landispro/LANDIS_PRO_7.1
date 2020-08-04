@@ -304,9 +304,9 @@ int FuelInit(PDP* ppdp, char* strfuelInitFile, int specAttrsNo, int luNo, char* 
 
 	fuelsites.readFireRegimeAttr(strFireRegimeAttr);
 
-	//fuelsites.readFireRegimeMap(strFireRegimeMap);
+	fuelsites.readFireRegimeMap(strFireRegimeMap);
 
-	fuelsites.readFireRegimeIMG(strFireRegimeMap, giRow, giCol);
+
 
 	sprintf(str1,"%s/%s",stroutputDir, "fuel");
 
@@ -452,7 +452,7 @@ _mkdir(str1);
 
 			errorSys("Can not open fuelManagenet Output for Stand file for write\n.",STOP);
 
-		fprintf(fuelManOutStand, "Iteration,ManagementArea,Stand,ManageSite,FireRiskBeforeTreatment,FireRiskAfterTreatment\n");
+		fprintf(fuelManOutStand, "Iteration   ManagementArea   Stand   ManageStie  FireRiskBeforeTreatment FireRiskAfterTreatment\n");
 
 		getFuelManage(strfuelManFile);
 
@@ -512,7 +512,7 @@ void FuelManageProcessEvents(int itr)
 
 
 
-void FuelputFuelOutput(int itr, char* FueloutputDir, double wAdfGeoTransform[])
+void FuelputFuelOutput(int itr, char* FueloutputDir, int nCellSize) 
 
 {
 
@@ -544,6 +544,10 @@ void FuelputFuelOutput(int itr, char* FueloutputDir, double wAdfGeoTransform[])
 
 	sprintf(str,"%s/FF%d",fuelOutDir,itr*pfuelcoresites->TimeStep_Fuel);
 
+	m.setCellSize(nCellSize);
+
+	double wAdfGeoTransform[6] = { 0.00, nCellSize, 0.00, 600.00, 0.00, nCellSize };//*
+
 	float nodata = 0;
 
 	m.write(str, red2, green2, blue2, wAdfGeoTransform);
@@ -562,7 +566,7 @@ void FuelputFuelOutput(int itr, char* FueloutputDir, double wAdfGeoTransform[])
 
 	sprintf(str,"%s/CF%d",fuelOutDir,itr*pfuelcoresites->TimeStep_Fuel);
 
-	m.setCellSize(wAdfGeoTransform[1]);
+	m.setCellSize(nCellSize);
 
 	
 
@@ -596,7 +600,7 @@ void FuelputFuelOutput(int itr, char* FueloutputDir, double wAdfGeoTransform[])
 
 	sprintf(str,"%s/FR%d",fuelOutDir,itr*pfuelcoresites->TimeStep_Fuel);	// fire risk
 
-	m.setCellSize(wAdfGeoTransform[1]);
+	m.setCellSize(nCellSize);
 
 	
 
@@ -606,7 +610,7 @@ void FuelputFuelOutput(int itr, char* FueloutputDir, double wAdfGeoTransform[])
 
 	sprintf(str,"%s/FP%d",fuelOutDir,itr*pfuelcoresites->TimeStep_Fuel);  // fire probility
 
-	m1.setCellSize(wAdfGeoTransform[1]);
+	m1.setCellSize(nCellSize);
 
 
 	m1.write(str, red2, green2, blue2, wAdfGeoTransform);
@@ -615,7 +619,7 @@ void FuelputFuelOutput(int itr, char* FueloutputDir, double wAdfGeoTransform[])
 
 	sprintf(str,"%s/FI%d",fuelOutDir,itr*pfuelcoresites->TimeStep_Fuel);  // fire severity
 
-	m2.setCellSize(wAdfGeoTransform[1]);
+	m2.setCellSize(nCellSize);
 
 	
 

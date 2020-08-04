@@ -36,6 +36,8 @@
 
 #include "landis.h"
 
+#include "PARAMS.H"
+
 #include "io.h"
 
 #include <direct.h>
@@ -1342,18 +1344,6 @@ float *pafScanline4;//*
 float *pafScanline5;//*
 unsigned int *pintScanline;
 
-char *pszSRS_WKT = NULL;//*
-
-OGRSpatialReference oSRS;//*
-
-oSRS.SetUTM(11, TRUE);//*
-
-oSRS.SetWellKnownGeogCS("HEAD74");//*
-
-oSRS.exportToWkt(&pszSRS_WKT);//*
-
-CPLFree(pszSRS_WKT);
-
 GDALRasterBand *outPoBand;//*
 GDALRasterBand *outPoBand1;//*
 GDALRasterBand *outPoBand2;//*
@@ -1423,6 +1413,8 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 								errorSys("Img file not be created.", STOP);//*
 
 							poDstDS->SetGeoTransform(wAdfGeoTransform);//*
+
+							poDstDS->SetProjection(parameters.pszSRS_WKT);
 
 							outPoBand = poDstDS->GetRasterBand(1);//*
 
@@ -1573,6 +1565,8 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 						errorSys("Img file not be created.", STOP);//*
 
 					poDstDS->SetGeoTransform(wAdfGeoTransform);//*
+
+					poDstDS->SetProjection(parameters.pszSRS_WKT);
 
 					outPoBand = poDstDS->GetRasterBand(1);//*
 
@@ -5481,6 +5475,9 @@ void inputLandtypeImg(GDALDataset* ltimgFile, int xDim, int yDim, PDP* ppdp)
 
 		noDataValue = GDALGetRasterNoDataValue(poBand, NULL);
 
+		if (ltimgFile->GetProjectionRef() != NULL)
+			printf("Projection is `%s'\n", ltimgFile->GetProjectionRef());
+
 		if ((nCols != xDim) && (nRows != yDim))
 
 			errorSys("landtype map and species map do not match.", STOP);
@@ -5605,6 +5602,7 @@ if (simgFile->GetGeoTransform(adfGeoTransform) == CE_None){ //*
 
 }//*
 
+parameters.pszSRS_WKT = simgFile->GetProjectionRef();
 
 if ((rcFile=LDfopen(parameters.reclassInFile,1))==NULL) //This one has age list
 

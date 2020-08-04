@@ -577,6 +577,16 @@ double StockingCuttingRegime::CutShareStockinginACell_LifeSpanPercent(int i, int
 
 		}
 
+		//Check for herbicide flag
+		if (flag_plant[k] == 0) {
+			(*pCoresites)(i, j)->SpecieIndex(k + 1)->flag_herb = 0;
+		}
+		else if (flag_plant[k] == 1) {
+			(*pCoresites)(i, j)->SpecieIndex(k + 1)->flag_herb = 0;
+		}
+		else if (flag_plant[k] == 2) {
+			(*pCoresites)(i, j)->SpecieIndex(k + 1)->flag_herb = 1;
+		}
 		//AgeCohortGroup[(speciesOrder[k]-1)*6 + 0] = 1;
 
 		//AgeCohortGroup[(speciesOrder[k]-1)*6 + 0] = temp;

@@ -192,66 +192,32 @@ void FuelManage::processEvents(int itr) {
 
         p = it.current();
 
-		if (((itr - p->entryDecade) % p->entryDecade == 0) & (itr <= p->finalDecade)){
 		//<Add By Qia on May 19 2009>
 
-			if (!strcmp(p->Label, "PRESCRIBEDBURNING")){
+		if (!strcmp (p->Label, "PRESCRIBEDBURNING")){
 
-				p->Treatment(itr, fuelManageFile, fuelManOutStand, 1);
-
-			}
-
-			else if (!strcmp(p->Label, "CWDREDUCTION")){
-
-				p->Treatment(itr, fuelManageFile, fuelManOutStand, 0);
+			p->Treatment(itr, fuelManageFile, fuelManOutStand,1); 
 
 			}
 
-			else if (!strcmp(p->Label, "PRESCRIBEDFIRE+CWDREDUCTION")){
+		else if (!strcmp (p->Label, "CWDREDUCTION")){
 
-				p->Treatment(itr, fuelManageFile, fuelManOutStand, 2);
-
-			}
-
-			else if (!strcmp(p->Label, "SEVERITY1")) {
-
-				p->Treatment(itr, fuelManageFile, fuelManOutStand, 1);
+			p->Treatment(itr, fuelManageFile, fuelManOutStand,0); 
 
 			}
 
-			else if (!strcmp(p->Label, "SEVERITY2")) {
+		else if (!strcmp (p->Label, "PRESCRIBEDFIRE+CWDREDUCTION")){
 
-				p->Treatment(itr, fuelManageFile, fuelManOutStand, 2);
-
-			}
-
-			else if (!strcmp(p->Label, "SEVERITY3")) {
-
-				p->Treatment(itr, fuelManageFile, fuelManOutStand, 3);
-
-			}
-
-			else if (!strcmp(p->Label, "SEVERITY4")) {
-
-				p->Treatment(itr, fuelManageFile, fuelManOutStand, 4);
-
-			}
-
-			else if (!strcmp(p->Label, "SEVERITY5")) {
-
-				p->Treatment(itr, fuelManageFile, fuelManOutStand, 5);
+			p->Treatment(itr, fuelManageFile, fuelManOutStand,2); 
 
 			}
 
 		else{
 
-				p->Treatment(itr, fuelManageFile, fuelManOutStand, 0);
+			p->Treatment(itr, fuelManageFile, fuelManOutStand,0); 
 
 			}
-		}
-		else {
-			continue;
-		}
+
 		//</Add By Qia on May 19 2009>
 
 		// Do the treatment based on the prescription

@@ -94,6 +94,8 @@ public:
 
 	char *Biomassfile;
 
+	const char *pszSRS_WKT = NULL;
+
 	//</Add By Qia on June 29 2009>
 
 

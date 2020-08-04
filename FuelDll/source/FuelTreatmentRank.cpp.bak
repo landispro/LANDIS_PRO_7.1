@@ -107,8 +107,7 @@ FuelTreatmentRank::~FuelTreatmentRank(){}
            id = theStandArray[i];
 
            stand = (*fuelpstands)(id);
-
-		   //totalCell+=stand->numberOfActiveSites();
+		   totalCell+=stand->numberOfActiveSites();
 
 		   // get potential fire risk for each stand
 
@@ -229,25 +228,19 @@ void FuelTreatmentRank::ascendingSort(IntArray& theStandArray, IntArray& theSort
 
 void FuelTreatmentRank::randomSort(IntArray& theStandArray, IntArray& theSortKeyArray, int theLength) {
 
-	int temp, k;
+    int temp, k;
 
-	for (int i = 1; i <= theLength; i++) {
+   for (int i = 1; i <= theLength; i++) {
 
-		k = (int)(theLength * frand()) + 1;
+        k = (int) (theLength * frand()) + 1;
 
-		if (k > theLength) {
-			k = theLength;
-		}
+        temp = theStandArray[i];
 
-		assert(k >= 1 && k <= theLength);
+        theStandArray[i] = theStandArray[k];
 
-		temp = theStandArray[i];
+        theStandArray[k] = temp;
 
-		theStandArray[i] = theStandArray[k];
-
-		theStandArray[k] = temp;
-
-	}
+    }
 
 }
 
