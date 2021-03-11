@@ -4172,9 +4172,9 @@ for(k=1;k<=siteptr->number();k++)
 
 						//if ((i <= sqrt(local_maxD_d_cellsize * local_maxD_d_cellsize - (j - X)* (j - X)) + Y) && (i >= -sqrt(local_maxD_d_cellsize * local_maxD_d_cellsize - (j - X)* (j - X)) + Y)) {
 
-						//TempDist = (j - Col)*(j - Col) + (i - Row)*(i - Row);
+						TempDist = (j - Col)*(j - Col) + (i - Row)*(i - Row);
 
-						TempDist = siteptr->specAtt(k)->maxD *siteptr->specAtt(k)->maxD ;
+						//TempDist = siteptr->specAtt(k)->maxD *siteptr->specAtt(k)->maxD ;
 
 
 
@@ -5814,8 +5814,8 @@ SeedRainFlag=seedflag;
 
 				 for (int n = -1; n <= 1; n++){
 
-					 //index = m* m + n *n;
-					 index = sitetmp->specAtt(i)->maxD* sitetmp->specAtt(i)->maxD;
+					 index = m* m + n *n;
+					 //index = sitetmp->specAtt(i)->maxD* sitetmp->specAtt(i)->maxD;
 					
 
 					// if (sqrt(index) <= sitetmp->specAtt(i)->maxD / CellSize){

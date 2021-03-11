@@ -1588,7 +1588,9 @@ printf("Start 7.0 Style writing output at %s",ctime(&ltime));
 
 							{
 
-								TmpBasalAreaS += sites.GetGrowthRates(k, m, l->ltID)*sites.GetGrowthRates(k, m, l->ltID) / 4 * 3.1415926*sites(i, j)->SpecieIndex(k)->getTreeNum(m, k) / 10000.00;
+								float grow = sites.GetGrowthRates(k, m, l->ltID);
+								float treeNum = sites(i, j)->SpecieIndex(k)->getTreeNum(m, k);
+								TmpBasalAreaS += grow * grow / 4 * 3.1415926 * treeNum / 10000.00;
 
 								//TmpBasalAreaS+=0.005454*sites.GetGrowthRates(k,m)*sites.GetGrowthRates(k,m)*sites(i,j)->SpecieIndex(k)->getTreeNum(m,k);
 
